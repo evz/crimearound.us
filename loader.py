@@ -20,6 +20,7 @@ def get_crimes():
     crimes = requests.get(CRIMES, params={'dateOccurred': req_date})
     if crimes.status_code == 200:
         headers = crimes.json()[0].keys()
+        inp = crimes.json()
         out = open('%s.csv' % req_date, 'wb')
         writer = csv.DictWriter(out, headers)
         writer.writer.writerow(headers)
