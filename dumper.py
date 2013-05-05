@@ -99,6 +99,7 @@ def dumpit(crime, weather):
                 k = Key(bucket)
                 k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
                 k.set_contents_from_string(json_util.dumps(out, indent=4))
+                k.set_acl('public-read')
 
 if __name__ == '__main__':
     c = pymongo.MongoClient()

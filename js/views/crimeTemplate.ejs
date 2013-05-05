@@ -2,13 +2,13 @@
 <h5><%= block %> <br/> <span class="light">(<%= location_desc %>)</span></h5>
 <p>
     <strong>Arrest? </strong>
-    <% if(arrest == 'true'){ %> 
+    <% if(arrest == 'true' || arrest == true){ %> 
         <i class="foundicon-checkmark"></i>&nbsp;&nbsp;
     <% } else { %> 
         <i class="foundicon-remove"></i>&nbsp;&nbsp;
     <% } %> 
     <strong>Domestic? </strong>
-    <% if(domestic == 'true'){ %> 
+    <% if(domestic == 'true' || domestic == true){ %> 
         <i class="foundicon-checkmark"></i>
     <% } else { %> 
         <i class="foundicon-remove"></i>

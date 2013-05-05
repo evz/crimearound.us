@@ -26,7 +26,7 @@
 
     function load_map(){
         $('.full-height').height(window.innerHeight-45);
-        var then = moment().subtract('days', 14);
+        var then = moment().subtract('days', 8);
         var y = then.format('YYYY');
         var m = then.format('M');
         var d = then.format('D');
@@ -59,6 +59,8 @@
                 fetch_and_load(url, date_str);
             });
             resize_junk();
+        }).fail(function(resp){
+            console.log(resp);
         });
     }
 

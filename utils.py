@@ -3,6 +3,7 @@ import urlparse
 import hmac
 import base64
 import hashlib
+import os
 
 GOOG_KEY = os.environ['GOOG_KEY']
 GOOG_ACCT = os.environ['GOOG_ACCT']
