@@ -27,6 +27,14 @@ def get_crimes():
         il_east_proj = Proj(init="epsg:3435", preserve_units=True)
         geojson = {'type': 'FeatureCollection', 'features': []}
         for crime in crimes.json():
+            crime_date = datetime.strptime(crime['dateOccurred'], '%b-%d-%Y')
+            fname = 'geojson/%s/%s-%s-%s.json' % (crime['primary'], crime_date.month, crime_date.day, crime_date.year)
+            try:
+                f = open(fname, 'rb')
+                incoming = json.loads(f.read())
+                f.close()
+            except IOError:
+                incoming = geojson
             if crime['xCoordinate'] and crime['yCoordinate']:
                 feature = {
                     'type': 'Feature', 
@@ -40,18 +48,10 @@ def get_crimes():
                 feature['geometry']['coordinates'].extend([x,y])
                 for k,v in crime.items():
                     feature['properties'][k] = v
-                crime_date = datetime.strptime(crime['dateOccurred'], '%b-%d-%Y')
                 try:
                     os.mkdir('geojson/%s' % (crime['primary']))
                 except OSError:
                     pass
-                fname = 'geojson/%s/%s-%s-%s.json' % (crime['primary'], crime_date.month, crime_date.day, crime_date.year)
-                try:
-                    f = open(fname, 'rb')
-                    incoming = json.loads(f.read())
-                    f.close()
-                except IOError:
-                    incoming = geojson
                 incoming['features'].append(feature)
                 f = open(fname, 'wb')
                 f.write(json.dumps(incoming, indent=4))
