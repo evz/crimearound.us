@@ -1,5 +1,14 @@
 (function(){
     var map;
+    Array.range= function(a, b, step){
+        var A = [];
+        A[0] = a;
+        step = step || 1;
+        while(a+step <= b){
+            A[A.length] = a+= step;
+        }
+        return A;
+    }
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -30,6 +39,10 @@
         var d = then.format('D');
         var date_str = then.format('MM-DD-YYYY')
         var url = 'data/' + y + '/' + m + '/' + d + '.json';
+        fetch_and_load(url, date_str);
+    }
+
+    function fetch_and_load(url, date_str){
         var tpl = new EJS({url: 'js/views/dataTemplate.ejs'});
         $.getJSON(url, function(data){
             var marker_layer = L.mapbox.markerLayer(data.geojson).addTo(map);
@@ -37,7 +50,6 @@
             marker_layer.eachLayer(function(marker){
                 var props = marker.feature.properties;
                 var pop_content = crime_template.render(props);
-                console.log(pop_content);
                 marker.bindPopup(pop_content, {
                     closeButton: true,
                     minWidth: 320
@@ -46,10 +58,19 @@
             data.date = date_str;
             var html = tpl.render(data);
             $('#overlay').html(html);
-            //filter_markers(marker_layer);
             $('.filter').on('change', function(e){
                 filter_markers(marker_layer);
             });
+            $('.date-select').unbind('change');
+            $('.date-select').on('change', function(e){
+                var day = $('#day').val();
+                var month = $('#month').val();
+                var year = $('#year').val();
+                var date_str = moment(month + ' ' +  day + ' ' + year, 'M D YYYY').format('MM-DD-YYYY');
+                var url = 'data/' + year + '/' + month + '/' + day + '.json';
+                map.removeLayer(marker_layer);
+                fetch_and_load(url, date_str);
+            })
         });
     }
 

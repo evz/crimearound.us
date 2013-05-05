@@ -1,4 +1,24 @@
-<h3><%= date %></h3>
+<form>
+    <fieldset>
+        <% var parsed_date = moment(date, 'MM-DD-YYYY') %>
+        <legend><%= parsed_date.format('dddd, MMMM D, YYYY')%></legend>
+        <select class="date-select" id="month">
+            <% $.each(['January','February','March','April','May','June','July','August','September','October','November','December'], function(i, month){ %> 
+                <option value="<%= moment(month, 'MMMM').format('M') %>"<% if(parsed_date.format('MMMM') == month){ %> selected="True"<% } %>><%= month %></option>
+            <% }) %>
+        </select>
+        <select class="date-select" id="day">
+            <% $.each(Array.range(1,parsed_date.daysInMonth()), function(i, day){ %> 
+                <option value="<%= day %>"<% if(parsed_date.format('D') == day){ %> selected="True"<% } %>><%= day %></option>
+            <% }) %>
+        </select>
+        <select class="date-select" id="year">
+            <% $.each(Array.range(2001, 2013), function(i, year){ %> 
+                <option value="<%= year %>"<% if(parsed_date.format('YYYY') == year){ %> selected="True"<% } %>><%= year %></option>
+            <% }) %>
+        </select>
+    </fieldset>
+</form>
 <hr />
 <div class="six columns">
     <h5>Celsius (min/max)</h5>

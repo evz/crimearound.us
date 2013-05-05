@@ -1,7 +1,7 @@
 /* Artfully masterminded by ZURB  */
 
 .hide-overflow{
-    max-height: 250px;
+    max-height: 350px;
     overflow: scroll;
 }
 .leaflet-popup-content h5 span,
