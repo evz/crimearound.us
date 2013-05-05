@@ -1,0 +1,27 @@
+<h3><%= date %></h3>
+<hr />
+<div class="six columns">
+    <h5>Celsius (min/max)</h5>
+    <ul>
+        <li><%= weather.CELSIUS_MIN %>&deg;</li>
+        <li><%= weather.CELSIUS_MAX %>&deg;</li>
+    </ul>
+</div>
+<div class="six columns">
+    <h5>Fahrenheit (min/max)</h5>
+    <ul>
+        <li><%= weather.FAHR_MIN %>&deg;</li>
+        <li><%= weather.FAHR_MAX %>&deg;</li>
+    </ul>
+</div>
+<h5>Crimes <span>(Total: <%= crimes.meta.total %>)</span></h5>
+<div class="hide-overflow">
+    <% $.each(crimes.meta, function(key, value){ %> 
+        <% if(key != 'total'){ %>
+            <label for="<%= key %>">
+                <input class="filter" name="<%= key %>" type="checkbox" checked="true" />
+                <strong><%= key %></strong> (<%= value %>)
+            </label> 
+        <% } %>
+    <% }) %>
+</div>

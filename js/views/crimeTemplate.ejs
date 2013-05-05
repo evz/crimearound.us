@@ -1,0 +1,34 @@
+<h3><%= title %> <br/> <span><%= description %></span></h3>
+<h5><%= block %> <br/> <span>(<%= location_desc %>)</span></h5>
+<p>
+    <strong>Arrest? </strong>
+    <% if(arrest == 'true'){ %> 
+        <i class="foundicon-checkmark"></i>&nbsp;&nbsp;
+    <% } else { %> 
+        <i class="foundicon-remove"></i>&nbsp;&nbsp;
+    <% } %> 
+    <strong>Domestic? </strong>
+    <% if(domestic == 'true'){ %> 
+        <i class="foundicon-checkmark"></i>
+    <% } else { %> 
+        <i class="foundicon-remove"></i>
+    <% } %> 
+</p>
+<table class="twelve">
+    <thead>
+        <tr>
+            <th>Beat</th>
+            <th>District</th>
+            <th>Comm Area</th>
+            <th>Ward</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><%= beat %></td>
+            <td><%= district %></td>
+            <td><%= community_area %></td>
+            <td><%= ward %></td>
+        </tr>
+    </tbody>
+</table>
