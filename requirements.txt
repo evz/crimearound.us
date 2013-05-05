@@ -1,2 +1,4 @@
 requests
 boto
+pymongo
+ipython
