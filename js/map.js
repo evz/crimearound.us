@@ -24,16 +24,15 @@
         }
         map.setView([position.coords.latitude, position.coords.longitude], zoom);
         window.location.hash = zoom + ',' + position.coords.latitude + ',' + position.coords.longitude;
-        var then = moment().subtract('days', 7);
-        var now = moment();
-        var range = then.twix(now, true).iterate('days');
-        while(range.hasNext()){
-            var d = range.next().format('M-D-YYYY');
-            var geojson = 'geojson/BATTERY/' + d + '.json'
-            $.getJSON(geojson, function(data){
-                addLayer(L.mapbox.markerLayer(data), 'Battery, ' + d);
-            });
-        };
+        var then = moment().subtract('days', 14);
+        var y = then.format('YYYY');
+        var m = then.format('M');
+        var d = then.format('D');
+        var date_str = then.format('MM-DD-YYYY')
+        var url = 'data/' + y + '/' + m + '/' + d + '.json';
+        $.getJSON(url, function(data){
+            addLayer(L.mapbox.markerLayer(data.geojson), date_str);
+        });
     }
 
     function addLayer(layer, name){
