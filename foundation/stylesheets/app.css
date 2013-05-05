@@ -1,10 +1,22 @@
 /* Artfully masterminded by ZURB  */
+.top-bar {
+    margin-bottom: 0px !important;
+}
 
 .hide-overflow{
-    max-height: 350px;
     overflow: scroll;
 }
-.leaflet-popup-content h5 span,
-.leaflet-popup-content h3 span {
+.light {
     font-weight: 300;
+}
+#overlay h3,
+#overlay h5 {
+    margin: 7px 0 !important;
+}
+#overlay hr {
+    margin-bottom: 0px !important;
+}
+
+#overlay .temp {
+    margin-bottom: 10px !important;
 }

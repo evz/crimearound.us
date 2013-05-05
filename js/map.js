@@ -12,27 +12,20 @@
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
-            $('.full-height').height(window.innerHeight - 45);
+            resize_junk();
         }
-        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h').setView([41.886304, -87.637768], 13);
-        map.on('move', update_hash);
-        if (window.location.hash){
-            var hash = window.location.hash.substring(1).split(',');
-            var position = {'coords':{'latitude': hash[1], 'longitude': hash[2]}, 'zoom': hash[0]}
-            map_success(position);
-        } else {
-            reset_map();
-        }
+        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h').setView([41.83733944214672, -87.64171600341797], 11);
+        load_map();
     })
 
-    function map_success(position){
+    function resize_junk(){
+        $('.full-height').height(window.innerHeight - 45);
+        var offset = $('#overlay-top').height() + $('#crime-title').height() + 75;
+        $('.hide-overflow').height(window.innerHeight - offset);
+    }
+
+    function load_map(){
         $('.full-height').height(window.innerHeight-45);
-        var zoom = 13;
-        if (position.zoom){
-            zoom = position.zoom
-        }
-        map.setView([position.coords.latitude, position.coords.longitude], zoom);
-        window.location.hash = zoom + ',' + position.coords.latitude + ',' + position.coords.longitude;
         var then = moment().subtract('days', 14);
         var y = then.format('YYYY');
         var m = then.format('M');
@@ -46,14 +39,8 @@
         var tpl = new EJS({url: 'js/views/dataTemplate.ejs'});
         $.getJSON(url, function(data){
             var marker_layer = L.mapbox.markerLayer(data.geojson).addTo(map);
-            var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});
             marker_layer.eachLayer(function(marker){
-                var props = marker.feature.properties;
-                var pop_content = crime_template.render(props);
-                marker.bindPopup(pop_content, {
-                    closeButton: true,
-                    minWidth: 320
-                })
+                bind_popup(marker);
             })
             data.date = date_str;
             var html = tpl.render(data);
@@ -70,7 +57,8 @@
                 var url = 'data/' + year + '/' + month + '/' + day + '.json';
                 map.removeLayer(marker_layer);
                 fetch_and_load(url, date_str);
-            })
+            });
+            resize_junk();
         });
     }
 
@@ -85,32 +73,20 @@
         marker_layer.setFilter(function(f){
             return on.indexOf(f.properties['key']) !== -1;
         });
+        marker_layer.eachLayer(function(marker){
+            bind_popup(marker);
+        })
         return false;
     }
 
-    function update_hash(e){
-        var zoom = map.getZoom();
-        var center = map.getCenter();
-        window.location.hash = zoom + ',' + center.lat + ',' + center.lng;
-        map.panTo(center);
+    function bind_popup(marker){
+        var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});
+        var props = marker.feature.properties;
+        var pop_content = crime_template.render(props);
+        marker.bindPopup(pop_content, {
+            closeButton: true,
+            minWidth: 320
+        })
     }
 
-    function map_error(){
-        console.log('map error');
-    }
-
-    function reset_map(){
-        var full_height = 200;
-        if (window.innerHeight != undefined){
-            full_height = window.innerHeight
-        } else {
-            full_height = document.body.clientHeight;
-        }
-        $('.full-height').height(full_height-45);
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(map_success, map_error);
-        } else {
-            map_error();
-        }
-    }
 })()

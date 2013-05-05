@@ -1,7 +1,9 @@
+<% var parsed_date = moment(date, 'MM-DD-YYYY') %>
+<div id="overlay-top">
+<h3 class="light"><%= parsed_date.format('dddd, MMMM D, YYYY')%></h3>
 <form>
     <fieldset>
-        <% var parsed_date = moment(date, 'MM-DD-YYYY') %>
-        <legend><%= parsed_date.format('dddd, MMMM D, YYYY')%></legend>
+        <legend>Pick another date</legend>
         <select class="date-select" id="month">
             <% $.each(['January','February','March','April','May','June','July','August','September','October','November','December'], function(i, month){ %> 
                 <option value="<%= moment(month, 'MMMM').format('M') %>"<% if(parsed_date.format('MMMM') == month){ %> selected="True"<% } %>><%= month %></option>
@@ -19,28 +21,23 @@
         </select>
     </fieldset>
 </form>
+<div class="six columns temp">
+    <h3 class="light"><%= weather.CELSIUS_MAX %>&deg; C</h3>
+    <h5 class="light"><%= weather.CELSIUS_MIN %>&deg; C (low)</h5>
+</div>
+<div class="six columns temp">
+    <h3 class="light"><%= weather.FAHR_MAX %>&deg; F</h3>
+    <h5 class="light"><%= weather.FAHR_MIN %>&deg; F (low)</h5>
+</div>
 <hr />
-<div class="six columns">
-    <h5>Celsius (min/max)</h5>
-    <ul>
-        <li><%= weather.CELSIUS_MIN %>&deg;</li>
-        <li><%= weather.CELSIUS_MAX %>&deg;</li>
-    </ul>
 </div>
-<div class="six columns">
-    <h5>Fahrenheit (min/max)</h5>
-    <ul>
-        <li><%= weather.FAHR_MIN %>&deg;</li>
-        <li><%= weather.FAHR_MAX %>&deg;</li>
-    </ul>
-</div>
-<h5>Crimes <span>(Total: <%= crimes.meta.total %>)</span></h5>
+<h3 id="crime-title">Crimes <span class="light">(Total: <%= meta.total.value %>)</span></h3>
 <div class="hide-overflow">
-    <% $.each(crimes.meta, function(key, value){ %> 
-        <% if(key != 'total'){ %>
-            <label for="<%= key %>">
-                <input class="filter" name="<%= key %>" type="checkbox" checked="true" />
-                <strong><%= key %></strong> (<%= value %>)
+    <% $.each(meta.detail, function(i, val){ %> 
+        <% if(val.key != 'total'){ %>
+            <label for="<%= val.key %>">
+                <input class="filter" name="<%= val.key %>" type="checkbox" checked="true" />
+                <strong><%= val.name %></strong> (<%= val.value %>)
             </label> 
         <% } %>
     <% }) %>
