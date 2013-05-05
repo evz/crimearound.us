@@ -4,6 +4,9 @@ import hmac
 import base64
 import hashlib
 
+GOOG_KEY = os.environ['GOOG_KEY']
+GOOG_ACCT = os.environ['GOOG_ACCT']
+
 def encoded_dict(in_dict):
     out_dict = {}
     for k, v in in_dict.iteritems():
@@ -16,8 +19,8 @@ def encoded_dict(in_dict):
     return out_dict
 
 def sign_google(u, params):
-    key = 'Y4uHS-AxlqBiddCHXmYzF9Ryg4k='
-    params['client'] = 'gme-nationalspiritual'
+    key = GOOG_KEY
+    params['client'] = GOOG_ACCT
     qs = urllib.urlencode(encoded_dict(params), True)
     full_url = u + '?' + qs
     url = urlparse.urlparse(full_url)

@@ -24,7 +24,7 @@
         }
         map.setView([position.coords.latitude, position.coords.longitude], zoom);
         window.location.hash = zoom + ',' + position.coords.latitude + ',' + position.coords.longitude;
-        var then = moment().subtract('days', 9);
+        var then = moment().subtract('days', 14);
         var y = then.format('YYYY');
         var m = then.format('M');
         var d = then.format('D');
