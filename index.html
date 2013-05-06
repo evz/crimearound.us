@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>Crime vs. The Weather</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -15,11 +15,6 @@
         <link rel="stylesheet" href="/foundation/stylesheets/foundation.min.css">
         <link rel="stylesheet" href="/foundation/stylesheets/app.css">
         <link rel="stylesheet" href="/foundation/stylesheets/general_foundicons.css">
-        <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css' rel='stylesheet' />
-        <!--[if lte IE 8]>
-            <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.ie.css' rel='stylesheet' />
-        <![endif]-->
-        <script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.js'></script>
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-26502031-1']);
@@ -46,19 +41,77 @@
                 <section>
                     <ul class="left">
                         <li><a href="/most-wanted.html">Most Wanted</a></li>
+                        <li><a href="/map.html">Crime Browser</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
-        <div id="overlay" class="three columns full-height"></div>
-        <div id="map" class="nine columns full-height dark"></div>
+        <div class="row">
+            <div id="totals" class="twelve columns"></div>
+        </div>
+        <div class="row">
+            <div id="homicide" class="six columns"></div>
+            <div id="assault" class="six columns"></div>
+        </div>
+        <div class="row">
+            <div id="battery" class="six columns"></div>
+            <div id="theft" class="six columns"></div>
+        </div>
+        <div class="row">
+            <div id="arson" class="four columns"></div>
+            <div id="burglary" class="four columns"></div>
+            <div id="crim_sexual_assault" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="criminal_damage" class="four columns"></div>
+            <div id="criminal_trespass" class="four columns"></div>
+            <div id="deceptive_practice" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="domestic_violence" class="four columns"></div>
+            <div id="gambling" class="four columns"></div>
+            <div id="weapons_violation" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="interfere_with_public_officer" class="four columns"></div>
+            <div id="interference_with_public_officer" class="four columns"></div>
+            <div id="intimidation" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="kidnapping" class="four columns"></div>
+            <div id="liquor_law_violation" class="four columns"></div>
+            <div id="motor_vehicle_theft" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="narcotics" class="four columns"></div>
+            <div id="non_criminal" class="four columns"></div>
+            <div id="non_criminal_subject_specified" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="obscenity" class="four columns"></div>
+            <div id="offense_involving_children" class="four columns"></div>
+            <div id="offenses_involving_children" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="other_narcotic_violation" class="four columns"></div>
+            <div id="other_offense" class="four columns"></div>
+            <div id="prostitution" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="public_indecency" class="four columns"></div>
+            <div id="public_peace_violation" class="four columns"></div>
+            <div id="ritualism" class="four columns"></div>
+        </div>
+        <div class="row">
+            <div id="robbery" class="four columns"></div>
+            <div id="sex_offense" class="four columns"></div>
+            <div id="stalking" class="four columns"></div>
+        </div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
-        <script src="/js/spin.min.js"></script>
-        <script src="/js/jquery.spin.js"></script>
         <script src="/js/moment.min.js"></script>
         <script src="/js/twix.min.js"></script>
         <script src="/js/ejs_production.js"></script>
-        <script src="/js/map.js"></script>
+        <script src="/js/weather.js"></script>
     </body>
 </html>

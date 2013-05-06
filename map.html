@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -16,6 +15,11 @@
         <link rel="stylesheet" href="/foundation/stylesheets/foundation.min.css">
         <link rel="stylesheet" href="/foundation/stylesheets/app.css">
         <link rel="stylesheet" href="/foundation/stylesheets/general_foundicons.css">
+        <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css' rel='stylesheet' />
+        <!--[if lte IE 8]>
+            <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.ie.css' rel='stylesheet' />
+        <![endif]-->
+        <script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.js'></script>
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-26502031-1']);
@@ -42,15 +46,20 @@
                 <section>
                     <ul class="left">
                         <li><a href="/most-wanted.html">Most Wanted</a></li>
+                        <li><a href="/most-wanted.html">Crime Browser</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
-        <div id="wanted-list"></div>
+        <div id="overlay" class="three columns full-height"></div>
+        <div id="map" class="nine columns full-height dark"></div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
+        <script src="/js/spin.min.js"></script>
+        <script src="/js/jquery.spin.js"></script>
         <script src="/js/moment.min.js"></script>
+        <script src="/js/twix.min.js"></script>
         <script src="/js/ejs_production.js"></script>
-        <script src="/js/most-wanted.js"></script>
+        <script src="/js/map.js"></script>
     </body>
 </html>

@@ -3,6 +3,8 @@ from base64 import b64decode
 import os
 import json
 import pymongo
+from operator import itemgetter
+from itertools import groupby
 from datetime import datetime, timedelta
 from utils import sign_google, make_meta
 from boto.s3.connection import S3Connection
@@ -202,7 +204,19 @@ def get_by_temp():
             for detail in cr['detail']:
                 summary['detail'][detail['key']] += detail['value']
         group['summary'] = summary
-        print group
+    organizer = []
+    for group in grouped:
+        organizer.append({'key': 'total', 'temp': group['temp'], 'average': group['summary']['total'] / len(group['days'])})
+        for k,v in group['summary']['detail'].items():
+            organizer.append({'key': k, 'temp': group['temp'], 'average': v / len(group['days'])})
+    output = []
+    organizer = sorted(organizer, key=itemgetter('key'))
+    for k,g in groupby(organizer, key=itemgetter('key')):
+        output.append({'key': k, 'data': list(g)})
+    for group in output:
+        f = open('data/weather/%s.json' % group['key'], 'wb')
+        f.write(json.dumps(group))
+        f.close()
 
 if __name__ == '__main__':
     get_crimes()
