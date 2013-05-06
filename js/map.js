@@ -37,7 +37,9 @@
 
     function fetch_and_load(url, date_str){
         var tpl = new EJS({url: 'js/views/dataTemplate.ejs'});
+        $('#map').spin('large')
         $.getJSON(url, function(data){
+            $('#map').spin(false);
             var marker_layer = L.mapbox.markerLayer(data.geojson).addTo(map);
             marker_layer.eachLayer(function(marker){
                 bind_popup(marker);

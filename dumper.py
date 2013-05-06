@@ -15,7 +15,7 @@ def daterange(start_date, end_date):
 def dumpit(crime, weather):
     s3conn = S3Connection(AWS_KEY, AWS_SECRET)
     bucket = s3conn.get_bucket('crime.static-eric.com')
-    for single_date in daterange(datetime(2013, 1, 1), datetime.now()):
+    for single_date in daterange(datetime(2001, 1, 1), datetime.now()):
         weat = [w for w in weather.find({'DATE': single_date})]
         if len(weat) > 0:
             midnight = single_date.replace(hour=0).replace(minute=0)
@@ -93,13 +93,14 @@ def dumpit(crime, weather):
                         } for f in crimes]
                     }
                 }
-                f = open('data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day), 'wb')
-                f.write(json_util.dumps(out, indent=4, sort_keys=True))
-                f.close()
+                # f = open('data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day), 'wb')
+                # f.write(json_util.dumps(out, indent=4, sort_keys=True))
+                # f.close()
                 k = Key(bucket)
                 k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
                 k.set_contents_from_string(json_util.dumps(out, indent=4))
                 k.set_acl('public-read')
+                print 'Uploaded %s' % k.key
 
 if __name__ == '__main__':
     c = pymongo.MongoClient()
