@@ -60,7 +60,18 @@
             });
             resize_junk();
         }).fail(function(resp){
-            console.log(resp);
+            var error_template = new EJS({url: 'js/views/errorTemplate.ejs'});
+            var error_html = error_template.render({date: date_str});
+            $('#overlay').html(error_html);
+            $('.date-select').unbind('change');
+            $('.date-select').on('change', function(e){
+                var day = $('#day').val();
+                var month = $('#month').val();
+                var year = $('#year').val();
+                var date_str = moment(month + ' ' +  day + ' ' + year, 'M D YYYY').format('MM-DD-YYYY');
+                var url = 'data/' + year + '/' + month + '/' + day + '.json';
+                fetch_and_load(url, date_str);
+            });
         });
     }
 

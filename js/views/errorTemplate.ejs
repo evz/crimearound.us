@@ -1,6 +1,9 @@
 <% var parsed_date = moment(date, 'MM-DD-YYYY') %>
-<div id="overlay-top">
-<h3 class="light"><%= parsed_date.format('dddd, MMMM D, YYYY')%></h3>
+<h3 class="light">
+    Sorry, no data for <br />
+    <%= parsed_date.format('MMMM D, YYYY')%> 
+    yet.
+</h3>
 <form>
     <fieldset>
         <legend>Pick another date</legend>
@@ -21,24 +24,3 @@
         </select>
     </fieldset>
 </form>
-<div class="six columns temp">
-    <h3 class="light"><%= Math.round(weather.CELSIUS_MAX * 100) / 100 %>&deg; C</h3>
-    <h5 class="light"><%= Math.round(weather.CELSIUS_MIN * 100) / 100 %>&deg; C (low)</h5>
-</div>
-<div class="six columns temp">
-    <h3 class="light"><%= Math.round(weather.FAHR_MAX * 100) / 100 %>&deg; F</h3>
-    <h5 class="light"><%= Math.round(weather.FAHR_MIN * 100) / 100 %>&deg; F (low)</h5>
-</div>
-<hr />
-</div>
-<h3 id="crime-title">Crimes <span class="light">(Total: <%= meta.total.value %>)</span></h3>
-<div class="hide-overflow">
-    <% $.each(meta.detail, function(i, val){ %> 
-        <% if(val.key != 'total'){ %>
-            <label for="<%= val.key %>">
-                <input class="filter" name="<%= val.key %>" type="checkbox" checked="true" />
-                <strong><%= val.name %></strong> (<%= val.value %>)
-            </label> 
-        <% } %>
-    <% }) %>
-</div>

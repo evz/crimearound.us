@@ -93,9 +93,9 @@ def dumpit(crime, weather):
                         } for f in crimes]
                     }
                 }
-                # f = open('data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day), 'wb')
-                # f.write(json_util.dumps(out, indent=4, sort_keys=True))
-                # f.close()
+                f = open('data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day), 'wb')
+                f.write(json_util.dumps(out, indent=4, sort_keys=True))
+                f.close()
                 k = Key(bucket)
                 k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
                 k.set_contents_from_string(json_util.dumps(out, indent=4))
