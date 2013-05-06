@@ -1,5 +1,7 @@
 import requests
+from base64 import b64decode
 import os
+import shutil
 import json
 import pymongo
 from datetime import datetime, timedelta
@@ -7,6 +9,7 @@ from utils import sign_google
 
 CRIMES = 'http://data.cityofchicago.org/resource/ijzp-q8t2.json'
 MOST_WANTED = 'http://api1.chicagopolice.org/clearpath/api/1.0/mostWanted/list'
+MUGSHOTS = 'http://api1.chicagopolice.org/clearpath/api/1.0/mugshots'
 WEATHER_KEY = os.environ['WEATHER_KEY']
 
 class SocrataError(Exception): 
@@ -15,6 +18,11 @@ class SocrataError(Exception):
         self.message = message
 
 class WeatherError(Exception): 
+    def __init__(self, message):
+        Exception.__init__(self, message)
+        self.message = message
+
+class ClearPathError(Exception): 
     def __init__(self, message):
         Exception.__init__(self, message)
         self.message = message
@@ -100,5 +108,43 @@ def get_weather(dates):
         else:
             raise WeatherError('Wunderground API responded with %s: %s' % (weat.status_code, weat.content[300:]))
 
+def get_most_wanted():
+    wanted = requests.get(MOST_WANTED, params={'max': 100})
+    shutil.rmtree('data/wanted', ignore_errors=True)
+    shutil.rmtree('images/wanted', ignore_errors=True)
+    try:
+        os.makedirs('data/wanted')
+    except os.error:
+        pass
+    try:
+        os.makedirs('images/wanted')
+    except os.error:
+        pass
+    if wanted.status_code == 200:
+        wanted_list = []
+        for person in wanted.json():
+            warrant = person['warrantNo']
+            wanted_list.append(warrant)
+            mugs = requests.get(MUGSHOTS, params={'warrantNo': warrant})
+            person['mugs'] = []
+            if mugs.status_code == 200:
+                for mug in mugs.json():
+                    image_path = 'images/wanted/%s_%s.jpg' % (warrant, mug['mugshotNo'])
+                    f = open(image_path, 'wb')
+                    f.write(b64decode(mug['image']))
+                    f.close()
+                    person['mugs'].append({'angle': mug['mugshotNo'], 'image_path': image_path})
+            else:
+                raise ClearPathError('ClearPath API returned %s when fetching mugshots for %s: %s' % (mugs.status_code, warrant, mugs.content[300:]))
+            f = open('data/wanted/%s.json' % warrant, 'wb')
+            f.write(json.dumps(person, indent=4))
+            f.close()
+        f = open('data/wanted/wanted_list.json', 'wb')
+        f.write(json.dumps(wanted_list))
+        f.close()
+    else:
+        raise ClearPathError('ClearPath API returned %s when getting most wanted list: %s' % (wanted.status_code, wanted.content[300:]))
+
 if __name__ == '__main__':
     get_crimes()
+    get_most_wanted()
