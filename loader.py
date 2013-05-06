@@ -1,16 +1,19 @@
 import requests
 from base64 import b64decode
 import os
-import shutil
 import json
 import pymongo
 from datetime import datetime, timedelta
 from utils import sign_google
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 
 CRIMES = 'http://data.cityofchicago.org/resource/ijzp-q8t2.json'
 MOST_WANTED = 'http://api1.chicagopolice.org/clearpath/api/1.0/mostWanted/list'
 MUGSHOTS = 'http://api1.chicagopolice.org/clearpath/api/1.0/mugshots'
 WEATHER_KEY = os.environ['WEATHER_KEY']
+AWS_KEY = os.environ['AWS_ACCESS_KEY']
+AWS_SECRET = os.environ['AWS_SECRET_KEY']
 
 class SocrataError(Exception): 
     def __init__(self, message):
@@ -110,17 +113,9 @@ def get_weather(dates):
 
 def get_most_wanted():
     wanted = requests.get(MOST_WANTED, params={'max': 100})
-    shutil.rmtree('data/wanted', ignore_errors=True)
-    shutil.rmtree('images/wanted', ignore_errors=True)
-    try:
-        os.makedirs('data/wanted')
-    except os.error:
-        pass
-    try:
-        os.makedirs('images/wanted')
-    except os.error:
-        pass
     if wanted.status_code == 200:
+        s3conn = S3Connection(AWS_KEY, AWS_SECRET)
+        bucket = s3conn.get_bucket('crime.static-eric.com')
         wanted_list = []
         for person in wanted.json():
             warrant = person['warrantNo']
@@ -130,18 +125,21 @@ def get_most_wanted():
             if mugs.status_code == 200:
                 for mug in mugs.json():
                     image_path = 'images/wanted/%s_%s.jpg' % (warrant, mug['mugshotNo'])
-                    f = open(image_path, 'wb')
-                    f.write(b64decode(mug['image']))
-                    f.close()
+                    k = Key(bucket)
+                    k.key = image_path
+                    k.set_contents_from_string(b64decode(mug['image']))
+                    k.set_acl('public-read')
                     person['mugs'].append({'angle': mug['mugshotNo'], 'image_path': image_path})
             else:
                 raise ClearPathError('ClearPath API returned %s when fetching mugshots for %s: %s' % (mugs.status_code, warrant, mugs.content[300:]))
-            f = open('data/wanted/%s.json' % warrant, 'wb')
-            f.write(json.dumps(person, indent=4))
-            f.close()
-        f = open('data/wanted/wanted_list.json', 'wb')
-        f.write(json.dumps(wanted_list))
-        f.close()
+            k = Key(bucket)
+            k.key = 'data/wanted/%s.json' % warrant
+            k.set_contents_from_string(json.dumps(person, indent=4))
+            k.set_acl('public-read')
+        k = Key(bucket)
+        k.key = 'data/wanted/wanted_list.json'
+        k.set_contents_from_string(json.dumps(wanted_list))
+        k.set_acl('public-read')
     else:
         raise ClearPathError('ClearPath API returned %s when getting most wanted list: %s' % (wanted.status_code, wanted.content[300:]))
 
