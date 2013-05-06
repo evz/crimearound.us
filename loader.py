@@ -4,7 +4,7 @@ import os
 import json
 import pymongo
 from datetime import datetime, timedelta
-from utils import sign_google
+from utils import sign_google, make_meta
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
@@ -142,6 +142,67 @@ def get_most_wanted():
         k.set_acl('public-read')
     else:
         raise ClearPathError('ClearPath API returned %s when getting most wanted list: %s' % (wanted.status_code, wanted.content[300:]))
+
+def get_by_temp():
+    c = pymongo.MongoClient()
+    db = c['chicago']
+    weather = db['weather']
+    crime = db['crime']
+    grouped = []
+    for temp in range(-30, 120):
+        days = [d['DATE'] for d in weather.find({'FAHR_MAX': {'$gt': temp, '$lt': temp + 1}})]
+        if days:
+            grouped.append({'temp': temp, 'days': days})
+    for group in grouped:
+        crime_summary = []
+        for day in group['days']:
+            crimes = [c for c in crime.find({'Date': {'$gt': day, '$lt': day + timedelta(hours=24)}})]
+            crime_summary.extend(make_meta(crimes))
+        summary = {
+            'total': 0,
+            'detail': {
+                'arson': 0,
+                'assault': 0,
+                'battery': 0,
+                'burglary': 0,
+                'crim_sexual_assault': 0,
+                'criminal_damage': 0,
+                'criminal_trespass': 0,
+                'deceptive_practice': 0,
+                'domestic_violence': 0,
+                'gambling': 0,
+                'homicide': 0,
+                'interfere_with_public_officer': 0,
+                'interference_with_public_officer': 0,
+                'intimidation' :0,
+                'kidnapping': 0,
+                'liquor_law_violation': 0,
+                'motor_vehicle_theft': 0,
+                'narcotics': 0,
+                'non_criminal': 0,
+                'non_criminal_subject_specified': 0,
+                'obscenity': 0,
+                'offense_involving_children': 0,
+                'offenses_involving_children': 0,
+                'other_narcotic_violation': 0,
+                'other_offense': 0,
+                'prostitution': 0,
+                'public_indecency': 0,
+                'public_peace_violation': 0,
+                'ritualism': 0,
+                'robbery': 0,
+                'sex_offense': 0,
+                'stalking': 0,
+                'theft': 0,
+                'weapons_violation': 0,
+            }
+        }
+        for cr in crime_summary:
+            summary['total'] += cr['total']['value']
+            for detail in cr['detail']:
+                summary['detail'][detail['key']] += detail['value']
+        group['summary'] = summary
+        print group
 
 if __name__ == '__main__':
     get_crimes()
