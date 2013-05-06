@@ -26,7 +26,7 @@
 
     function load_map(){
         $('.full-height').height(window.innerHeight-45);
-        var then = moment().subtract('days', 8);
+        var then = moment().subtract('days', 9);
         var y = then.format('YYYY');
         var m = then.format('M');
         var d = then.format('D');
