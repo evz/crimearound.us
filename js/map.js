@@ -62,6 +62,7 @@
             });
             resize_junk();
         }).fail(function(resp){
+            $('#map').spin(false);
             var error_template = new EJS({url: 'js/views/errorTemplate.ejs'});
             var error_html = error_template.render({date: date_str});
             $('#overlay').html(error_html);
