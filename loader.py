@@ -107,6 +107,7 @@ def get_weather(dates):
             weather['CELSIUS_MIN'] = summary['mintempm']
             weather['FAHR_MAX'] = summary['maxtempi']
             weather['FAHR_MIN'] = summary['mintempi']
+            weather['DATE'] = datetime.strptime(date, '%Y%m%d')
             update = {'$set': weather}
             up = coll.update({'DATE': datetime.strptime(date, '%Y%m%d')}, update, upsert=True)
             print 'Updated %s weather' % (date)
