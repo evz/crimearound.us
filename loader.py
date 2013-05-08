@@ -160,7 +160,7 @@ def get_by_temp():
         crime_summary = []
         for day in group['days']:
             crimes = [c for c in crime.find({'Date': {'$gt': day, '$lt': day + timedelta(hours=24)}})]
-            crime_summary.extend(make_meta(crimes))
+            crime_summary.append(make_meta(crimes))
         summary = {
             'total': 0,
             'detail': {
@@ -207,9 +207,9 @@ def get_by_temp():
         group['summary'] = summary
     organizer = []
     for group in grouped:
-        organizer.append({'key': 'total', 'temp': group['temp'], 'average': group['summary']['total'] / len(group['days'])})
+        organizer.append({'key': 'total', 'temp': group['temp'], 'average': float(group['summary']['total']) / float(len(group['days']))})
         for k,v in group['summary']['detail'].items():
-            organizer.append({'key': k, 'temp': group['temp'], 'average': v / len(group['days'])})
+            organizer.append({'key': k, 'temp': group['temp'], 'average': float(v) / float(len(group['days']))})
     output = []
     organizer = sorted(organizer, key=itemgetter('key'))
     for k,g in groupby(organizer, key=itemgetter('key')):

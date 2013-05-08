@@ -47,72 +47,49 @@
             </nav>
         </div>
         <div class="row">
-            <div id="total" class="twelve columns chart"></div>
+            <div class="twelve columns">
+                <h1 class="light">Crime vs. Temperature</h1>
+                <h3 class="light">As the <strong>temperature</strong> in Chicago rises, so does the <strong>crime rate</strong>?</h3>
+            </div>
         </div>
         <div class="row">
-            <div id="homicide" class="six columns chart"></div>
-            <div id="assault" class="six columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="battery" class="six columns chart"></div>
-            <div id="theft" class="six columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="arson" class="four columns chart"></div>
-            <div id="burglary" class="four columns chart"></div>
-            <div id="crim_sexual_assault" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="criminal_damage" class="four columns chart"></div>
-            <div id="criminal_trespass" class="four columns chart"></div>
-            <div id="deceptive_practice" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="domestic_violence" class="four columns chart"></div>
-            <div id="gambling" class="four columns chart"></div>
-            <div id="weapons_violation" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="interfere_with_public_officer" class="four columns chart"></div>
-            <div id="interference_with_public_officer" class="four columns chart"></div>
-            <div id="intimidation" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="kidnapping" class="four columns chart"></div>
-            <div id="liquor_law_violation" class="four columns chart"></div>
-            <div id="motor_vehicle_theft" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="narcotics" class="four columns chart"></div>
-            <div id="non_criminal" class="four columns chart"></div>
-            <div id="non_criminal_subject_specified" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="obscenity" class="four columns chart"></div>
-            <div id="offense_involving_children" class="four columns chart"></div>
-            <div id="offenses_involving_children" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="other_narcotic_violation" class="four columns chart"></div>
-            <div id="other_offense" class="four columns chart"></div>
-            <div id="prostitution" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="public_indecency" class="four columns chart"></div>
-            <div id="public_peace_violation" class="four columns chart"></div>
-            <div id="ritualism" class="four columns chart"></div>
-        </div>
-        <div class="row">
-            <div id="robbery" class="four columns chart"></div>
-            <div id="sex_offense" class="four columns chart"></div>
-            <div id="stalking" class="four columns chart"></div>
+            <div class="two columns">
+                <dl class="sub-nav">
+                    <dd class="filter active"><a href="#total">Total</a></dd>
+                    <dd class="filter"><a href="#homicide">Homicide</a></dd>
+                    <dd class="filter"><a href="#assault">Assault</a></dd>
+                    <dd class="filter"><a href="#battery">Battery</a></dd>
+                    <dd class="filter"><a href="#theft">Theft</a></dd>
+                    <dd class="filter"><a href="#motor_vehicle_theft">Vehicle Theft</a></dd>
+                    <dd class="filter"><a href="#crim_sexual_assault">Sexual Assault</a></dd>
+                    <dd class="filter"><a href="#criminal_damage">Criminal Damage</a></dd>
+                    <dd class="filter"><a href="#criminal_trespass">Criminal Trespass</a></dd>
+                    <dd class="filter"><a href="#robbery">Robbery</a></dd>
+                    <dd class="filter"><a href="#prostitution">Prostitution</a></dd>
+                    <dd class="filter"><a href="#stalking">Stalking</a></dd>
+                    <dd class="filter"><a href="#ritualism">Ritualism</a></dd>
+                    <dd class="filter"><a href="#sex_offense">Sex Offense</a></dd>
+                    <dd class="filter"><a href="#weapons_violation">Weapons Violation</a></dd>
+                    <dd class="filter"><a href="#kidnapping">Kidnapping</a></dd>
+                    <dd class="filter"><a href="#intimidation">Intimidation</a></dd>
+                </dl>
+              </div>
+          <div class="ten columns">
+              <div class="row">
+                  <div class="twelve columns" id="chart"></div>
+                  <div class="twelve columns">
+                      <h5 class="light">
+                          It turns out that, after crunching <strong>5,000,000+</strong>
+                          publicly available <strong>crime reports</strong> (spanning the time between 2001 and the current day),
+                          and comparing it to historical weather data, this conventional wisdom generally pans out.
+                      </h5>
+                  </div>
+                </div>
+            </div>
         </div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
-        <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="/js/moment.min.js"></script>
-        <script src="/js/twix.min.js"></script>
-        <script src="/js/ejs_production.js"></script>
+        <script src="/js/d3.v3.js"></script>
         <script src="/js/weather.js"></script>
     </body>
 </html>

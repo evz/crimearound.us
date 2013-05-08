@@ -33,7 +33,7 @@ def sign_google(u, params):
     return '%s&signature=%s' % (originalUrl, encodedSignature)
 
 def make_meta(crimes):
-    return {
+    out =  {
         'total': {'key': 'total', 'name': 'Total', 'value': len(crimes)},
         'detail': [
             {'key': 'arson', 'name': 'Arson', 'value': len([c for c in crimes if c.get('Primary Type') == 'ARSON'])},
@@ -71,4 +71,5 @@ def make_meta(crimes):
             {'key': 'theft', 'name': 'Theft', 'value': len([c for c in crimes if c.get('Primary Type') == 'THEFT'])},
             {'key': 'weapons_violation', 'name': 'Weapons Violation', 'value': len([c for c in crimes if c.get('Primary Type') == 'WEAPONS VIOLATION'])},
         ]
-    },
+    }
+    return out

@@ -23,3 +23,35 @@
 #wanted-list .row {
     margin-bottom: 15px;
 }
+
+.filter-title {
+    margin-bottom: 0 !important;
+}
+
+dl.sub-nav dt, dl.sub-nav dd {
+    display: block;
+    float: none;
+    white-space: nowrap;
+    margin-bottom: 5px;
+}
+dl.sub-nav dd.active {
+    margin-left: 0px !important;
+}
+.axis path {
+    stroke: #ccc;
+    fill: none;
+    shape-rendering: crispEdges;
+}
+line {
+  stroke: #555;
+  stroke-width: 2px;
+}
+.crime-line {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1.5px;
+}
+text {
+  font-size: 12px;
+  fill: #888;
+}
