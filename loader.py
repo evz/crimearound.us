@@ -215,10 +215,18 @@ def get_by_temp():
     for k,g in groupby(organizer, key=itemgetter('key')):
         output.append({'key': k, 'data': list(g)})
     for group in output:
-        f = open('data/weather/%s.json' % group['key'], 'wb')
-        f.write(json.dumps(group))
-        f.close()
+       #f = open('data/weather/%s.json' % group['key'], 'wb')
+       #f.write(json.dumps(group))
+       #f.close()
+        s3conn = S3Connection(AWS_KEY, AWS_SECRET)
+        bucket = s3conn.get_bucket('crime.static-eric.com')
+        k = Key(bucket)
+        k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
+        k.set_contents_from_string(json_util.dumps(out, indent=4))
+        k.set_acl('public-read')
+        print 'Uploaded %s' % k.key
 
 if __name__ == '__main__':
     get_crimes()
     get_most_wanted()
+    get_by_temp()
