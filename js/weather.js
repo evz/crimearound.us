@@ -1,22 +1,23 @@
 (function(){
     $(document).ready(function(){
         $.getJSON('/data/weather/total.json', function(data){
-            init_chart(data.data);
+            init_chart(data.data, 'Total');
         });
         $('.filter').on('click', function(e){
-            e.preventDefault();
+            // e.preventDefault();
             $('.filter').removeClass('active');
             $(this).addClass('active');
-            var filter = $(this).find('a').attr('href').substr(1);
+            var filter = $(this).data('category');
+            var title = $(this).find('a').text();
             $.getJSON('/data/weather/' + filter + '.json', function(data){
                 $('#chart').empty()
-                init_chart(data.data);
+                init_chart(data.data, title);
             })
         })
 
     })
 
-    function init_chart(data){
+    function init_chart(data, title){
         var el_width = $('#chart').width();
         var margin = {top: 20, right: 40, bottom: 50, left: 60},
             width = el_width - margin.left - margin.right,
@@ -48,6 +49,10 @@
             .attr('class', 'y axis')
             .call(yAxis)
         svg.append('text')
+            .attr({'y': 40, 'x': 20})
+            .style({'font-size': '40px', 'font-weight': 'bold', 'fill': '#ddd'})
+            .text(title);
+        svg.append('text')
             .attr('transform', 'rotate(-90)')
             .attr({'y': -50, 'x': -160, 'text-anchor': 'middle'})
             .style({'font-size': '15px', 'font-weight': '300', 'fill': '#555'})
@@ -56,7 +61,7 @@
             .attr({'y': height + 40, 'x': width / 2, 'text-anchor': 'middle'})
             .style({'font-size': '15px', 'font-weight': '300', 'fill': '#555'})
             .text('Degrees Fahrenheit');
-        var label_size = Math.round(width * 0.04)
+        var label_size = '30'
         svg.append('text')
             .attr({'id': 'dataLabel', 'x': width - 20, 'y': height - 20, 'text-anchor': 'end' })
             .style({'font-size': label_size + 'px', 'font-weight': '300', 'fill': '#000'})
