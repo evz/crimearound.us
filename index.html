@@ -83,10 +83,36 @@
                           publicly available <strong>crime reports</strong> (spanning the time between 2001 and the current day),
                           and comparing it to historical weather data, this conventional wisdom generally pans out.
                       </h5>
+                      <a href="http://twitter.com/share"
+                          class="twitter-share-button"
+                          data-count="horizontal"
+                          data-via="evanzanten">Tweet</a>
+                          <script type="text/javascript"
+                              src="http://platform.twitter.com/widgets.js"></script>
+                      <p>Like many other civic minded hackers in the city, I was pretty excited to see the recent launch of the Chicago Police Department’s <a href="http://api1.chicagopolice.org/clearpath/documentation">open data <span class="caps">API</span></a>. After a couple weekend hacks, I’m also pretty excited to announce my own attempt at putting something basic together that leverages that data and displays it alongside a daily temperature summary. Right now, it doesn’t really have a name (I’m horrible at naming things), but you can take a look at it <a href="http://crime.static-eric.com">over here</a>.</p>
+                      <p>One of the things I hear every year is that as the temperature goes up in Chicago, so does the crime rate. So, I thought I’d put together a tool that gave me an easy way to compare the temperature to the number and types of reported crimes for a given day. So, I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could&nbsp;see.</p>
+                      <p>Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to load), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>). </p>
+                      <p>But really, all I wanted to do with MongoDB was to clean up the data and make it ready for the final output, flat <span class="caps">JSON</span> files. My reasoning for this is that I wanted to run the app entirely from an S3 bucket without any server-side anything. I’m not sure how far I’ll be able to push this but it works for now. There are obvious downsides like not being able to query stuff very well but, for now, I just wanted something that offered kind of a fire hose view that you could browse through and maybe pull some threads out&nbsp;of.</p>
+                      <p>My intention is to update this every day when there is new data crime available (which, according to the docs is once a day, Tuesday—Sunday). I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a <span class="caps">VM</span> on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or&nbsp;something).</p>
+                      <p>Anyways, I’m interested in feedback. Features, ideas, etc are all&nbsp;welcome.</p>
                   </div>
                 </div>
             </div>
         </div>
+        <div id="disqus_thread" class="row"></div>
+        <script type="text/javascript">
+            var disqus_shortname = 'static-eric';
+            var disqus_identifier = 'Chicago Crime vs. Temperature Map';
+            var disqus_url = 'http://static-eric.com/2013/05/chicago-crime-map.html';
+            var disqus_developer = 1;
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        <a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
         <script src="/js/d3.v3.js"></script>
