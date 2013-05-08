@@ -46,7 +46,7 @@
                 </section>
             </nav>
         </div>
-        <div class="row">
+        <div id="top" class="row">
             <div class="twelve columns">
                 <h1 class="light">Crime vs. Temperature</h1>
                 <h3 class="light">As the <strong>temperature</strong> in Chicago rises, so does the <strong>crime rate</strong>?</h3>
@@ -56,7 +56,7 @@
             <div class="two columns">
                 <dl class="sub-nav">
                     <dd class="filter active"><a href="#total">Total</a></dd>
-                    <dd class="filter"><a href="#homicide">Homicide</a></dd>
+                    <dd class="filter"><a href="#top" data-category="homicide">Homicide</a></dd>
                     <dd class="filter"><a href="#assault">Assault</a></dd>
                     <dd class="filter"><a href="#battery">Battery</a></dd>
                     <dd class="filter"><a href="#theft">Theft</a></dd>
@@ -72,6 +72,24 @@
                     <dd class="filter"><a href="#weapons_violation">Weapons Violation</a></dd>
                     <dd class="filter"><a href="#kidnapping">Kidnapping</a></dd>
                     <dd class="filter"><a href="#intimidation">Intimidation</a></dd>
+                    <dd class="filter"><a href="#total">Total</a></dd>
+                    <dd class="filter"><a href="#homicide">Homicide</a></dd>
+                    <dd class="filter"><a href="#assault">Assault</a></dd>
+                    <dd class="filter"><a href="#battery">Battery</a></dd>
+                    <dd class="filter"><a href="#theft">Theft</a></dd>
+                    <dd class="filter"><a href="#motor_vehicle_theft">Vehicle Theft</a></dd>
+                    <dd class="filter"><a href="#crim_sexual_assault">Sexual Assault</a></dd>
+                    <dd class="filter"><a href="#criminal_damage">Criminal Damage</a></dd>
+                    <dd class="filter"><a href="#criminal_trespass">Criminal Trespass</a></dd>
+                    <dd class="filter"><a href="#robbery">Robbery</a></dd>
+                    <dd class="filter"><a href="#prostitution">Prostitution</a></dd>
+                    <dd class="filter"><a href="#stalking">Stalking</a></dd>
+                    <dd class="filter"><a href="#ritualism">Ritualism</a></dd>
+                    <dd class="filter"><a href="#top">Sex Offense</a></dd>
+                    <dd class="filter"><a href="#weapons_violation">Weapons Violation</a></dd>
+                    <dd class="filter"><a href="#kidnapping">Kidnapping</a></dd>
+                    <dd class="filter"><a href="#intimidation">Intimidation</a></dd>
+                    
                 </dl>
               </div>
           <div class="ten columns">
@@ -89,11 +107,16 @@
                           data-via="evanzanten">Tweet</a>
                           <script type="text/javascript"
                               src="http://platform.twitter.com/widgets.js"></script>
-                      <p>Like many other civic minded hackers in the city, I was pretty excited to see the recent launch of the Chicago Police Department’s <a href="http://api1.chicagopolice.org/clearpath/documentation">open data <span class="caps">API</span></a>. After a couple weekend hacks, I’m also pretty excited to announce my own attempt at putting something basic together that leverages that data and displays it alongside a daily temperature summary. Right now, it doesn’t really have a name (I’m horrible at naming things), but you can take a look at it <a href="http://crime.static-eric.com">over here</a>.</p>
-                      <p>One of the things I hear every year is that as the temperature goes up in Chicago, so does the crime rate. So, I thought I’d put together a tool that gave me an easy way to compare the temperature to the number and types of reported crimes for a given day. So, I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could&nbsp;see.</p>
-                      <p>Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to load), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>). </p>
-                      <p>But really, all I wanted to do with MongoDB was to clean up the data and make it ready for the final output, flat <span class="caps">JSON</span> files. My reasoning for this is that I wanted to run the app entirely from an S3 bucket without any server-side anything. I’m not sure how far I’ll be able to push this but it works for now. There are obvious downsides like not being able to query stuff very well but, for now, I just wanted something that offered kind of a fire hose view that you could browse through and maybe pull some threads out&nbsp;of.</p>
-                      <p>My intention is to update this every day when there is new data crime available (which, according to the docs is once a day, Tuesday—Sunday). I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a <span class="caps">VM</span> on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or&nbsp;something).</p>
+                      <p>Like many other civic minded hackers in the city, I was pretty excited to see the recent launch of the Chicago Police Department’s <a href="http://api1.chicagopolice.org/clearpath/documentation">open data <span class="caps">API</span></a>. And, after a couple weekend hacks, I’m also pretty excited to announce my own attempt at a really basic visualiztion.</p>
+                      <p>Roughly, here’s what I did:</p>
+                      <ol>
+                          <li>Take all of the days since 2001 and group them by the reported high temperature</li>
+                          <li>Take all of the crimes committed on those days and add them together</li>
+                          <li>Divide the number of crimes committed at a given temperature and divide it by the number of days to get an average</li>
+                      </ol>
+                      <p>To accomplish this I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could see. Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to import), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>). If you’ve read this far and you like maps check out the beginnings of a location based browser <a href="/map.html">over here</a></p>
+                      <p>But really, all I wanted to do was to get this on the web and because I’m doing this with very few (aka none) resources, I didn’t really want to have to worry about any kind of hosted backend setup, which kinda means my database needs to stay on my local machine. With that in mind, the persistence layer of this site (including the map stuff) is all powered by flat JSON files. This way, I can run the app entirely from an S3 bucket without any server-side anything. I’m not sure how far I’ll be able to push this but it works for now. There are obvious downsides like not being able to query stuff very well on the fly but, for now, I just wanted something that offered kind of a fire hose view that you could browse through and maybe pull some threads out of.</p>
+                      <p>My intention is to update this site (including the <a href="/map.html">map</a> and, if you’ve read this far you may as well know about my <a href="/most-wanted.html">rogue’s gallery</a> as well) every day when there is new data crime available. I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a VM on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or something).</p>
                       <p>Anyways, I’m interested in feedback. Features, ideas, etc are all&nbsp;welcome.</p>
                   </div>
                 </div>
