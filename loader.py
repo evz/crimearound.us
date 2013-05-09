@@ -10,7 +10,9 @@ from utils import sign_google, make_meta
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-CRIMES = 'http://data.cityofchicago.org/resource/ijzp-q8t2.json'
+# just 2013 data
+CRIMES = 'http://data.cityofchicago.org/resource/a95h-gwzm.json'
+
 MOST_WANTED = 'http://api1.chicagopolice.org/clearpath/api/1.0/mostWanted/list'
 MUGSHOTS = 'http://api1.chicagopolice.org/clearpath/api/1.0/mugshots'
 WEATHER_KEY = os.environ['WEATHER_KEY']
@@ -56,36 +58,39 @@ def get_crimes():
     c = pymongo.MongoClient()
     db = c['chicago']
     coll = db['crime']
-    crimes = requests.get(CRIMES)
+    crimes = []
+    for offset in [0, 1000, 2000, 3000]:
+        crime_offset = requests.get(CRIMES, params={'$limit': 1000, '$offset': offset})
+        if crime_offset.status_code == 200:
+            crimes.extend(crime_offset.json())
+        else:
+            raise SocrataError('Socrata API responded with a %s status code: %s' % (crimes.status_code, crimes.content[300:]))
     existing = 0
     new = 0
     dates = []
-    if crimes.status_code == 200:
-        for crime in crimes.json():
-            for k,v in crime.items():
-                crime[' '.join(k.split('_')).title()] = v
-                del crime[k]
-            try:
-                crime['Location'] = {
-                    'type': 'Point',
-                    'coordinates': (float(crime['Longitude']), float(crime['Latitude']))
-                }
-            except KeyError:
-                print 'Gotta geocode %s' % crime['Block']
-                crime['Location'] = geocode_it(crime['Block'])
-            crime['Updated On'] = datetime.strptime(crime['Updated On'], '%Y-%m-%dT%H:%M:%S')
-            crime['Date'] = datetime.strptime(crime['Date'], '%Y-%m-%dT%H:%M:%S')
-            dates.append(crime['Date'])
-            update = coll.update({'Case Number': crime['Case Number']}, crime, upsert=True)
-            if update['updatedExisting']:
-                existing += 1
-            else:
-                new += 1
-        unique_dates = list(set([datetime.strftime(d, '%Y%m%d') for d in dates]))
-        get_weather(unique_dates)
-        print 'Updated %s, Created %s' % (existing, new)
-    else:
-        raise SocrataError('Socrata API responded with a %s status code: %s' % (crimes.status_code, crimes.content[300:]))
+    for crime in crimes:
+        for k,v in crime.items():
+            crime[' '.join(k.split('_')).title()] = v
+            del crime[k]
+        try:
+            crime['Location'] = {
+                'type': 'Point',
+                'coordinates': (float(crime['Longitude']), float(crime['Latitude']))
+            }
+        except KeyError:
+            print 'Gotta geocode %s' % crime['Block']
+            crime['Location'] = geocode_it(crime['Block'])
+        crime['Updated On'] = datetime.strptime(crime['Updated On'], '%Y-%m-%dT%H:%M:%S')
+        crime['Date'] = datetime.strptime(crime['Date'], '%Y-%m-%dT%H:%M:%S')
+        dates.append(crime['Date'])
+        update = coll.update({'Case Number': crime['Case Number']}, crime, upsert=True)
+        if update['updatedExisting']:
+            existing += 1
+        else:
+            new += 1
+    unique_dates = list(set([datetime.strftime(d, '%Y%m%d') for d in dates]))
+    get_weather(unique_dates)
+    print 'Updated %s, Created %s' % (existing, new)
     return None
 
 def get_weather(dates):
