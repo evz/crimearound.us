@@ -147,5 +147,5 @@ if __name__ == '__main__':
     db = c['chicago']
     crime = db['crime']
     weather = db['weather']
-    # dumpit(crime, weather)
+    dumpit(crime, weather)
     dump_by_temp(crime, weather)
