@@ -1,4 +1,6 @@
 import pymongo
+import requests
+import csv
 from datetime import datetime, timedelta
 import os
 import json
@@ -101,10 +103,6 @@ def dumpit(crime, weather):
             one_til = single_date.replace(hour=23).replace(minute=59)
             crimes = [c for c in crime.find({'Date': {'$gt': midnight, '$lt': one_til}})]
             if len(crimes) > 0:
-                try:
-                    os.makedirs('data/%s/%s/' % (single_date.year, single_date.month))
-                except os.error:
-                    pass
                 out = {
                     'weather': {
                         'CELSIUS_MIN': weat[0]['CELSIUS_MIN'],
@@ -143,6 +141,28 @@ def dumpit(crime, weather):
                 k.set_acl('public-read')
                 k.set_metadata('Content-Type', 'application/json')
                 print 'Uploaded %s' % k.key
+
+def dump_to_csv():
+    all_rows = []
+    for date in daterange(datetime(2013, 4, 15), datetime(2013, 4, 30)):
+        year, month, day = datetime.strftime(date, '%Y/%m/%d').split('/')
+        r = requests.get('http://crime.static-eric.com/data/%s/%s/%s.json' % (year, int(month), day))
+        meta = r.json()['meta']
+        weather = r.json()['weather']
+        out = {
+            'date': datetime.strftime(date, '%m-%d-%Y'),
+            'temp_max': weather['FAHR_MAX'],
+            'total_count': meta['total']['value'],
+        }
+        fieldnames = sorted(out.keys())
+        for category in meta['detail']:
+            fieldnames.append(category['key'])
+            out[category['key']] = category['value']
+        all_rows.append(out)
+    out_f = open('data/sample.csv', 'wb')
+    writer = csv.DictWriter(out_f, fieldnames=fieldnames)
+    writer.writerow(dict( (n,n) for n in fieldnames ))
+    writer.writerows(all_rows)
 
 if __name__ == '__main__':
     c = pymongo.MongoClient()
