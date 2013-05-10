@@ -10,7 +10,9 @@ from utils import sign_google, make_meta
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
-CRIMES = 'http://data.cityofchicago.org/resource/ijzp-q8t2.json'
+# just 2013 data
+CRIMES = 'http://data.cityofchicago.org/resource/a95h-gwzm.json'
+
 MOST_WANTED = 'http://api1.chicagopolice.org/clearpath/api/1.0/mostWanted/list'
 MUGSHOTS = 'http://api1.chicagopolice.org/clearpath/api/1.0/mugshots'
 WEATHER_KEY = os.environ['WEATHER_KEY']
@@ -56,36 +58,39 @@ def get_crimes():
     c = pymongo.MongoClient()
     db = c['chicago']
     coll = db['crime']
-    crimes = requests.get(CRIMES)
+    crimes = []
+    for offset in [0, 1000, 2000, 3000]:
+        crime_offset = requests.get(CRIMES, params={'$limit': 1000, '$offset': offset})
+        if crime_offset.status_code == 200:
+            crimes.extend(crime_offset.json())
+        else:
+            raise SocrataError('Socrata API responded with a %s status code: %s' % (crimes.status_code, crimes.content[300:]))
     existing = 0
     new = 0
     dates = []
-    if crimes.status_code == 200:
-        for crime in crimes.json():
-            for k,v in crime.items():
-                crime[' '.join(k.split('_')).title()] = v
-                del crime[k]
-            try:
-                crime['Location'] = {
-                    'type': 'Point',
-                    'coordinates': (float(crime['Longitude']), float(crime['Latitude']))
-                }
-            except KeyError:
-                print 'Gotta geocode %s' % crime['Block']
-                crime['Location'] = geocode_it(crime['Block'])
-            crime['Updated On'] = datetime.strptime(crime['Updated On'], '%Y-%m-%dT%H:%M:%S')
-            crime['Date'] = datetime.strptime(crime['Date'], '%Y-%m-%dT%H:%M:%S')
-            dates.append(crime['Date'])
-            update = coll.update({'Case Number': crime['Case Number']}, crime, upsert=True)
-            if update['updatedExisting']:
-                existing += 1
-            else:
-                new += 1
-        unique_dates = list(set([datetime.strftime(d, '%Y%m%d') for d in dates]))
-        get_weather(unique_dates)
-        print 'Updated %s, Created %s' % (existing, new)
-    else:
-        raise SocrataError('Socrata API responded with a %s status code: %s' % (crimes.status_code, crimes.content[300:]))
+    for crime in crimes:
+        for k,v in crime.items():
+            crime[' '.join(k.split('_')).title()] = v
+            del crime[k]
+        try:
+            crime['Location'] = {
+                'type': 'Point',
+                'coordinates': (float(crime['Longitude']), float(crime['Latitude']))
+            }
+        except KeyError:
+            print 'Gotta geocode %s' % crime['Block']
+            crime['Location'] = geocode_it(crime['Block'])
+        crime['Updated On'] = datetime.strptime(crime['Updated On'], '%Y-%m-%dT%H:%M:%S')
+        crime['Date'] = datetime.strptime(crime['Date'], '%Y-%m-%dT%H:%M:%S')
+        dates.append(crime['Date'])
+        update = coll.update({'Case Number': crime['Case Number']}, crime, upsert=True)
+        if update['updatedExisting']:
+            existing += 1
+        else:
+            new += 1
+    unique_dates = list(set([datetime.strftime(d, '%Y%m%d') for d in dates]))
+    get_weather(unique_dates)
+    print 'Updated %s, Created %s' % (existing, new)
     return None
 
 def get_weather(dates):
@@ -146,85 +151,6 @@ def get_most_wanted():
     else:
         raise ClearPathError('ClearPath API returned %s when getting most wanted list: %s' % (wanted.status_code, wanted.content[300:]))
 
-def get_by_temp():
-    c = pymongo.MongoClient()
-    db = c['chicago']
-    weather = db['weather']
-    crime = db['crime']
-    grouped = []
-    for temp in range(-30, 120):
-        days = [d['DATE'] for d in weather.find({'FAHR_MAX': {'$gt': temp, '$lt': temp + 1}})]
-        if days:
-            grouped.append({'temp': temp, 'days': days})
-    for group in grouped:
-        crime_summary = []
-        for day in group['days']:
-            crimes = [c for c in crime.find({'Date': {'$gt': day, '$lt': day + timedelta(hours=24)}})]
-            crime_summary.append(make_meta(crimes))
-        summary = {
-            'total': 0,
-            'detail': {
-                'arson': 0,
-                'assault': 0,
-                'battery': 0,
-                'burglary': 0,
-                'crim_sexual_assault': 0,
-                'criminal_damage': 0,
-                'criminal_trespass': 0,
-                'deceptive_practice': 0,
-                'domestic_violence': 0,
-                'gambling': 0,
-                'homicide': 0,
-                'interfere_with_public_officer': 0,
-                'interference_with_public_officer': 0,
-                'intimidation' :0,
-                'kidnapping': 0,
-                'liquor_law_violation': 0,
-                'motor_vehicle_theft': 0,
-                'narcotics': 0,
-                'non_criminal': 0,
-                'non_criminal_subject_specified': 0,
-                'obscenity': 0,
-                'offense_involving_children': 0,
-                'offenses_involving_children': 0,
-                'other_narcotic_violation': 0,
-                'other_offense': 0,
-                'prostitution': 0,
-                'public_indecency': 0,
-                'public_peace_violation': 0,
-                'ritualism': 0,
-                'robbery': 0,
-                'sex_offense': 0,
-                'stalking': 0,
-                'theft': 0,
-                'weapons_violation': 0,
-            }
-        }
-        for cr in crime_summary:
-            summary['total'] += cr['total']['value']
-            for detail in cr['detail']:
-                summary['detail'][detail['key']] += detail['value']
-        group['summary'] = summary
-    organizer = []
-    for group in grouped:
-        organizer.append({'key': 'total', 'temp': group['temp'], 'average': float(group['summary']['total']) / float(len(group['days']))})
-        for k,v in group['summary']['detail'].items():
-            organizer.append({'key': k, 'temp': group['temp'], 'average': float(v) / float(len(group['days']))})
-    output = []
-    organizer = sorted(organizer, key=itemgetter('key'))
-    for k,g in groupby(organizer, key=itemgetter('key')):
-        output.append({'key': k, 'data': list(g)})
-    for group in output:
-        s3conn = S3Connection(AWS_KEY, AWS_SECRET)
-        bucket = s3conn.get_bucket('crime.static-eric.com')
-        k = Key(bucket)
-        name = 'data/weather/%s.json' % group['key']
-        k.key = name
-        k.set_contents_from_string(json.dumps(group, indent=4))
-        k.set_acl('public-read')
-        print 'Uploaded %s' % name
-
 if __name__ == '__main__':
-    #get_crimes()
-    #get_most_wanted()
-    get_by_temp()
+    get_crimes()
+    get_most_wanted()
