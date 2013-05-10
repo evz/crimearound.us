@@ -82,9 +82,9 @@ def dump_by_temp(crime, weather):
         k = Key(bucket)
         name = 'data/weather/%s.json' % group['key']
         k.key = name
+        k.set_contents_from_string(json.dumps(group, indent=4))
         k.set_acl('public-read')
         k.set_metadata('Content-Type', 'application/json')
-        k.set_contents_from_string(json.dumps(group, indent=4))
         print 'Uploaded %s' % name
 
 def daterange(start_date, end_date):
@@ -139,9 +139,9 @@ def dumpit(crime, weather):
                 # f.close()
                 k = Key(bucket)
                 k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
+                k.set_contents_from_string(json_util.dumps(out, indent=4))
                 k.set_acl('public-read')
                 k.set_metadata('Content-Type', 'application/json')
-                k.set_contents_from_string(json_util.dumps(out, indent=4))
                 print 'Uploaded %s' % k.key
 
 if __name__ == '__main__':
@@ -149,5 +149,5 @@ if __name__ == '__main__':
     db = c['chicago']
     crime = db['crime']
     weather = db['weather']
-    #dumpit(crime, weather)
+    dumpit(crime, weather)
     dump_by_temp(crime, weather)
