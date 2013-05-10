@@ -10,6 +10,7 @@ from boto.s3.key import Key
 from utils import make_meta
 from operator import itemgetter
 from itertools import groupby
+from cStringIO import StringIO
 
 AWS_KEY = os.environ['AWS_ACCESS_KEY']
 AWS_SECRET = os.environ['AWS_SECRET_KEY']
@@ -138,16 +139,17 @@ def dumpit(crime, weather):
                 k = Key(bucket)
                 k.key = 'data/%s/%s/%s.json' % (single_date.year, single_date.month, single_date.day)
                 k.set_contents_from_string(json_util.dumps(out, indent=4))
-                k.set_acl('public-read')
-                k.set_metadata('Content-Type', 'application/json')
+                k = k.copy(k.bucket.name, k.name, {'Content-Type':'application/json'}, preserve_acl=True)
                 print 'Uploaded %s' % k.key
 
-def dump_to_csv():
+def dump_to_csv(start_date, end_date, out_name):
     all_rows = []
-    for date in daterange(datetime(2013, 4, 15), datetime(2013, 4, 30)):
+    for date in daterange(datetime.strptime(start_date, '%Y-%m-%d'), datetime.strptime(end_date, '%Y-%m-%d')):
         year, month, day = datetime.strftime(date, '%Y/%m/%d').split('/')
-        r = requests.get('http://crime.static-eric.com/data/%s/%s/%s.json' % (year, int(month), day))
+        r = requests.get('http://crime.static-eric.com/data/%s/%s/%s.json' % (year, int(month), int(day)))
         meta = r.json()['meta']
+        if type(meta) == list:
+            meta = meta[0]
         weather = r.json()['weather']
         out = {
             'date': datetime.strftime(date, '%m-%d-%Y'),
@@ -159,15 +161,25 @@ def dump_to_csv():
             fieldnames.append(category['key'])
             out[category['key']] = category['value']
         all_rows.append(out)
-    out_f = open('data/sample.csv', 'wb')
+    out_f = StringIO()
     writer = csv.DictWriter(out_f, fieldnames=fieldnames)
     writer.writerow(dict( (n,n) for n in fieldnames ))
     writer.writerows(all_rows)
+    s3conn = S3Connection(AWS_KEY, AWS_SECRET)
+    bucket = s3conn.get_bucket('crime.static-eric.com')
+    k = Key(bucket)
+    k.key = 'data/weather/%s.csv' % out_name
+    k.set_contents_from_string(out_f.getvalue())
+    k = k.copy(k.bucket.name, k.name, {'Content-Type':'text/csv'}, preserve_acl=True)
 
 if __name__ == '__main__':
+    import sys
     c = pymongo.MongoClient()
     db = c['chicago']
     crime = db['crime']
     weather = db['weather']
-    dumpit(crime, weather)
-    dump_by_temp(crime, weather)
+    #dumpit(crime, weather)
+    #dump_by_temp(crime, weather)
+    start, end = sys.argv[1:3]
+    name = sys.argv[3]
+    dump_to_csv(start, end, name)
