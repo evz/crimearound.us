@@ -40,7 +40,7 @@
                 </ul>
                 <section>
                     <ul class="left">
-                        <!-- <li><a href="/map.html">Crime Browser</a></li> -->
+                        <li><a href="/get-the-data.html">Get the Data</a></li>
                         <li><a href="/most-wanted.html">Most Wanted</a></li>
                     </ul>
                 </section>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="two columns">
+            <div id="filter-nav" class="two columns">
                 <dl class="sub-nav">
                     <dd class="filter active" data-category="total"><a href="#top">Total</a></dd>
                     <dd class="filter" data-category="arson"><a href="#top">Arson</a></dd>
@@ -108,9 +108,9 @@
                           <li>Take all of the crimes committed on those days and add them together</li>
                           <li>Divide the number of crimes committed at a given temperature and divide it by the number of days to get an average</li>
                       </ol>
-                      <p>To accomplish this I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could see. Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to import), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>). If you’ve read this far and you like maps check out the beginnings of a location based browser <a href="/map.html">over here</a></p>
+                      <p>To accomplish this I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could see. Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to import), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>).</p>
                       <p>But really, all I wanted to do was to get this on the web and because I’m doing this with very few (aka none) resources, I didn’t really want to have to worry about any kind of hosted backend setup, which kinda means my database needs to stay on my local machine. With that in mind, the persistence layer of this site (including the map stuff) is all powered by flat JSON files. This way, I can run the app entirely from an S3 bucket without any server-side anything. I’m not sure how far I’ll be able to push this but it works for now. There are obvious downsides like not being able to query stuff very well on the fly but, for now, I just wanted something that offered kind of a fire hose view that you could browse through and maybe pull some threads out of.</p>
-                      <p>My intention is to update this site (including the <a href="/map.html">map</a> and, if you’ve read this far you may as well know about my <a href="/most-wanted.html">rogue’s gallery</a> as well) every day when there is new data crime available. I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a VM on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or something).</p>
+                      <p>My intention is to update this site every day when there is new data crime available. I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a VM on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or something).</p>
                       <p>Anyways, I’m interested in feedback. Features, ideas, etc are all&nbsp;welcome.</p>
                   </div>
                 </div>

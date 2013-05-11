@@ -28,14 +28,18 @@
     margin-bottom: 0 !important;
 }
 
-dl.sub-nav dt, dl.sub-nav dd {
+#filter-nav dl.sub-nav dt, #filter-nav dl.sub-nav dd {
     display: block;
     float: none;
     white-space: nowrap;
     margin-bottom: 5px;
 }
-dl.sub-nav dd.active {
+#filter-nav dl.sub-nav dd.active {
     margin-left: 0px !important;
+}
+#docs-nav {
+    margin-top: 50px;
+    background-color: #fff;
 }
 .axis path {
     stroke: #ccc;
@@ -54,4 +58,7 @@ line {
 text {
   font-size: 12px;
   fill: #888;
+}
+pre {
+    margin-bottom: 15px;
 }

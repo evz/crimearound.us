@@ -40,23 +40,108 @@
                 </ul>
                 <section>
                     <ul class="left">
-                        <!-- <li><a href="/map.html">Crime Browser</a></li> -->
+                        <li><a href="/get-the-data.html">Get the Data</a></li>
                         <li><a href="/most-wanted.html">Most Wanted</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
         <div class="row">
-            <div class="ten columns centered">
-                <h1 class="light">So, you wanna get some <strong>data</strong>&hellip;</h1>
-                <h3 class="light">Well, I’ve gone ahead and made all of the data that powers this site relatively simple to get in a few different ways.</h3>
-                <h5><a href="#json">Get some JSON</a></h5>
-                <p>If you’re just interested in raw data and don’t really want to run queries against it, I’ve broken it down a couple different ways.
-                Firstly, there’s the daily firehose view which you can get like this: </p>
-                <code>http://crime.static-eric.com/data/2007/10/24.json</code>
+            <div class="eight columns centered">
+                <h2 class="light">So, you wanna get some <strong>data</strong>&hellip;</h2>
+                <h4 class="light">Well, I’ve gone ahead and made all of the data that powers this site relatively simple to get in a few different ways.</h4>
+                <h5>Daily Dump</h5>
+                <p>Firstly, there’s the <strong>daily firehose view</strong>. Which works like this: </p>
+                <pre><code>http://crime.static-eric.com/data/2007/10/24.json</code></pre>
+                <p>That gets you the dump of everything for October 24, 2007. This looks like this:</p>
+                <script src="https://gist.github.com/evz/5555872.js?file=2007-10-24.json"></script>
+                <p>You end up with three top level objects: <code>weather</code>, <code>meta</code> and <code>geojson</code>. The weather
+                object, predictably, contains info about the temperature that was observed on a given day. The meta object contains summary info
+                about the number of each type of crime reported on that day, as well as a grand total. The geojson object is a FeatureCollection
+                containing points for each crime reported on the given day. Within the FeatureCollection are features which contain the actual
+                latitude/longitude where the crime reportedly happened and more detail about the crime itself (inside the properties object).</p>
+                <hr />
+                <h5>Weather</h5>
+                <p>If you’re interested in taking a look at the summarized data that was used to do <a href="/">this visualization</a>,
+                you can get that by stucturing your request this way:</p>
+                <pre><code>http://crime.static-eric.com/data/weather/arson.json</code></pre>
+                <p>This will get you a total of all arsons reported between January 1, 2001 and a week ago grouped by the high
+                temperature of the day on which they were reported. That response should look something like this:</p>
+                <script src="https://gist.github.com/evz/5555872.js?file=arson.json"></script>
+                <p>Each object inside the <code>data</code> key gives you the total number of days that were observed at the a given
+                temperature and an average number of that type of crime that was reported on days that were observed at that temperature.</p>
+                <p>The valid categories of crime that can be fetched this way are:</p>
+                <div class="row">
+                    <div class="six columns">
+                        <ul>
+                            <li><code>arson</code></li>
+                            <li><code>assault</code></li>
+                            <li><code>battery</code></li>
+                            <li><code>burglary</code></li>
+                            <li><code>crim_sexual_assault</code></li>
+                            <li><code>criminal_damage</code></li>
+                            <li><code>criminal_trespass</code></li>
+                            <li><code>deceptive_practice</code></li>
+                            <li><code>domestic_violence</code></li>
+                            <li><code>gambling</code></li>
+                            <li><code>homicide</code></li>
+                            <li><code>interfere_with_public_officer</code></li>
+                            <li><code>interference_with_public_officer</code></li>
+                            <li><code>intimidation</code></li>
+                            <li><code>kidnapping</code></li>
+                            <li><code>liquor_law_violation</code></li>
+                        </ul>
+                    </div>
+                    <div class="six columns">
+                        <ul>
+                            <li><code>narcotics</code></li>
+                            <li><code>non_criminal</code></li>
+                            <li><code>non_criminal_subject_specified</code></li>
+                            <li><code>obscenity</code></li>
+                            <li><code>offense_involving_children</code></li>
+                            <li><code>offenses_involving_children</code></li>
+                            <li><code>other_offenses</code></li>
+                            <li><code>prostitution</code></li>
+                            <li><code>public_indecency</code></li>
+                            <li><code>public_peace_violation</code></li>
+                            <li><code>ritualism</code></li>
+                            <li><code>robbery</code></li>
+                            <li><code>sex_offense</code></li>
+                            <li><code>stalking</code></li>
+                            <li><code>theft</code></li>
+                            <li><code>weapons_violation</code></li>
+                        </ul>
+                    </div>
+                </div>
+                <p>So, just swapping out <code>arson.json</code> for any one of those categories “.json” will get you what your after.
+                The other key that will work is <code>total</code> which will give you the averages for the number of all crimes reported on
+                days at a given temperature.</p>
+                <hr />
+                <h5>CSV dumps</h5>
+                <p>So, you’re old school, eh? Well, I think I got you at least partially covered. There are CSV dumps available by year for
+                for the reported crimes vs. temperature data. However, instead of being grouped by temperature, there is a row for each day
+                that gives you the date, the observed temperature, the total number of crimes reported that day, and then a category
+                by category count. You can get those like this:</p>
+                <pre><code>http://crime.static-eric.com/data/weather/2010.csv</code></pre>
+                <p>That will get you a CSV dump containing all the info for 2010. There is also a full dump that can be fetched by swapping out
+                <code>2010.csv</code> with <code>full_dump.csv</code> in the example above.</p>
+                <hr />
+                <h5>More?</h5>
+                <p>Thanks to a generous donation of an EC2 instance by the <a href="http://smartchicagocollaborative.org">Smart Chicago Collaborative</a>
+                I’m working on getting a REST endpoint together for the bulk of the crime and weather data (and whatever else I end up with). So, watch this space. </p>
             </div>
         </div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
+        <script type="text/javascript">
+            (function(){
+                $(document).ready(function(){
+                    $('dd').on('click', function(e){
+                        $('dd').removeClass('active');
+                        $(this).addClass('active');
+                    })
+                })
+             })()
+        </script>
     </body>
 </html>
