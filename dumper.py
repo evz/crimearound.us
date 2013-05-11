@@ -178,8 +178,9 @@ if __name__ == '__main__':
     db = c['chicago']
     crime = db['crime']
     weather = db['weather']
-    #dumpit(crime, weather)
-    #dump_by_temp(crime, weather)
-    start, end = sys.argv[1:3]
-    name = sys.argv[3]
-    dump_to_csv(start, end, name)
+    dumpit(crime, weather)
+    dump_by_temp(crime, weather)
+    if sys.argv > 1:
+        start, end = sys.argv[1:3]
+        name = sys.argv[3]
+        dump_to_csv(start, end, name)

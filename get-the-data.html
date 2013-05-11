@@ -15,11 +15,6 @@
         <link rel="stylesheet" href="/foundation/stylesheets/foundation.min.css">
         <link rel="stylesheet" href="/foundation/stylesheets/app.css">
         <link rel="stylesheet" href="/foundation/stylesheets/general_foundicons.css">
-        <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.css' rel='stylesheet' />
-        <!--[if lte IE 8]>
-            <link href='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.ie.css' rel='stylesheet' />
-        <![endif]-->
-        <script src='http://api.tiles.mapbox.com/mapbox.js/v1.0.0/mapbox.js'></script>
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-26502031-1']);
@@ -51,15 +46,17 @@
                 </section>
             </nav>
         </div>
-        <div id="overlay" class="three columns full-height"></div>
-        <div id="map" class="nine columns full-height dark"></div>
+        <div class="row">
+            <div class="ten columns centered">
+                <h1 class="light">So, you wanna get some <strong>data</strong>&hellip;</h1>
+                <h3 class="light">Well, I’ve gone ahead and made all of the data that powers this site relatively simple to get in a few different ways.</h3>
+                <h5><a href="#json">Get some JSON</a></h5>
+                <p>If you’re just interested in raw data and don’t really want to run queries against it, I’ve broken it down a couple different ways.
+                Firstly, there’s the daily firehose view which you can get like this: </p>
+                <code>http://crime.static-eric.com/data/2007/10/24.json</code>
+            </div>
+        </div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
-        <script src="/js/spin.min.js"></script>
-        <script src="/js/jquery.spin.js"></script>
-        <script src="/js/moment.min.js"></script>
-        <script src="/js/twix.min.js"></script>
-        <script src="/js/ejs_production.js"></script>
-        <script src="/js/map.js"></script>
     </body>
 </html>
