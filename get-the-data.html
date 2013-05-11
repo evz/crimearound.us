@@ -55,9 +55,9 @@
                 <pre><code>http://crime.static-eric.com/data/2007/10/24.json</code></pre>
                 <p>That gets you the dump of everything for October 24, 2007. It looks like this:</p>
                 <script src="https://gist.github.com/evz/5555872.js?file=2007-10-24.json"></script>
-                <p>You end up with three top level objects: <code>weather</code>, <code>meta</code> and <code>geojson</code>. The weather
-                object, predictably, contains info about the temperature that was observed on a given day. The meta object contains summary info
-                about the number of each type of crime reported on that day, as well as a grand total. The geojson object is a FeatureCollection
+                <p>You end up with three top level objects: <code>weather</code>, <code>meta</code> and <code>geojson</code>. The <strong>weather</strong>
+                object, predictably, contains info about the temperature that was observed on a given day. The <strong>meta</strong> object contains summary info
+                about the number of each type of crime reported on that day, as well as a grand total. The <strong>geojson</strong> object is a FeatureCollection
                 containing points for each crime reported on the given day. Within the FeatureCollection are features which contain the actual
                 latitude/longitude where the crime reportedly happened and more detail about the crime itself (inside the properties object).</p>
                 <hr />
@@ -127,7 +127,7 @@
                 <code>2010.csv</code> with <code>full_dump.csv</code> in the example above.</p>
                 <hr />
                 <h5>More?</h5>
-                <p>Thanks to a generous donation of an EC2 instance by the <a href="http://smartchicagocollaborative.org">Smart Chicago Collaborative</a>
+                <p>Thanks to a generous help with some infrastructure from the <a href="http://smartchicagocollaborative.org">Smart Chicago Collaborative</a>
                 I’m working on getting a REST endpoint together for the bulk of the crime and weather data (and whatever else I end up with). So, watch this space. </p>
             </div>
         </div>
