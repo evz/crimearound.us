@@ -1,5 +1,6 @@
-<h3><%= title %> <br/> <span class="light"><%= description %></span></h3>
-<h5><%= block %> <br/> <span class="light">(<%= location_desc %>)</span></h5>
+<h6><%= moment(date.$date).format('dddd MMM D, YYYY') %></h6>
+<h3><%= primary_type %> <br/> <span class="light"><%= description %></span></h3>
+<h5><%= block %> <br/> <span class="light">(<%= location_description %>)</span></h5>
 <p>
     <strong>Arrest? </strong>
     <% if(arrest == 'true' || arrest == true){ %> 
@@ -25,10 +26,10 @@
     </thead>
     <tbody>
         <tr>
-            <td><%= beat %></td>
-            <td><%= district %></td>
-            <td><%= community_area %></td>
-            <td><%= ward %></td>
+            <td><%= typeof beat !== 'undefined' ? beat : '' %></td>
+            <td><%= typeof district !== 'undefined' ? district : '' %></td>
+            <td><%= typeof community_area !== 'undefined' ? community_area : ''%></td>
+            <td><%= typeof ward !== 'undefined' ? ward : '' %></td>
         </tr>
     </tbody>
 </table>

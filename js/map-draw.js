@@ -44,9 +44,12 @@
             })
             var tpl = new EJS({url: 'js/views/filterTemplate.ejs'});
             $('#filters').append(tpl.render());
-            $('.date-picker').on('change', function(e){
-                console.log(e);
-            })
+            $('.filter').on('change', function(e){
+                geojson.clearLayers();
+                drawnItems.eachLayer(function(layer){
+                    edit_create(layer, map);
+                });
+            });
         })
     });
 
@@ -66,6 +69,7 @@
     }
 
     function edit_create(layer, map){
+        $('#map').spin('large')
         var query = {};
         query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON());
         var start = $('.start').val().replace('Start Date: ', '');
@@ -74,16 +78,51 @@
         end = moment(end).endOf('day').unix();
         query['date__lte'] = end;
         query['date__gte'] = start;
+        var on = [];
+        var checkboxes = $('.filter.type');
+        $.each(checkboxes, function(i, checkbox){
+            if($(checkbox).is(':checked')){
+                on.push($(checkbox).attr('value'));
+            }
+        });
+        var marker_opts = {
+            radius: 10,
+            fillColor: "#2109a8",
+            color: "#2109a8",
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.6
+        };
         $.when(get_results(query)).then(function(resp){
-            console.log(resp);
+            $('#map').spin(false);
             $.each(resp.results, function(i, result){
-                geojson.addLayer(L.geoJson(result.location))
-                    .addTo(map);
+                var location = result.location;
+                location.properties = result;
+                geojson.addLayer(L.geoJson(location, {
+                    pointToLayer: function(feature, latlng){
+                        return L.circleMarker(latlng, marker_opts)
+                    },
+                    onEachFeature: bind_popup
+                })).addTo(map);
             })
         }).fail(function(data){
             console.log(data);
         })
         drawnItems.addLayer(layer);
+    }
+
+    function bind_popup(feature, layer){
+        var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});
+        var props = feature.properties;
+        var pop_content = crime_template.render(props);
+        layer.bindPopup(pop_content, {
+            closeButton: true,
+            minWidth: 320
+        })
+    }
+
+    function filter_markers(marker_layer){
+
     }
 
     function get_results(query){
