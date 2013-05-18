@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Crime vs. The Weather</title>
+        <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -15,6 +15,12 @@
         <link rel="stylesheet" href="/foundation/stylesheets/foundation.min.css">
         <link rel="stylesheet" href="/foundation/stylesheets/app.css">
         <link rel="stylesheet" href="/foundation/stylesheets/general_foundicons.css">
+        <link rel="stylesheet" href="/css/leaflet.css" />
+        <link rel="stylesheet" href="/css/leaflet.draw.css" />
+        <!--[if lte IE 8]>
+            <link rel="stylesheet" href="/css/leaflet.ie.css" />
+            <link rel="stylesheet" href="/css/leaflet.draw.ie.css" />
+        <![endif]-->
         <script type="text/javascript">
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-26502031-1']);
@@ -40,96 +46,18 @@
                 </ul>
                 <section>
                     <ul class="left">
-                        <li><a href="/get-the-data.html">Get the Data</a></li>
+                        <!-- <li><a href="/map.html">Crime Browser</a></li> -->
                         <li><a href="/most-wanted.html">Most Wanted</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
-        <div class="row">
-            <div class="twelve columns">
-                <h1 id="top" class="light">Crime vs. Temperature</h1>
-                <h3 class="light">As the <strong>temperature</strong> in Chicago rises, so does the <strong>crime rate</strong>?</h3>
-            </div>
-        </div>
-        <div class="row">
-            <div id="filter-nav" class="two columns">
-                <dl class="sub-nav">
-                    <dd class="filter active" data-category="total"><a href="#top">Total</a></dd>
-                    <dd class="filter" data-category="arson"><a href="#top">Arson</a></dd>
-                    <dd class="filter" data-category="assault"><a href="#top">Assault</a></dd>
-                    <dd class="filter" data-category="battery"><a href="#top">Battery</a></dd>
-                    <dd class="filter" data-category="burglary"><a href="#top">Burglary</a></dd>
-                    <dd class="filter" data-category="crim_sexual_assault"><a href="#top">Criminal Sexual Assault</a></dd>
-                    <dd class="filter" data-category="criminal_damage"><a href="#top">Criminal Damage</a></dd>
-                    <dd class="filter" data-category="criminal_trespass"><a href="#top">Criminal Trespass</a></dd>
-                    <dd class="filter" data-category="deceptive_practice"><a href="#top">Deceptive Practice</a></dd>
-                    <dd class="filter" data-category="domestic_violence"><a href="#top">Domestic Violence</a></dd>
-                    <dd class="filter" data-category="gambling"><a href="#top">Gambling</a></dd>
-                    <dd class="filter" data-category="homicide"><a href="#top">Homicide</a></dd>
-                    <dd class="filter" data-category="interfere_with_public_officer"><a href="#top">Interfere with Public Officer</a></dd>
-                    <dd class="filter" data-category="interference_with_public_officer"><a href="#top">Interference with Public Officer</a></dd>
-                    <dd class="filter" data-category="intimidation"><a href="#top">Intimidation</a></dd>
-                    <dd class="filter" data-category="kidnapping"><a href="#top">Kidnapping</a></dd>
-                    <dd class="filter" data-category="liquor_law_violation"><a href="#top">Liquor Law Violation</a></dd>
-                    <dd class="filter" data-category="motor_vehicle_theft"><a href="#top">Motor Vehicle Theft</a></dd>
-                    <dd class="filter" data-category="narcotics"><a href="#top">Narcotics</a></dd>
-                    <dd class="filter" data-category="non_criminal"><a href="#top">Non-Criminal</a></dd>
-                    <dd class="filter" data-category="non_criminal_subject_specified"><a href="#top">Non-Criminal (Subject Specified)</a></dd>
-                    <dd class="filter" data-category="obscenity"><a href="#top">Obscenity</a></dd>
-                    <dd class="filter" data-category="offense_involving_children"><a href="#top">Offense Involving Children</a></dd>
-                    <dd class="filter" data-category="offenses_involving_children"><a href="#top">Offenses Involving Children</a></dd>
-                    <dd class="filter" data-category="other_narcotic_violation"><a href="#top">Other Narcotic Violation</a></dd>
-                    <dd class="filter" data-category="other_offense"><a href="#top">Other Offense</a></dd>
-                    <dd class="filter" data-category="prostitution"><a href="#top">Prostitution</a></dd>
-                    <dd class="filter" data-category="public_indecency"><a href="#top">Public Indecency</a></dd>
-                    <dd class="filter" data-category="public_peace_violation"><a href="#top">Public Peace Violation</a></dd>
-                    <dd class="filter" data-category="ritualism"><a href="#top">Ritualism</a></dd>
-                    <dd class="filter" data-category="robbery"><a href="#top">Robbery</a></dd>
-                    <dd class="filter" data-category="sex_offense"><a href="#top">Sex Offense</a></dd>
-                    <dd class="filter" data-category="stalking"><a href="#top">Stalking</a></dd>
-                    <dd class="filter" data-category="theft"><a href="#top">Theft</a></dd>
-                    <dd class="filter" data-category="weapons_violation"><a href="#top">Weapons Violation</a></dd>
-                </dl>
-              </div>
-          <div class="ten columns">
-              <div class="row">
-                  <div class="twelve columns" id="chart"></div>
-                  <div class="twelve columns">
-                      <h4 class="light">
-                          It turns out that, after crunching <strong>5,000,000+</strong>
-                          publicly available <strong>crime reports</strong> (spanning the time between 2001 and the current day),
-                          and comparing it to historical weather data, this conventional wisdom generally pans out.
-                      </h4>
-                      <p>Like many other civic minded hackers in the city, I was pretty excited to see the recent launch of the Chicago Police Department’s <a href="http://api1.chicagopolice.org/clearpath/documentation">open data <span class="caps">API</span></a>. And, after a couple weekend hacks, I’m also pretty excited to announce my own attempt at a really basic visualiztion.</p>
-                      <p>Roughly, here’s what I did:</p>
-                      <ol>
-                          <li>Take all of the days since 2001 and group them by the reported high temperature</li>
-                          <li>Take all of the crimes committed on those days and add them together</li>
-                          <li>Divide the number of crimes committed at a given temperature and divide it by the number of days to get an average</li>
-                      </ol>
-                      <p>To accomplish this I downloaded the full <span class="caps">CSV</span> dump of <a href="https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2">all 5,000,000+ reported crimes</a> in Chicago since 2001, headed over to the <a href="http://www.ncdc.noaa.gov/cdo-web/#t=secondTabLink"><span class="caps">NOAA</span></a> and got a dump of weather data since 2001, loaded them both into a MongoDB and started to see what I could see. Technically, there were really not too many hurdles to overcome. MongoDB ships with a handy dandy method for <a href="http://docs.mongodb.org/manual/reference/mongoimport/#usage">importing csv data directly into a database</a>, so, with a little patience (the crime data took around 5 hours to import), I was able to get everything loaded pretty easily. I made a couple indexes to make things work a it quicker and, for the crime data, created a “Location” field that contained a GeoJSON object (cause that’s how MongoDB <a href="http://docs.mongodb.org/manual/core/2dsphere/">does things these days</a>).</p>
-                      <p>But really, all I wanted to do was to get this on the web and because I’m doing this with very few (aka none) resources, I didn’t really want to have to worry about any kind of hosted backend setup, which kinda means my database needs to stay on my local machine. With that in mind, the persistence layer of this site (including the map stuff) is all powered by flat JSON files. This way, I can run the app entirely from an S3 bucket without any server-side anything. I’m not sure how far I’ll be able to push this but it works for now. There are obvious downsides like not being able to query stuff very well on the fly but, for now, I just wanted something that offered kind of a fire hose view that you could browse through and maybe pull some threads out of.</p>
-                      <p>My intention is to update this site every day when there is new data crime available. I’m hoping that I can actually make this a bit more automated but for now, I’ve just written a <a href="https://github.com/evz/crimesaroundus">couple scripts</a> that handle the heavy lifting but will need to be triggered daily. The other sorta lame thing is that the MongoDB is in a VM on my laptop. I’d love to share it with someone and/or figure out an easy way to back it up that won’t be too pricy (although I’ll probably just suck it up and put it in S3 or something).</p>
-                      <p>Anyways, I’m interested in feedback. Features, ideas, etc are all&nbsp;welcome.</p>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div id="disqus_thread" class="row"></div>
-        <script type="text/javascript">
-            var disqus_shortname = 'crimevsweather'; // required: replace example with your forum shortname
-            (function() {
-                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();
-        </script>
-        <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        <div id="map" class="twelve columns full-height"></div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
-        <script src="/js/d3.v3.js"></script>
-        <script src="/js/weather.js"></script>
+        <script src="/js/leaflet.js"></script>
+        <script src="/js/leaflet.draw.js"></script>
+        <script src="/js/leaflet-google.js"></script>
+        <script src="/js/map-draw.js"></script>
     </body>
 </html>
