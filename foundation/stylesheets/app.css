@@ -3,62 +3,17 @@
     margin-bottom: 0px !important;
 }
 
-.hide-overflow{
-    overflow: scroll;
-}
 .light {
     font-weight: 300;
 }
-#overlay h3,
-#overlay h5 {
-    margin: 7px 0 !important;
-}
-#overlay hr {
-    margin-bottom: 0px !important;
-}
-
-#overlay .temp {
-    margin-bottom: 10px !important;
-}
-#wanted-list .row {
-    margin-bottom: 15px;
+.fixed-bottom {
+    left: 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 99;
 }
 
-.filter-title {
-    margin-bottom: 0 !important;
-}
-
-#filter-nav dl.sub-nav dt, #filter-nav dl.sub-nav dd {
-    display: block;
-    float: none;
-    white-space: nowrap;
-    margin-bottom: 5px;
-}
-#filter-nav dl.sub-nav dd.active {
-    margin-left: 0px !important;
-}
-#docs-nav {
-    margin-top: 50px;
-    background-color: #fff;
-}
-.axis path {
-    stroke: #ccc;
-    fill: none;
-    shape-rendering: crispEdges;
-}
-line {
-  stroke: #555;
-  stroke-width: 2px;
-}
-.crime-line {
-    fill: none;
-    stroke: #999;
-    stroke-width: 1.5px;
-}
-text {
-  font-size: 12px;
-  fill: #888;
-}
-pre {
-    margin-bottom: 15px;
+#filters form {
+    margin-bottom: 0;
 }

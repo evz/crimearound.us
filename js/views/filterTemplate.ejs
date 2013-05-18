@@ -1,0 +1,10 @@
+<form class="eight columns centered">
+    <div class="row">
+        <div class="six columns">
+            <input class="date-picker start" type="text" value="Start Date: <%= moment().subtract('d', 14).format('YYYY-MM-DD') %>" placeholder="Start Date"/>
+        </div>
+        <div class="six columns">
+            <input class="date-picker end" type="text" value="End Date: <%= moment().subtract('d', 7).format('YYYY-MM-DD') %>" placeholder="End Date"/>
+        </div>
+    </div>
+</form>
