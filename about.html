@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Share my data</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="/foundation/stylesheets/foundation.min.css">
+        <link rel="stylesheet" href="/foundation/stylesheets/app.css">
+        <link rel="stylesheet" href="/foundation/stylesheets/general_foundicons.css">
+        <script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-26502031-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <div class="fixed">
+            <nav class="top-bar">
+                <ul>
+                    <li class="name"><h1><a href="/">crimearound.us</a></h1></li>
+                </ul>
+                <section>
+                    <ul class="left">
+                        <li><a id="report" href="/about.html">What’s going on here?</a></li>
+                    </ul>
+                </section>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="ten columns centered">
+                <h2 class="light">What’s happening around you?</h2>
+                <h4 class="light">This app provides a unique way of finding out.</h4>
+                <img src="/custom-shape.jpg" />
+                <h5>Draw a map&hellip;</h5>
+                <p>Using the tools on the left side of the map interface, you can draw a custom shape on the map to define the area that you are interested in. When you’re done drawing, the area you drew will immediately be populated by dots representing the various reported crimes that took place between 7 and 14 days ago. To customize the date range or limit the types of crimes returned, you can use the controls across the bottom of the map. Both date fields expect a date formatted like so <strong>YYYY-MM-DD</strong></p>
+                <h5>&hellip;get a report</h5>
+                <p>Once you’ve honed in on what it is that you want to look at, you can click on “Get a Report” which will generate an Excel Spreadsheet of everything you’re looking at. Have a use for other formats? You can submit an issue <a href="https://github.com/evz/crimeapi/issues">over here</a> and tell me what you’re after.</p>
+                <h5>More to come?</h5>
+                <p>This app is mostly made possible by infrastructure made available to me by the <a href="http://www.smartchicagocollaborative.org">Smart Chicago Collaborative</a>. I hope to be able to continue developing this app as well as whatever else seems to make sense.</p>
+                <h5>Have an idea? Or a problem? Want to help?</h5>
+                <p>You can submit bug reports, fork my code, or give me ideas <a href="https://github.com/evz/crimearound.us/issues">over on github</a>.</p>
+                <h5>How does this thing work, anyways?</h5>
+                <p>In a nutshell, the portion of the app that you are interacting with here and on the map page is being hosted entirely out of an S3 bucket. I’ve got a MongoDB instance that has all crime reported in Chicago from 2001 until a week ago. In front of the database is a <a href="https://github.com/evz/crimeapi">very simple Flask app</a> that gives this app a way to talk to it by responding with JSONP. Because it uses JSONP, the database can be used by client-side javascript from anywhere on the web. Or, with a bit of trickery, from server-side apps as well. <strong>Want to use this data? Docs are coming soon&hellip;</strong></p>
+                <h5>Who are you, anyways?</h5>
+                <p>Oh yeah, that. I’m <strong>Eric van Zanten</strong>, a web developer in Chicago who currently works for the <a href="http://www.bahai.us">Bahá’í Faith</a>. I’m on <a href="https://twitter.com/evanzanten"Twitter</a> and I have a <a href="http://www.static-eric.com">blog</a>. Besides this app, I created a visualization that compares daily temperature and crime <a href="http://crime.static-eric.com">over here</a>.</p>
+            </div>
+        </div>
+        <script src="/foundation/javascripts/foundation.min.js"></script>
+        <script src="/foundation/javascripts/app.js"></script>
+    </body>
+</html>

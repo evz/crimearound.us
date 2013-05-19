@@ -46,8 +46,8 @@
                 </ul>
                 <section>
                     <ul class="left">
-                        <!-- <li><a href="/map.html">Crime Browser</a></li> -->
-                        <li><a href="/most-wanted.html">Most Wanted</a></li>
+                        <li><a id="report" href="javascript://">Get a Report</a></li>
+                        <li><a id="report" href="/about.html">What’s going on here?</a></li>
                     </ul>
                 </section>
             </nav>
@@ -55,12 +55,27 @@
         <div id="map" class="twelve columns full-height"></div>
         <div id="filters" class="fixed-bottom"></div>
         <div id="mapinfo"></div>
+        <div id="report-modal" class="reveal-modal small">
+            <h2 class="light">Oops, slight problem</h2>
+            <p class="lead">You need to give me something to work with</p>
+            <p>Before I can generate a report, I need you to specify what you want me to report
+            on by drawing a shape on the map.</p>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+        <div id="date-error" class="reveal-modal small">
+            <h2 class="light">Oops, slight problem</h2>
+            <p class="lead">At least one of your dates isn’t formatted correctly.
+            The date fields down at the bottom of the map expect dates formatted like this:
+            <strong>YYYY-MM-DD</strong></p>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
         <script src="/foundation/javascripts/foundation.min.js"></script>
         <script src="/foundation/javascripts/app.js"></script>
         <script src="/js/ejs_production.js"></script>
         <script src="/js/moment.min.js"></script>
         <script src="/js/spin.min.js"></script>
         <script src="/js/jquery.spin.js"></script>
+        <script src="/js/jquery.fileDownload.js"></script>
         <script src="/js/leaflet.js"></script>
         <script src="/js/wax.leaf.min.js"></script>
         <script src="/js/leaflet.draw.js"></script>

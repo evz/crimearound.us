@@ -1,6 +1,7 @@
 (function(){
     var drawnItems = new L.FeatureGroup();
     var geojson = new L.LayerGroup();
+    var meta = {};
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -50,11 +51,13 @@
                     edit_create(layer, map);
                 });
             });
+            $('#report').on('click', get_report);
         })
     });
 
     function draw_edit(e){
         var layers = e.layers;
+        geojson.clearLayers();
         layers.eachLayer(function(layer){
             edit_create(layer, e.target);
         })
@@ -74,8 +77,14 @@
         query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON());
         var start = $('.start').val().replace('Start Date: ', '');
         var end = $('.end').val().replace('End Date: ', '');
-        start = moment(start).startOf('day').unix();
-        end = moment(end).endOf('day').unix();
+        start = moment(start)
+        end = moment(end)
+        var valid = false;
+        if (start.isValid() && end.isValid()){
+            start = start.startOf('day').unix();
+            end = end.endOf('day').unix();
+            valid = true;
+        }
         query['date__lte'] = end;
         query['date__gte'] = start;
         var on = [];
@@ -85,6 +94,7 @@
                 on.push($(checkbox).attr('value'));
             }
         });
+        query['type'] = on.join(',')
         var marker_opts = {
             radius: 10,
             fillColor: "#2109a8",
@@ -93,21 +103,27 @@
             opacity: 1,
             fillOpacity: 0.6
         };
-        $.when(get_results(query)).then(function(resp){
-            $('#map').spin(false);
-            $.each(resp.results, function(i, result){
-                var location = result.location;
-                location.properties = result;
-                geojson.addLayer(L.geoJson(location, {
-                    pointToLayer: function(feature, latlng){
-                        return L.circleMarker(latlng, marker_opts)
-                    },
-                    onEachFeature: bind_popup
-                })).addTo(map);
+        if(valid){
+            $.when(get_results(query)).then(function(resp){
+                $('#map').spin(false);
+                $.each(resp.results, function(i, result){
+                    meta = resp.meta;
+                    var location = result.location;
+                    location.properties = result;
+                    geojson.addLayer(L.geoJson(location, {
+                        pointToLayer: function(feature, latlng){
+                            return L.circleMarker(latlng, marker_opts)
+                        },
+                        onEachFeature: bind_popup
+                    })).addTo(map);
+                })
+            }).fail(function(data){
+                console.log(data);
             })
-        }).fail(function(data){
-            console.log(data);
-        })
+        } else {
+            $('#map').spin(false);
+            $('#date-error').reveal();
+        }
         drawnItems.addLayer(layer);
     }
 
@@ -121,8 +137,20 @@
         })
     }
 
-    function filter_markers(marker_layer){
-
+    function get_report(){
+        var query = JSON.stringify(meta.query);
+        if (typeof query !== 'undefined'){
+            $.fileDownload('http://crime-weather.smartchicagoapps.org/api/report/?query=' + query, {
+                successCallback: function(url){
+                    console.log(url);
+                },
+                errorCallback: function(html, url){
+                    console.log(html);
+                }
+            })
+        } else {
+            $('#report-modal').reveal()
+        }
     }
 
     function get_results(query){
