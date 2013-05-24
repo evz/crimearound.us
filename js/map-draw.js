@@ -14,7 +14,7 @@
                 tilejson: tilejson.tilejson,
                 tiles: tilejson.tiles
             }
-            map = new L.Map('map')
+            map = new L.Map('map', {attributionControl: false})
                 .addLayer(new wax.leaf.connector(tiles));
             if(window.location.hash){
                 var location = window.location.hash.split(',')
@@ -24,6 +24,11 @@
             } else {
                 map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
             }
+            var attribution = new L.Control.Attribution();
+            attribution.addAttribution("Geocoding data &copy; 2013 <a href='http://open.mapquestapi.com'>MapQuest, Inc.</a> | ");
+            attribution.addAttribution("Tiles from <a href='http://mapbox.com/about/maps/'>MapBox</a> | ");
+            attribution.addAttribution("Map data © <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA.</a>");
+            map.addControl(attribution);
             map.addLayer(drawnItems);
             var drawControl = new L.Control.Draw({
                 edit: {
