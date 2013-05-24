@@ -1,0 +1,8 @@
+<p>Your search returned more than one result. Did you mean one of these?</p>
+<ul>
+<% $.each(locations, function(i, location){ %> 
+    <li data-latlng="<%=location.latLng.lat %>,<%= location.latLng.lng %>">
+        <a href="javascript://" class="refine-search"><%= location.street %>, <%= location.postalCode %></a>
+    </li>
+<%})%>
+</ul>

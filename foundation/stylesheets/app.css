@@ -22,3 +22,19 @@ label {
     float: left;
     margin-right: 7px;
 }
+
+.label.violent {
+    background-color: #7B3294;
+}
+
+.label.quality {
+    background-color: #008837;
+}
+
+.label.property {
+    background-color: #ca0020;
+}
+
+#search ul {
+    list-style-position: inside !important;
+}

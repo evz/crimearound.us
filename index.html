@@ -21,16 +21,15 @@
             <link rel="stylesheet" href="/css/leaflet.ie.css" />
             <link rel="stylesheet" href="/css/leaflet.draw.ie.css" />
         <![endif]-->
-        <script type="text/javascript">
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-26502031-1']);
-            _gaq.push(['_trackPageview']);
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
+          ga('create', 'UA-41010142-1', 'crimearound.us');
+          ga('send', 'pageview');
+
         </script>
     </head>
     <body>
@@ -52,9 +51,23 @@
                 </section>
             </nav>
         </div>
-        <div id="map" class="twelve columns full-height"></div>
-        <div id="filters" class="fixed-bottom"></div>
-        <div id="mapinfo"></div>
+        <div id="mapinfo" class="three columns full-height">
+            <h4 class="light">What’s happening in your area?</h4>
+            <hr />
+            <div id="search">
+                <form>
+                    <fieldset>
+                        <legend>Search by an address</legend>
+                        <input type="text" placeholder="Enter any Chicago address"/>
+                        <button class="button radius small search expand postfix">Search</button>
+                        <div id="refine"></div>
+                    </fieldset>
+                </form>
+            </div>
+            <hr />
+            <div id="filters"></div>
+        </div>
+        <div id="map" class="nine columns full-height"></div>
         <div id="report-modal" class="reveal-modal small">
             <h2 class="light">Oops, slight problem</h2>
             <p class="lead">You need to give me something to work with</p>

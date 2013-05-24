@@ -1,21 +1,19 @@
-<form class="twelve columns">
-    <div class="row">
-        <div class="four columns">
-            <input class="filter start" type="text" value="Start Date: <%= moment().subtract('d', 14).format('YYYY-MM-DD') %>" placeholder="Start Date"/>
-        </div>
-        <div class="four columns">
-            <input class="filter end" type="text" value="End Date: <%= moment().subtract('d', 7).format('YYYY-MM-DD') %>" placeholder="End Date"/>
-        </div>
-        <div class="four columns">
-            <label>Violent
-                <input class="filter type" type="checkbox" value="violent" checked="true">
-            </label>
-            <label>Property
-                <input class="filter type" type="checkbox" value="property" checked="true">
-            </label>
-            <label>Quality of Life
-                <input class="filter type" type="checkbox" value="quality" checked="true">
-            </label>
-        </div>
-    </div>
+<form>
+    <fieldset>
+        <legend>Filter by date</legend>
+        <input class="filter start" type="text" value="Start Date: <%= moment().subtract('d', 14).format('YYYY-MM-DD') %>" placeholder="Start Date"/>
+        <input class="filter end" type="text" value="End Date: <%= moment().subtract('d', 7).format('YYYY-MM-DD') %>" placeholder="End Date"/>
+    </fieldset>
+    <fieldset>
+    <legend>Filter by crime type</legend><div class="blob violent"></div>
+        <label><span class="label violent radius">Violent</span>
+            <input class="filter type" type="checkbox" value="violent" checked="true">
+        </label>
+        <label><span class="label property radius">Property</span>
+            <input class="filter type" type="checkbox" value="property" checked="true">
+        </label>
+        <label><span class="label quality radius">Quality of Life</span>
+            <input class="filter type" type="checkbox" value="quality" checked="true">
+        </label>
+    </fieldset>
 </form>

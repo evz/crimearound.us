@@ -2,6 +2,7 @@
     var drawnItems = new L.FeatureGroup();
     var geojson = new L.LayerGroup();
     var meta = {};
+    var map;
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -13,7 +14,7 @@
                 tilejson: tilejson.tilejson,
                 tiles: tilejson.tiles
             }
-            var map = new L.Map('map')
+            map = new L.Map('map')
                 .addLayer(new wax.leaf.connector(tiles));
             if(window.location.hash){
                 var location = window.location.hash.split(',')
@@ -52,8 +53,46 @@
                 });
             });
             $('#report').on('click', get_report);
+            $('.search').on('click',function(e){
+                e.preventDefault();
+                $('#refine').empty()
+                var query = $(this).prev().val() + ' Chicago, IL';
+                var bbox = "42.023134979999995,-87.52366115999999,41.644286009999995,-87.94010087999999";
+                var params = {
+                    key: 'Fmjtd|luub2d0rn1,rw=o5-9u2ggw',
+                    location: query,
+                    boundingBox: bbox
+                }
+                $.ajax({
+                    url:'http://open.mapquestapi.com/geocoding/v1/address',
+                    data: params,
+                    dataType: 'jsonp',
+                    success: handle_geocode
+                });
+            });
         })
     });
+
+    function handle_geocode(data){
+        var locations = data.results[0].locations;
+        if (locations.length == 1) {
+            var latlng = [locations[0].latLng.lat, locations[0].latLng.lng];
+            map.setView(latlng, 17);
+            L.marker(latlng).addTo(map);
+        } else if (locations.length > 1) {
+            var tpl = new EJS({url: 'js/views/searchRefine.ejs'});
+            $('#refine').append(tpl.render({locations:locations}))
+            $('.refine-search').on('click', function(e){
+                e.preventDefault();
+                var data = $(this).parent().data('latlng').split(',');
+                var latlng = [parseFloat(data[0]), parseFloat(data[1])];
+                map.setView(latlng, 17);
+                L.marker(latlng).addTo(map);
+            })
+        } else {
+            $('#refine').append("<p>Your search didn't return any results.</p>");
+        }
+    }
 
     function draw_edit(e){
         var layers = e.layers;
@@ -97,8 +136,6 @@
         query['type'] = on.join(',')
         var marker_opts = {
             radius: 10,
-            fillColor: "#2109a8",
-            color: "#2109a8",
             weight: 2,
             opacity: 1,
             fillOpacity: 0.6
@@ -112,6 +149,17 @@
                     location.properties = result;
                     geojson.addLayer(L.geoJson(location, {
                         pointToLayer: function(feature, latlng){
+                            console.log(feature);
+                            if (feature.properties.type == 'violent'){
+                                marker_opts.color = '#7B3294';
+                                marker_opts.fillColor = '#7B3294';
+                            } else if (feature.properties.type == 'property'){
+                                marker_opts.color = '#ca0020';
+                                marker_opts.fillColor = '#ca0020';
+                            } else {
+                                marker_opts.color = '#008837';
+                                marker_opts.fillColor = '#008837';
+                            }
                             return L.circleMarker(latlng, marker_opts)
                         },
                         onEachFeature: bind_popup
