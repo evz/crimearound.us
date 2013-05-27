@@ -154,7 +154,6 @@
                     location.properties = result;
                     geojson.addLayer(L.geoJson(location, {
                         pointToLayer: function(feature, latlng){
-                            console.log(feature);
                             if (feature.properties.type == 'violent'){
                                 marker_opts.color = '#7B3294';
                                 marker_opts.fillColor = '#7B3294';
@@ -195,10 +194,8 @@
         if (typeof query !== 'undefined'){
             $.fileDownload('http://crime-weather.smartchicagoapps.org/api/report/?query=' + query, {
                 successCallback: function(url){
-                    console.log(url);
                 },
                 errorCallback: function(html, url){
-                    console.log(html);
                 }
             })
         } else {
