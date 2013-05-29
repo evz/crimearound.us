@@ -1,6 +1,6 @@
 <h6><%= moment(date.$date).format('dddd MMM D, YYYY') %></h6>
-<h3><%= primary_type %> <br/> <span class="light"><%= description %></span></h3>
-<h5><%= block %> <br/> <span class="light">(<%= location_description %>)</span></h5>
+<h3><%= primary_type %> <br/> <span class="light"><%= typeof description !== 'undefined' ? description : '' %></span></h3>
+<h5><%= block %> <br/> <span class="light">(<%= typeof location_description !== 'undefined' ? location_description : '' %>)</span></h5>
 <p>
     <strong>Arrest? </strong>
     <% if(arrest == 'true' || arrest == true){ %> 
