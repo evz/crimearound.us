@@ -113,6 +113,7 @@
 
     function draw_delete(e){
         geojson.clearLayers();
+        $('#meta').empty();
     }
 
     function edit_create(layer, map){
@@ -150,6 +151,7 @@
                 $('#map').spin(false);
                 $.each(resp.results, function(i, result){
                     meta = resp.meta;
+                    render_meta(meta);
                     var location = result.location;
                     location.properties = result;
                     geojson.addLayer(L.geoJson(location, {
@@ -177,6 +179,11 @@
             $('#date-error').reveal();
         }
         drawnItems.addLayer(layer);
+    }
+
+    function render_meta(meta){
+        var tpl = new EJS({url: 'js/views/metaTemplate.ejs'});
+        $('#meta').html(tpl.render(meta.totals_by_type))
     }
 
     function bind_popup(feature, layer){

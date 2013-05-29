@@ -38,3 +38,15 @@ label {
 #search ul {
     list-style-position: inside !important;
 }
+
+#meta {
+    width: 100%;
+}
+
+#meta h1 {
+    margin-bottom: 5px;
+}
+
+#meta h5 {
+    margin: 0;
+}
