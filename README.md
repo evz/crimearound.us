@@ -1,3 +1,3 @@
-# Crimes around us
+# Crime around us
 
-An attempt at hooking up an app to [http://api1.chicagopolice.org/clearpath](http://api1.chicagopolice.org/clearpath)
+An example application using the API that I’ve created for the publicly available Chicago Crime Reports data.

@@ -3,6 +3,8 @@
     var geojson = new L.LayerGroup();
     var meta = {};
     var map;
+    // var endpoint = 'http://localhost:7777';
+    var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -33,7 +35,7 @@
             var drawControl = new L.Control.Draw({
                 edit: {
                         featureGroup: drawnItems
-                    },
+                },
                 draw: {
                     polyline: false,
                     circle: false,
@@ -170,7 +172,7 @@
                         },
                         onEachFeature: bind_popup
                     })).addTo(map);
-                })
+                });
             }).fail(function(data){
                 console.log(data);
             })
@@ -199,7 +201,7 @@
     function get_report(){
         var query = JSON.stringify(meta.query);
         if (typeof query !== 'undefined'){
-            $.fileDownload('http://crime-weather.smartchicagoapps.org/api/report/?query=' + query, {
+            $.fileDownload(endpoint + '/api/report/?query=' + query, {
                 successCallback: function(url){
                 },
                 errorCallback: function(html, url){
@@ -212,7 +214,7 @@
 
     function get_results(query){
         return $.ajax({
-            url: 'http://crime-weather.smartchicagoapps.org/api/crime/',
+            url: endpoint + '/api/crime/',
             dataType: 'jsonp',
             data: query,
         })
