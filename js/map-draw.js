@@ -3,8 +3,8 @@
     var geojson = new L.LayerGroup();
     var meta = {};
     var map;
-    // var endpoint = 'http://localhost:7777';
-    var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    var endpoint = 'http://localhost:7777';
+    // var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -153,7 +153,6 @@
                 $('#map').spin(false);
                 $.each(resp.results, function(i, result){
                     meta = resp.meta;
-                    render_meta(meta);
                     var location = result.location;
                     location.properties = result;
                     geojson.addLayer(L.geoJson(location, {
@@ -173,6 +172,7 @@
                         onEachFeature: bind_popup
                     })).addTo(map);
                 });
+                render_meta(meta);
             }).fail(function(data){
                 console.log(data);
             })
@@ -184,8 +184,83 @@
     }
 
     function render_meta(meta){
+        render_chart(meta.totals_by_date);
         var tpl = new EJS({url: 'js/views/metaTemplate.ejs'});
-        $('#meta').html(tpl.render(meta.totals_by_type))
+        $('#meta').html(tpl.render(meta.totals_by_type));
+    }
+
+    function render_chart(totals){
+        $('#chart').empty();
+        var data = []
+        var parser = d3.time.format("%Y-%m-%d");
+        $.each(totals, function(date, count){
+            data.push({date:parser.parse(date), count:count})
+        });
+        data.sort(function(a, b){return a.date-b.date})
+        var el_width = $('#chart').width();
+        var margin = {top: 10, right: 10, bottom: 40, left: 40},
+            width = el_width - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
+
+        var x = d3.time.scale().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+            .scale(x)
+            .ticks(d3.time.days, 1)
+            .orient('bottom');
+        var yAxis = d3.svg.axis().scale(y).orient('left');
+
+        var line = d3.svg.line()
+            .y(function(d){return y(d.count)})
+            .x(function(d){return x(d.date)});
+
+        var svg = d3.select('#chart').append('svg')
+            .attr('width', width + margin.left + margin.right)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        y.domain(d3.extent(data, function(d){return d.count;}));
+        x.domain(d3.extent(data, function(d){return d.date;}))
+        svg.selectAll('text')
+            .attr("transform", "rotate(-45)")
+        svg.append('g')
+            .attr('class', 'y axis')
+            .call(yAxis)
+        svg.append('text')
+            .attr({'y': 10, 'x': 10})
+            .style({'font-size': '18px', 'font-weight': 'bold', 'fill': '#ddd'})
+            .text('Crimes reported by date');
+        svg.append('text')
+            .attr({'id': 'dataLabel', 'x': width, 'y': height + 25, 'text-anchor': 'end' })
+            .style({'font-size': '18px', 'font-weight': '300', 'fill': '#000'})
+        svg.append('path')
+            .datum(data)
+            .attr('class', 'crime-line')
+            .attr('d', line);
+        svg.selectAll('.point')
+            .data(data)
+            .enter().append('svg:circle')
+            .attr('class', 'point')
+            .attr('r', 4)
+            .attr('cx', function(d,i){return x(d.date)})
+            .attr('cy', function(d,i){return y(d.count)})
+            .on('mouseover', function(d){
+                d3.select(this).attr('r', 8)
+                d3.select('svg g #dataLabel')
+                    .text('Date: ' + parser(d.date) + ', ' + 'Crimes: ' + d.count)
+                    .transition()
+                    .duration(500)
+                    .style('opacity', 1)
+            })
+            .on('mouseout', function(d){
+                d3.select(this).attr('r', 4);
+                d3.select('svg g #dataLabel')
+                    .transition()
+                    .duration(500)
+                    .style('opacity', 0)
+            })
     }
 
     function bind_popup(feature, layer){
