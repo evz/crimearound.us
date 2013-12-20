@@ -16,8 +16,8 @@
             meta.removeFrom(map);
         }
     }
-    var endpoint = 'http://localhost:7777';
-    // var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    //var endpoint = 'http://localhost:7777';
+    var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -173,6 +173,9 @@
             $.when(get_results(query)).then(function(resp){
                 $('#map').spin(false);
                 var meta_data = resp.meta;
+                if($('.meta.leaflet-control').length){
+                    meta.removeFrom(map);
+                }
                 meta.addTo(map);
                 meta.update(meta_data);
                 $.each(resp.results, function(i, result){
