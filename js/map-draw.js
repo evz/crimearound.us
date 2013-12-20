@@ -1,10 +1,23 @@
 (function(){
     var drawnItems = new L.FeatureGroup();
     var geojson = new L.LayerGroup();
-    var meta = {};
     var map;
-    // var endpoint = 'http://localhost:7777';
-    var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    var meta = L.control({position: 'bottomright'});
+    meta.onAdd = function(map){
+        this._div = L.DomUtil.create('div', 'meta');
+        return this._div;
+    }
+    meta.update = function(meta_data){
+        if(typeof meta_data !== 'undefined'){
+            var tpl = new EJS({url: 'js/views/metaTemplate.ejs'});
+            $(this._div).html(tpl.render(meta_data.totals_by_type));
+        } else {
+            $(this._div).empty();
+            meta.removeFrom(map);
+        }
+    }
+    var endpoint = 'http://localhost:7777';
+    // var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -115,7 +128,7 @@
 
     function draw_delete(e){
         geojson.clearLayers();
-        $('#meta').empty();
+        meta.update();
     }
 
     function edit_create(layer, map){
@@ -135,13 +148,21 @@
         query['date__lte'] = end;
         query['date__gte'] = start;
         var on = [];
-        var checkboxes = $('.filter.type');
-        $.each(checkboxes, function(i, checkbox){
+        var type_checkboxes = $('.filter.type');
+        $.each(type_checkboxes, function(i, checkbox){
             if($(checkbox).is(':checked')){
                 on.push($(checkbox).attr('value'));
             }
         });
         query['type'] = on.join(',')
+        on = [];
+        var time_checkboxes = $('.filter.time');
+        $.each(time_checkboxes, function(i, checkbox){
+            if($(checkbox).is(':checked')){
+                on.push($(checkbox).attr('value'));
+            }
+        });
+        query['time'] = on.join(',')
         var marker_opts = {
             radius: 10,
             weight: 2,
@@ -151,9 +172,10 @@
         if(valid){
             $.when(get_results(query)).then(function(resp){
                 $('#map').spin(false);
+                var meta_data = resp.meta;
+                meta.addTo(map);
+                meta.update(meta_data);
                 $.each(resp.results, function(i, result){
-                    meta = resp.meta;
-                    render_meta(meta);
                     var location = result.location;
                     location.properties = result;
                     geojson.addLayer(L.geoJson(location, {
@@ -183,10 +205,6 @@
         drawnItems.addLayer(layer);
     }
 
-    function render_meta(meta){
-        var tpl = new EJS({url: 'js/views/metaTemplate.ejs'});
-        $('#meta').html(tpl.render(meta.totals_by_type))
-    }
 
     function bind_popup(feature, layer){
         var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});

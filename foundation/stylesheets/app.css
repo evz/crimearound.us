@@ -39,14 +39,16 @@ label {
     list-style-position: inside !important;
 }
 
-#meta {
-    width: 100%;
+.meta.leaflet-control {
+    width: 25%;
+    height: 300px;
+    background-color: #fff;
 }
 
-#meta h1 {
+.meta h1 {
     margin-bottom: 5px;
 }
 
-#meta h5 {
+.meta h5 {
     margin: 0;
 }

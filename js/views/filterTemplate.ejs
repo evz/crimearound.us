@@ -6,14 +6,36 @@
     </fieldset>
     <fieldset>
     <legend>Filter by crime type</legend><div class="blob violent"></div>
-        <label><span class="label violent radius">Violent</span>
+        <label>
+            <span class="label violent radius">Violent</span>
             <input class="filter type" type="checkbox" value="violent" checked="true">
         </label>
-        <label><span class="label property radius">Property</span>
+        <label>
+            <span class="label property radius">Property</span>
             <input class="filter type" type="checkbox" value="property" checked="true">
         </label>
-        <label><span class="label quality radius">Quality of Life</span>
+        <label>
+            <span class="label quality radius">Quality of Life</span>
             <input class="filter type" type="checkbox" value="quality" checked="true">
+        </label>
+    </fieldset>
+    <fieldset>
+    <legend>Filter by time of day</legend><div class="blob violent"></div>
+        <label>
+            <input class="filter time" type="checkbox" value="0,6" checked="true">
+            Early Morning (Midnight&ndash;6am)
+        </label>
+        <label>
+            <input class="filter time" type="checkbox" value="6,12" checked="true">
+            Morning (6am&ndash;Noon)
+        </label>
+        <label>
+            <input class="filter time" type="checkbox" value="12,18" checked="true">
+            Afternoon (Noon&ndash;6pm)
+        </label>
+        <label>
+            <input class="filter time" type="checkbox" value="18,24" checked="true">
+            Night (6pm&ndash;Midnight)
         </label>
     </fieldset>
 </form>
