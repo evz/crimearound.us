@@ -9,7 +9,7 @@
     }
     meta.update = function(meta_data){
         if(typeof meta_data !== 'undefined'){
-            var tpl = new EJS({url: 'js/views/metaTemplate.ejs'});
+            var tpl = new EJS({url: 'js/views/metaTemplate.ejs?2'});
             $(this._div).html(tpl.render(meta_data.totals_by_type));
         } else {
             $(this._div).empty();
@@ -64,7 +64,7 @@
                 var zoom = e.target.getZoom();
                 window.location.hash = zoom + ',' + center.lat + ',' + center.lng;
             })
-            var tpl = new EJS({url: 'js/views/filterTemplate.ejs'});
+            var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
             $('#filters').append(tpl.render());
             $('.filter').on('change', function(e){
                 geojson.clearLayers();
