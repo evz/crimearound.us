@@ -3,6 +3,7 @@
     var geojson = new L.LayerGroup();
     var map;
     var meta = L.control({position: 'bottomright'});
+    var meta_data;
     meta.onAdd = function(map){
         this._div = L.DomUtil.create('div', 'meta');
         return this._div;
@@ -172,7 +173,7 @@
         if(valid){
             $.when(get_results(query)).then(function(resp){
                 $('#map').spin(false);
-                var meta_data = resp.meta;
+                meta_data = resp.meta;
                 if($('.meta.leaflet-control').length){
                     meta.removeFrom(map);
                 }
@@ -220,7 +221,7 @@
     }
 
     function get_report(){
-        var query = JSON.stringify(meta.query);
+        var query = JSON.stringify(meta_data.query);
         if (typeof query !== 'undefined'){
             $.fileDownload(endpoint + '/api/report/?query=' + query, {
                 successCallback: function(url){
