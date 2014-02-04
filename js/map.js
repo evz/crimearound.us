@@ -32,19 +32,6 @@
             }
             map = new L.Map('map', {attributionControl: false})
                 .addLayer(new wax.leaf.connector(tiles));
-            if(window.location.hash){
-                var location = window.location.hash.split(',')
-                var center = new L.LatLng(location[1], location[2])
-                var zoom = location[0].replace('#', '')
-                map.setView(center, parseInt(zoom));
-            } else {
-                map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
-            }
-            var attribution = new L.Control.Attribution();
-            attribution.addAttribution("Geocoding data &copy; 2013 <a href='http://open.mapquestapi.com'>MapQuest, Inc.</a> | ");
-            attribution.addAttribution("Tiles from <a href='http://mapbox.com/about/maps/'>MapBox</a> | ");
-            attribution.addAttribution("Map data © <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA.</a>");
-            map.addControl(attribution);
             map.addLayer(drawnItems);
             var drawControl = new L.Control.Draw({
                 edit: {
@@ -60,11 +47,32 @@
             map.on('draw:created', draw_create);
             map.on('draw:edited', draw_edit);
             map.on('draw:deleted', draw_delete);
-            map.on('moveend', function(e){
-                var center = e.target.getCenter();
-                var zoom = e.target.getZoom();
-                window.location.hash = zoom + ',' + center.lat + ',' + center.lng;
-            })
+            if(window.location.hash){
+                var hash = window.location.hash.slice(1,window.location.hash.length);
+                var query = parseParams(hash)
+                console.log(query);
+                $.when(get_results(query)).then(
+                    function(resp){
+                        console.log(resp)
+                        add_resp_to_map(resp);
+                        var location = resp['meta']['query']['location']
+                        var geo = L.geoJson(location['$geoWithin']['$geometry']);
+                        drawnItems.addLayer(geo);
+                        map.fitBounds(geo.getBounds());
+                    }
+                ).fail();
+              //var location = window.location.hash.split(',')
+              //var center = new L.LatLng(location[1], location[2])
+              //var zoom = location[0].replace('#', '')
+              //map.setView(center, parseInt(zoom));
+            } else {
+                map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
+            }
+            var attribution = new L.Control.Attribution();
+            attribution.addAttribution("Geocoding data &copy; 2013 <a href='http://open.mapquestapi.com'>MapQuest, Inc.</a> | ");
+            attribution.addAttribution("Tiles from <a href='http://mapbox.com/about/maps/'>MapBox</a> | ");
+            attribution.addAttribution("Map data © <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA.</a>");
+            map.addControl(attribution);
             var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
             $('#filters').append(tpl.render());
             $('.filter').on('change', function(e){
@@ -115,6 +123,22 @@
         }
     }
 
+    function parseParams(query){
+        var re = /([^&=]+)=?([^&]*)/g;
+        var decodeRE = /\+/g;  // Regex for replacing addition symbol with a space
+        var decode = function (str) {return decodeURIComponent( str.replace(decodeRE, " ") );};
+        var params = {}, e;
+        while ( e = re.exec(query) ) {
+            var k = decode( e[1] ), v = decode( e[2] );
+            if (k.substring(k.length - 2) === '[]') {
+                k = k.substring(0, k.length - 2);
+                (params[k] || (params[k] = [])).push(v);
+            }
+            else params[k] = v;
+        }
+        return params;
+    }
+
     function draw_edit(e){
         var layers = e.layers;
         geojson.clearLayers();
@@ -129,6 +153,7 @@
 
     function draw_delete(e){
         geojson.clearLayers();
+        drawnItems.clearLayers();
         meta.update();
     }
 
@@ -164,41 +189,10 @@
             }
         });
         query['time'] = on.join(',')
-        var marker_opts = {
-            radius: 10,
-            weight: 2,
-            opacity: 1,
-            fillOpacity: 0.6
-        };
         if(valid){
             $.when(get_results(query)).then(function(resp){
-                $('#map').spin(false);
-                meta_data = resp.meta;
-                if($('.meta.leaflet-control').length){
-                    meta.removeFrom(map);
-                }
-                meta.addTo(map);
-                meta.update(meta_data);
-                $.each(resp.results, function(i, result){
-                    var location = result.location;
-                    location.properties = result;
-                    geojson.addLayer(L.geoJson(location, {
-                        pointToLayer: function(feature, latlng){
-                            if (feature.properties.type == 'violent'){
-                                marker_opts.color = '#7B3294';
-                                marker_opts.fillColor = '#7B3294';
-                            } else if (feature.properties.type == 'property'){
-                                marker_opts.color = '#ca0020';
-                                marker_opts.fillColor = '#ca0020';
-                            } else {
-                                marker_opts.color = '#008837';
-                                marker_opts.fillColor = '#008837';
-                            }
-                            return L.circleMarker(latlng, marker_opts)
-                        },
-                        onEachFeature: bind_popup
-                    })).addTo(map);
-                });
+                add_resp_to_map(resp);
+                window.location.hash = $.param(query);
             }).fail(function(data){
                 console.log(data);
             })
@@ -209,6 +203,41 @@
         drawnItems.addLayer(layer);
     }
 
+    function add_resp_to_map(resp){
+        var marker_opts = {
+            radius: 10,
+            weight: 2,
+            opacity: 1,
+            fillOpacity: 0.6
+        };
+        $('#map').spin(false);
+        meta_data = resp.meta;
+        if($('.meta.leaflet-control').length){
+            meta.removeFrom(map);
+        }
+        meta.addTo(map);
+        meta.update(meta_data);
+        $.each(resp.results, function(i, result){
+            var location = result.location;
+            location.properties = result;
+            geojson.addLayer(L.geoJson(location, {
+                pointToLayer: function(feature, latlng){
+                    if (feature.properties.type == 'violent'){
+                        marker_opts.color = '#7B3294';
+                        marker_opts.fillColor = '#7B3294';
+                    } else if (feature.properties.type == 'property'){
+                        marker_opts.color = '#ca0020';
+                        marker_opts.fillColor = '#ca0020';
+                    } else {
+                        marker_opts.color = '#008837';
+                        marker_opts.fillColor = '#008837';
+                    }
+                    return L.circleMarker(latlng, marker_opts)
+                },
+                onEachFeature: bind_popup
+            })).addTo(map);
+        });
+    }
 
     function bind_popup(feature, layer){
         var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});
