@@ -68,3 +68,7 @@ label {
 .meta h5 {
     margin: 0 0 10px 0 !important;
 }
+
+ul.chosen-choices li input {
+    height: 25px !important;
+}

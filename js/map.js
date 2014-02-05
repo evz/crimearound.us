@@ -98,6 +98,7 @@
                 success: handle_geocode
             });
         });
+        $('.chosen-select').chosen();
     });
 
     function handle_geocode(data){
