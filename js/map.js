@@ -24,7 +24,8 @@
         window.onresize = function(event){
             resize_junk();
         }
-        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h', {attributionControl: false});
+        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h', {attributionControl: false})
+            .fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         map.addLayer(drawnItems);
         var drawControl = new L.Control.Draw({
             edit: {
@@ -65,13 +66,14 @@
                     add_resp_to_map(resp);
                 }
             ).fail();
-          //var location = window.location.hash.split(',')
-          //var center = new L.LatLng(location[1], location[2])
-          //var zoom = location[0].replace('#', '')
-          //map.setView(center, parseInt(zoom));
         } else {
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
+       //var geocoder = L.mapbox.geocoderControl('ericvanzanten.map-7b7muw9h');
+       //map.addControl(geocoder);
+       //geocoder.on('select', function(e){
+       //    console.log('uh');
+       //})
         var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
         $('#filters').append(tpl.render());
         $('.filter').on('change', function(e){
@@ -159,7 +161,11 @@
     function edit_create(layer, map){
         $('#map').spin('large')
         var query = {};
-        query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON()['geometry']);
+        var feature = layer.toGeoJSON();
+        if (feature.type == 'FeatureCollection'){
+            feature = feature.features[0];
+        }
+        query['location__geoWithin'] = JSON.stringify(feature['geometry']);
         var start = $('.start').val().replace('Start Date: ', '');
         var end = $('.end').val().replace('End Date: ', '');
         start = moment(start)
@@ -179,7 +185,9 @@
                 on.push($(checkbox).attr('value'));
             }
         });
-        query['type'] = on.join(',')
+        if (on.length > 0){
+            query['type'] = on.join(',')
+        }
         on = [];
         var time_checkboxes = $('.filter.time');
         $.each(time_checkboxes, function(i, checkbox){
@@ -187,9 +195,10 @@
                 on.push($(checkbox).attr('value'));
             }
         });
-        query['time'] = on.join(',')
+        if (on.length > 0){
+            query['time'] = on.join(',');
+        }
         if(valid){
-            console.log(query);
             $.when(get_results(query)).then(function(resp){
                 add_resp_to_map(resp);
                 window.location.hash = $.param(query);
