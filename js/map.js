@@ -50,10 +50,8 @@
             if(window.location.hash){
                 var hash = window.location.hash.slice(1,window.location.hash.length);
                 var query = parseParams(hash)
-                console.log(query);
                 $.when(get_results(query)).then(
                     function(resp){
-                        console.log(resp)
                         add_resp_to_map(resp);
                         var location = resp['meta']['query']['location']
                         var geo = L.geoJson(location['$geoWithin']['$geometry']);
