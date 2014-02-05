@@ -45,14 +45,26 @@ label {
 
 .meta.leaflet-control {
     width: 25%;
-    height: 300px;
     background-color: #fff;
+    padding: 10px 0px;
+}
+
+.leaflet-container h1 {
+    font-size: 44px;
+}
+
+.leaflet-container h3 {
+    font-size: 27px;
+}
+
+.leaflet-container h5 {
+    font-size: 17px;
 }
 
 .meta h1 {
-    margin-bottom: 5px;
+    margin-bottom: 5px !important;
 }
 
 .meta h5 {
-    margin: 0;
+    margin: 0 0 10px 0 !important;
 }

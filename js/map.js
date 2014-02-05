@@ -24,80 +24,80 @@
         window.onresize = function(event){
             resize_junk();
         }
-        var tiles_url = 'http://a.tiles.mapbox.com/v3/ericvanzanten.map-7b7muw9h.jsonp';
-        wax.tilejson(tiles_url, function(tilejson){
-            var tiles = {
-                tilejson: tilejson.tilejson,
-                tiles: tilejson.tiles
+        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h', {attributionControl: false});
+        map.addLayer(drawnItems);
+        var drawControl = new L.Control.Draw({
+            edit: {
+                    featureGroup: drawnItems
+            },
+            draw: {
+                polyline: false,
+                circle: false,
+                marker: false
             }
-            map = new L.Map('map', {attributionControl: false})
-                .addLayer(new wax.leaf.connector(tiles));
-            map.addLayer(drawnItems);
-            var drawControl = new L.Control.Draw({
-                edit: {
-                        featureGroup: drawnItems
-                },
-                draw: {
-                    polyline: false,
-                    circle: false,
-                    marker: false
-                }
-            });
-            map.addControl(drawControl);
-            map.on('draw:created', draw_create);
-            map.on('draw:edited', draw_edit);
-            map.on('draw:deleted', draw_delete);
-            if(window.location.hash){
-                var hash = window.location.hash.slice(1,window.location.hash.length);
-                var query = parseParams(hash)
-                $.when(get_results(query)).then(
-                    function(resp){
-                        add_resp_to_map(resp);
-                        var location = resp['meta']['query']['location']
-                        var geo = L.geoJson(location['$geoWithin']['$geometry']);
-                        drawnItems.addLayer(geo);
-                        map.fitBounds(geo.getBounds());
+        });
+        map.addControl(drawControl);
+        map.on('draw:created', draw_create);
+        map.on('draw:edited', draw_edit);
+        map.on('draw:deleted', draw_delete);
+        if(window.location.hash){
+            var hash = window.location.hash.slice(1,window.location.hash.length);
+            var query = parseParams(hash)
+            $.when(get_results(query)).then(
+                function(resp){
+                    var location = resp['meta']['query']['location']
+                    var shape_opts = {
+                        stroke: true,
+                        color: '#f06eaa',
+                        weight: 4,
+                        opacity: 0.5,
+                        fill: true,
+                        fillOpacity: 0.2,
+                        clickable: true
                     }
-                ).fail();
-              //var location = window.location.hash.split(',')
-              //var center = new L.LatLng(location[1], location[2])
-              //var zoom = location[0].replace('#', '')
-              //map.setView(center, parseInt(zoom));
-            } else {
-                map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
-            }
-            var attribution = new L.Control.Attribution();
-            attribution.addAttribution("Geocoding data &copy; 2013 <a href='http://open.mapquestapi.com'>MapQuest, Inc.</a> | ");
-            attribution.addAttribution("Tiles from <a href='http://mapbox.com/about/maps/'>MapBox</a> | ");
-            attribution.addAttribution("Map data © <a href='http://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA.</a>");
-            map.addControl(attribution);
-            var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
-            $('#filters').append(tpl.render());
-            $('.filter').on('change', function(e){
-                geojson.clearLayers();
-                drawnItems.eachLayer(function(layer){
-                    edit_create(layer, map);
-                });
-            });
-            $('#report').on('click', get_report);
-            $('.search').on('click',function(e){
-                e.preventDefault();
-                $('#refine').empty()
-                var query = $(this).prev().val() + ' Chicago, IL';
-                var bbox = "42.023134979999995,-87.52366115999999,41.644286009999995,-87.94010087999999";
-                var params = {
-                    key: 'Fmjtd|luub2d0rn1,rw=o5-9u2ggw',
-                    location: query,
-                    boundingBox: bbox
+                    var geo = L.geoJson(location['$geoWithin']['$geometry'],{
+                        style: function(feature){
+                            return shape_opts;
+                        }
+                    });
+                    drawnItems.addLayer(geo);
+                    map.fitBounds(geo.getBounds());
+                    add_resp_to_map(resp);
                 }
-                $.ajax({
-                    url:'http://open.mapquestapi.com/geocoding/v1/address',
-                    data: params,
-                    dataType: 'jsonp',
-                    success: handle_geocode
-                });
+            ).fail();
+          //var location = window.location.hash.split(',')
+          //var center = new L.LatLng(location[1], location[2])
+          //var zoom = location[0].replace('#', '')
+          //map.setView(center, parseInt(zoom));
+        } else {
+            map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
+        }
+        var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
+        $('#filters').append(tpl.render());
+        $('.filter').on('change', function(e){
+            geojson.clearLayers();
+            drawnItems.eachLayer(function(layer){
+                edit_create(layer, map);
             });
-        })
+        });
+        $('#report').on('click', get_report);
+        $('.search').on('click',function(e){
+            e.preventDefault();
+            $('#refine').empty()
+            var query = $(this).prev().val() + ' Chicago, IL';
+            var bbox = "42.023134979999995,-87.52366115999999,41.644286009999995,-87.94010087999999";
+            var params = {
+                key: 'Fmjtd|luub2d0rn1,rw=o5-9u2ggw',
+                location: query,
+                boundingBox: bbox
+            }
+            $.ajax({
+                url:'http://open.mapquestapi.com/geocoding/v1/address',
+                data: params,
+                dataType: 'jsonp',
+                success: handle_geocode
+            });
+        });
     });
 
     function handle_geocode(data){
@@ -158,7 +158,7 @@
     function edit_create(layer, map){
         $('#map').spin('large')
         var query = {};
-        query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON());
+        query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON()['geometry']);
         var start = $('.start').val().replace('Start Date: ', '');
         var end = $('.end').val().replace('End Date: ', '');
         start = moment(start)
@@ -188,6 +188,7 @@
         });
         query['time'] = on.join(',')
         if(valid){
+            console.log(query);
             $.when(get_results(query)).then(function(resp){
                 add_resp_to_map(resp);
                 window.location.hash = $.param(query);
