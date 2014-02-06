@@ -17,8 +17,8 @@
             meta.removeFrom(map);
         }
     }
-    //var endpoint = 'http://localhost:7777';
-    var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    var endpoint = 'http://localhost:7777';
+    //var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -83,7 +83,7 @@
             });
         });
         $('#report').on('click', get_report);
-        $('.search').on('click',function(e){
+        $('#address-search').on('click',function(e){
             e.preventDefault();
             $('#refine').empty()
             var query = $(this).prev().val() + ' Chicago, IL';
@@ -100,6 +100,28 @@
                 success: handle_geocode
             });
         });
+        $('#submit-query').on('click', function(e){
+            e.preventDefault();
+            $('#map').spin('large');
+            if(drawnItems.toGeoJSON().features.length){
+                var types = []
+                $.each($('#crime-type').val(), function(i, type){
+                    types.push(type);
+                });
+                types = types.join(',');
+                locations = [];
+                $.each($('#crime-location').val(), function(i, location){
+                    locations.push(location);
+                });
+                locations = locations.join(',');
+                drawnItems.eachLayer(function(layer){
+                    edit_create(layer, map);
+                });
+            } else {
+                $('#map').spin(false);
+                $('#shape-error').reveal();
+            }
+        })
         $('.chosen-select').chosen();
     });
 
@@ -143,13 +165,15 @@
     function draw_edit(e){
         var layers = e.layers;
         geojson.clearLayers();
-        layers.eachLayer(function(layer){
-            edit_create(layer, e.target);
-        })
+        drawnItems.addLayer(e.layer);
+      //layers.eachLayer(function(layer){
+      //    edit_create(layer, e.target);
+      //})
     }
 
     function draw_create(e){
-        edit_create(e.layer, e.target)
+        //edit_create(e.layer, e.target)
+        drawnItems.addLayer(e.layer);
     }
 
     function draw_delete(e){
@@ -178,18 +202,22 @@
         }
         query['date__lte'] = end;
         query['date__gte'] = start;
-        var on = [];
-        var type_checkboxes = $('.filter.type');
-        $.each(type_checkboxes, function(i, checkbox){
-            if($(checkbox).is(':checked')){
-                on.push($(checkbox).attr('value'));
-            }
+        var types = []
+        $.each($('#crime-type').val(), function(i, type){
+            types.push(type);
         });
-        if (on.length > 0){
-            query['type'] = on.join(',')
+        if(types.length > 0){
+            query['primary_type'] = types.join(',');
         }
-        on = [];
+        var locations = [];
+        $.each($('#crime-location').val(), function(i, location){
+            locations.push(location);
+        });
+        if(locations.length > 0){
+            query['location_description'] = locations.join(',');
+        }
         var time_checkboxes = $('.filter.time');
+        var on = [];
         $.each(time_checkboxes, function(i, checkbox){
             if($(checkbox).is(':checked')){
                 on.push($(checkbox).attr('value'));

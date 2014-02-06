@@ -60,7 +60,7 @@
                     <fieldset>
                         <legend>Search by an address</legend>
                         <input type="text" placeholder="Enter any Chicago address"/>
-                        <button class="button radius small search expand postfix">Search</button>
+                        <button id="address-search" class="button radius small expand postfix">Search</button>
                         <div id="refine"></div>
                     </fieldset>
                 </form>
@@ -86,6 +86,14 @@
             <p class="lead">At least one of your dates isn’t formatted correctly.
             The date fields down at the bottom of the map expect dates formatted like this:
             <strong>YYYY-MM-DD</strong></p>
+            <a class="close-reveal-modal">&#215;</a>
+        </div>
+        <div id="shape-error" class="reveal-modal small">
+            <h2 class="light">Oops, slight problem</h2>
+            <p class="lead">
+                Before we can run your query, you’ll need to make sure to draw
+                a shape on the map using the tools on the left-hand side.
+            </p>
             <a class="close-reveal-modal">&#215;</a>
         </div>
         <script src="//d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js"></script>
