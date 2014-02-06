@@ -104,16 +104,6 @@
             e.preventDefault();
             $('#map').spin('large');
             if(drawnItems.toGeoJSON().features.length){
-                var types = []
-                $.each($('#crime-type').val(), function(i, type){
-                    types.push(type);
-                });
-                types = types.join(',');
-                locations = [];
-                $.each($('#crime-location').val(), function(i, location){
-                    locations.push(location);
-                });
-                locations = locations.join(',');
                 drawnItems.eachLayer(function(layer){
                     edit_create(layer, map);
                 });
@@ -202,19 +192,23 @@
         }
         query['date__lte'] = end;
         query['date__gte'] = start;
-        var types = []
-        $.each($('#crime-type').val(), function(i, type){
-            types.push(type);
-        });
-        if(types.length > 0){
-            query['primary_type'] = types.join(',');
+        if($('#crime-type').val()){
+            var types = []
+            $.each($('#crime-type').val(), function(i, type){
+                types.push(type);
+            });
+            if(types.length > 0){
+                query['primary_type'] = types.join(',');
+            }
         }
-        var locations = [];
-        $.each($('#crime-location').val(), function(i, location){
-            locations.push(location);
-        });
-        if(locations.length > 0){
-            query['location_description'] = locations.join(',');
+        if ($('#crime-location').val()){
+            var locations = [];
+            $.each($('#crime-location').val(), function(i, location){
+                locations.push(location);
+            });
+            if(locations.length > 0){
+                query['location_description'] = locations.join(',');
+            }
         }
         var time_checkboxes = $('.filter.time');
         var on = [];
