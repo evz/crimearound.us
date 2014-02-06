@@ -1,12 +1,12 @@
 <form>
     <fieldset>
-        <legend>Filter by date</legend>
+        <legend>Date</legend>
         <input class="filter start" type="text" value="Start Date: <%= moment().subtract('d', 14).format('YYYY-MM-DD') %>" placeholder="Start Date"/>
         <input class="filter end" type="text" value="End Date: <%= moment().subtract('d', 7).format('YYYY-MM-DD') %>" placeholder="End Date"/>
     </fieldset>
     <fieldset>
-        <legend>Filter by Crime Type</legend>
-        <select id="crime-type" data-placeholder="Apply filters" class="chosen-select" multiple>
+        <legend>Type</legend>
+        <select id="crime-type" data-placeholder="Crime type ..." class="chosen-select" multiple>
             <option value=""></option>
             <option value="THEFT">Theft</option>
             <option value="BATTERY">Battery</option>
@@ -40,10 +40,8 @@
             <option value="NON-CRIMINAL,NON-CRIMINAL (SUBJECT SPECIFIED)">Non-criminal</option>
             <option value="OTHER OFFENSE">Other Offense</option>
         </select>
-    </fieldset>
-    <fieldset>
-        <legend>Filter by Crime Location</legend>
-        <select id="crime-location" data-placeholder="Apply filters" class="chosen-select" multiple>
+        <br /><br />
+        <select id="crime-location" data-placeholder="Location type ..." class="chosen-select" multiple>
             <option value="airport">Airport</option>
             <option value="business_banking">Business - Banking</option>
             <option value="business_eatery">Business - Eatery</option>
@@ -67,5 +65,6 @@
             <option value="vehicle">Vehicle</option>
         </select>
     </fieldset>
-    <button id="submit-query" class="button radius small expand postfix">Search within your area</button>
+    <button id="submit-query" class="button radius postfix">Search</button>
+    <button id="reset" class="button radius postfix alert">Reset</button>
 </form>
