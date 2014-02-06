@@ -17,8 +17,8 @@
             meta.removeFrom(map);
         }
     }
-    var endpoint = 'http://localhost:7777';
-    //var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    //var endpoint = 'http://localhost:7777';
+    var endpoint = 'http://crime-weather.smartchicagoapps.org';
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
