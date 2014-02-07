@@ -11,6 +11,8 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <script src="//api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.js"></script>
+        <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.js'></script>
         <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.css" />
         <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.css" />
 
@@ -55,16 +57,6 @@
         <div id="mapinfo" class="three columns full-height">
             <h4 class="light">Search crime in your area</h4>
             <hr />
-            <div id="search">
-                <form>
-                    <fieldset>
-                        <legend>Search by an address</legend>
-                        <input type="text" placeholder="Enter a Chicago address"/>
-                        <button id="address-search" class="button radius expand postfix">Search address</button>
-                        <div id="refine"></div>
-                    </fieldset>
-                </form>
-            </div>
             <div id="filters"></div>
             <hr />
             <div id="meta">
@@ -108,8 +100,6 @@
         <script src="js/spin.min.js"></script>
         <script src="js/jquery.spin.js"></script>
         <script src="js/jquery.fileDownload.js"></script>
-        <script src="js/mapbox.js"></script>
-        <script src="js/leaflet.draw.js"></script>
         <script src="js/map.js?2"></script>
     </body>
 </html>
