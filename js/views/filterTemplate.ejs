@@ -65,6 +65,19 @@
             <option value="vehicle">Vehicle</option>
         </select>
     </fieldset>
+    <fieldset>
+        <legend>Filter by police beat</legend>
+        <select id="police-beat" data-placeholder="Police Beat ..." class="chosen-select" multiple>
+            <% $.each(resp, function(district, beats){ %> 
+                <optgroup label="<%= district %>">
+                    <% $.each(beats, function(i, beat){ %> 
+                        <% console.log(beat) %>
+                        <option value="<%= beat %>"><%= beat %></option>
+                    <% }) %>
+                </optgroup>
+            <% }) %>
+        </select>
+    </fieldset>
     <button id="submit-query" class="button radius postfix">Search</button>
     <button id="reset" class="button radius postfix alert">Reset</button>
 </form>

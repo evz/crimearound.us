@@ -183,8 +183,11 @@
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
         map.addControl(new AddressSearch());
-        var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
-        $('#filters').append(tpl.render());
+        $.getJSON('js/beats.json', function(resp){
+            var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
+            $('#filters').append(tpl.render({resp:resp}));
+            $('.chosen-select').chosen();
+        })
         $('.filter').on('change', function(e){
             geojson.clearLayers();
             drawnItems.eachLayer(function(layer){
@@ -220,30 +223,8 @@
                 $('#map').spin(false);
                 $('#shape-error').reveal();
             }
-        })
-        $('.chosen-select').chosen();
+        });
     });
-
-    function handle_geocode(data){
-        var locations = data.results[0].locations;
-        if (locations.length == 1) {
-            var latlng = [locations[0].latLng.lat, locations[0].latLng.lng];
-            map.setView(latlng, 17);
-            L.marker(latlng).addTo(map);
-        } else if (locations.length > 1) {
-            var tpl = new EJS({url: 'js/views/searchRefine.ejs'});
-            $('#refine').append(tpl.render({locations:locations}))
-            $('.refine-search').on('click', function(e){
-                e.preventDefault();
-                var data = $(this).parent().data('latlng').split(',');
-                var latlng = [parseFloat(data[0]), parseFloat(data[1])];
-                map.setView(latlng, 17);
-                L.marker(latlng).addTo(map);
-            })
-        } else {
-            $('#refine').append("<p>Your search didn't return any results.</p>");
-        }
-    }
 
     function parseParams(query){
         var re = /([^&=]+)=?([^&]*)/g;
