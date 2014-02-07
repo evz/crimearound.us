@@ -187,6 +187,18 @@
             var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
             $('#filters').append(tpl.render({resp:resp}));
             $('.chosen-select').chosen();
+            $('#submit-query').on('click', function(e){
+                e.preventDefault();
+                $('#map').spin('large');
+                if(drawnItems.toGeoJSON().features.length){
+                    drawnItems.eachLayer(function(layer){
+                        edit_create(layer, map);
+                    });
+                } else {
+                    $('#map').spin(false);
+                    $('#shape-error').reveal();
+                }
+            });
         })
         $('.filter').on('change', function(e){
             geojson.clearLayers();
@@ -211,18 +223,6 @@
                 dataType: 'jsonp',
                 success: handle_geocode
             });
-        });
-        $('#submit-query').on('click', function(e){
-            e.preventDefault();
-            $('#map').spin('large');
-            if(drawnItems.toGeoJSON().features.length){
-                drawnItems.eachLayer(function(layer){
-                    edit_create(layer, map);
-                });
-            } else {
-                $('#map').spin(false);
-                $('#shape-error').reveal();
-            }
         });
     });
 
@@ -298,6 +298,15 @@
             });
             if(locations.length > 0){
                 query['location_description'] = locations.join(',');
+            }
+        }
+        if ($('#police-beat').val()){
+            var beats = [];
+            $.each($('#police-beat').val(), function(i, beat){
+                beats.push(beat);
+            });
+            if(beats.length > 0){
+                query['beat'] = beats.join(',');
             }
         }
         var time_checkboxes = $('.filter.time');

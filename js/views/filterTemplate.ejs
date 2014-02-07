@@ -71,7 +71,6 @@
             <% $.each(resp, function(district, beats){ %> 
                 <optgroup label="<%= district %>">
                     <% $.each(beats, function(i, beat){ %> 
-                        <% console.log(beat) %>
                         <option value="<%= beat %>"><%= beat %></option>
                     <% }) %>
                 </optgroup>
