@@ -19,6 +19,119 @@
     }
     //var endpoint = 'http://localhost:7777';
     var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    var AddressSearch = L.Control.extend({
+        options: {
+            position: 'topleft',
+            keepOpen: false,
+        },
+        _toggle: function(e) {
+            if (e) L.DomEvent.stop(e);
+            if (L.DomUtil.hasClass(this._container, 'active')) {
+                L.DomUtil.removeClass(this._container, 'active');
+                this._results.innerHTML = '';
+                this._input.blur();
+            } else {
+                L.DomUtil.addClass(this._container, 'active');
+                this._input.focus();
+                this._input.select();
+            }
+        },
+        _closeIfOpen: function(e) {
+            if (L.DomUtil.hasClass(this._container, 'active') &&
+                !this.options.keepOpen) {
+                L.DomUtil.removeClass(this._container, 'active');
+                this._results.innerHTML = '';
+                this._input.blur();
+            }
+        },
+        onAdd: function(map) {
+            var container = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder leaflet-bar leaflet-control'),
+                link = L.DomUtil.create('a', 'leaflet-control-mapbox-geocoder-toggle mapbox-icon mapbox-icon-geocoder', container),
+                results = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-results', container),
+                wrap = L.DomUtil.create('div', 'leaflet-control-mapbox-geocoder-wrap', container),
+                form = L.DomUtil.create('form', 'leaflet-control-mapbox-geocoder-form', wrap),
+                input  = L.DomUtil.create('input', '', form);
+
+            link.href = '#';
+            link.innerHTML = '&nbsp;';
+
+            input.type = 'text';
+            input.setAttribute('placeholder', 'Search');
+
+            L.DomEvent.addListener(form, 'submit', this._geocode, this);
+            L.DomEvent.disableClickPropagation(container);
+
+            this._map = map;
+            this._input = input;
+            this._form = form;
+            this._results = results;
+
+            if (this.options.keepOpen) {
+                L.DomUtil.addClass(container, 'active');
+            } else {
+                this._map.on('click', this._closeIfOpen, this);
+                L.DomEvent.addListener(link, 'click', this._toggle, this);
+            }
+            return container;
+        },
+        _geocode: function(e){
+            L.DomEvent.preventDefault(e);
+            L.DomUtil.addClass(this._container, 'searching');
+            var map = this._map;
+            var container = this._container;
+            var results = this._results;
+            var self = this;
+            var onload = L.bind(function(resp, err){
+                L.DomUtil.removeClass(container, 'searching');
+                results.innerHTML = '';
+                var locations = resp.results[0].locations;
+                console.log(locations);
+                if (locations.length === 1){
+                    var latlng = [locations[0].latLng.lat, locations[0].latLng.lng];
+                    map.setView(latlng, 17);
+                    L.marker(latlng).addTo(map);
+                } else {
+                    for (var i = 0, l = Math.min(locations.length, 5); i < l; i++) {
+                        var name = [];
+                        if (locations[i].street) name.push(locations[i].street);
+                        if (!name.length) continue;
+
+                        var r = L.DomUtil.create('a', '', this._results);
+                        r.innerHTML = name.join(', ');
+                        r.href = '#';
+
+                        (L.bind(function(result) {
+                            L.DomEvent.addListener(r, 'click', function(e) {
+                                var lat = result.latLng.lat;
+                                var lng = result.latLng.lng;
+                                map.setView(L.latLng(lat, lng), 16);
+                                L.marker([lat,lng]).addTo(map);
+                                L.DomEvent.stop(e);
+                                self._toggle();
+                            }, this);
+                        }, this))(locations[i]);
+                    }
+                    if (resp.results.length > 5) {
+                        var outof = L.DomUtil.create('span', '', this._results);
+                        outof.innerHTML = 'Top 5 of ' + locations.length + '  results';
+                    }
+                }
+            }, this);
+            var query = this._input.value + ' Chicago, IL';
+            var bbox = "42.023134979999995,-87.52366115999999,41.644286009999995,-87.94010087999999";
+            var params = {
+                key: 'Fmjtd|luub2d0rn1,rw=o5-9u2ggw',
+                location: query,
+                boundingBox: bbox
+            }
+            $.ajax({
+                url:'http://open.mapquestapi.com/geocoding/v1/address',
+                data: params,
+                dataType: 'jsonp',
+                success: onload
+            });
+        }
+    });
     $(document).ready(function(){
         $('.full-height').height(window.innerHeight - 45);
         window.onresize = function(event){
@@ -69,11 +182,7 @@
         } else {
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
-       //var geocoder = L.mapbox.geocoderControl('ericvanzanten.map-7b7muw9h');
-       //map.addControl(geocoder);
-       //geocoder.on('select', function(e){
-       //    console.log('uh');
-       //})
+        map.addControl(new AddressSearch());
         var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
         $('#filters').append(tpl.render());
         $('.filter').on('change', function(e){
