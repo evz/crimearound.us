@@ -1,6 +1,6 @@
 (function(){
     var drawnItems = new L.FeatureGroup();
-    var geojson = new L.LayerGroup();
+    var geojson = new L.FeatureGroup();
     var map;
     var meta = L.control({position: 'bottomright'});
     var meta_data;
@@ -159,24 +159,28 @@
             var query = parseParams(hash)
             $.when(get_results(query)).then(
                 function(resp){
-                    var location = resp['meta']['query']['location']
-                    var shape_opts = {
-                        stroke: true,
-                        color: '#f06eaa',
-                        weight: 4,
-                        opacity: 0.5,
-                        fill: true,
-                        fillOpacity: 0.2,
-                        clickable: true
-                    }
-                    var geo = L.geoJson(location['$geoWithin']['$geometry'],{
-                        style: function(feature){
-                            return shape_opts;
+                    var location = resp['meta']['query']['location'];
+                    if (typeof location !== 'undefined'){
+                        var shape_opts = {
+                            stroke: true,
+                            color: '#f06eaa',
+                            weight: 4,
+                            opacity: 0.5,
+                            fill: true,
+                            fillOpacity: 0.2,
+                            clickable: true
                         }
-                    });
-                    drawnItems.addLayer(geo);
-                    map.fitBounds(geo.getBounds());
+                        var geo = L.geoJson(location['$geoWithin']['$geometry'],{
+                            style: function(feature){
+                                return shape_opts;
+                            }
+                        });
+                        drawnItems.addLayer(geo);
+                    }
                     add_resp_to_map(resp);
+                    if (geojson.getLayers().length > 0){
+                        map.fitBounds(geojson.getBounds());
+                    }
                 }
             ).fail();
         } else {
@@ -199,23 +203,9 @@
             $('.chosen-select').chosen();
             $('#submit-query').on('click', function(e){
                 e.preventDefault();
-                $('#map').spin('large');
-                if(drawnItems.toGeoJSON().features.length){
-                    drawnItems.eachLayer(function(layer){
-                        edit_create(layer, map);
-                    });
-                } else {
-                    $('#map').spin(false);
-                    $('#shape-error').reveal();
-                }
+                edit_create();
             });
         })
-        $('.filter').on('change', function(e){
-            geojson.clearLayers();
-            drawnItems.eachLayer(function(layer){
-                edit_create(layer, map);
-            });
-        });
         $('#report').on('click', get_report);
         $('#address-search').on('click',function(e){
             e.preventDefault();
@@ -255,14 +245,12 @@
     function draw_edit(e){
         var layers = e.layers;
         geojson.clearLayers();
-        drawnItems.addLayer(e.layer);
-      //layers.eachLayer(function(layer){
-      //    edit_create(layer, e.target);
-      //})
+        layers.eachLayer(function(layer){
+            drawnItems.addLayer(layer);
+        });
     }
 
     function draw_create(e){
-        //edit_create(e.layer, e.target)
         drawnItems.addLayer(e.layer);
     }
 
@@ -272,14 +260,15 @@
         meta.update();
     }
 
-    function edit_create(layer, map){
+    function edit_create(){
         $('#map').spin('large')
         var query = {};
-        var feature = layer.toGeoJSON();
-        if (feature.type == 'FeatureCollection'){
-            feature = feature.features[0];
+        var layers = drawnItems.getLayers();
+        if (layers.length > 0){
+            drawnItems.eachLayer(function(layer){
+                query['location__geoWithin'] = JSON.stringify(layer['geometry']);
+            })
         }
-        query['location__geoWithin'] = JSON.stringify(feature['geometry']);
         var start = $('.start').val().replace('Start Date: ', '');
         var end = $('.end').val().replace('End Date: ', '');
         start = moment(start)
@@ -333,6 +322,9 @@
             $.when(get_results(query)).then(function(resp){
                 add_resp_to_map(resp);
                 window.location.hash = $.param(query);
+                if (geojson.getLayers().length > 0){
+                    map.fitBounds(geojson.getBounds());
+                }
             }).fail(function(data){
                 console.log(data);
             })
@@ -340,7 +332,6 @@
             $('#map').spin(false);
             $('#date-error').reveal();
         }
-        drawnItems.addLayer(layer);
     }
 
     function add_resp_to_map(resp){
@@ -357,6 +348,9 @@
         }
         meta.addTo(map);
         meta.update(meta_data);
+        if(geojson.getLayers().length > 0){
+            geojson.clearLayers();
+        }
         $.each(resp.results, function(i, result){
             var location = result.location;
             location.properties = result;
