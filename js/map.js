@@ -183,9 +183,19 @@
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
         map.addControl(new AddressSearch());
+        $('.start').val("Start Date: " + moment().subtract('d', 14).format('YYYY-MM-DD'));
+        $('.end').val("End Date: " + moment().subtract('d', 7).format('YYYY-MM-DD'));
         $.getJSON('js/beats.json', function(resp){
-            var tpl = new EJS({url: 'js/views/filterTemplate.ejs?2'});
-            $('#filters').append(tpl.render({resp:resp}));
+            var beat_select = "<select id='police-beat' data-placeholder='Police Beat ...' class='chosen-select' multiple>";
+            $.each(resp, function(district, beats){
+                beat_select += "<optgroup label='" + district + "'>";
+                $.each(beats, function(i, beat){
+                    beat_select += "<option value='" + beat + "'>" + beat + "</option>";
+                })
+                beat_select += "</optgroup>";
+            });
+            beat_select += "</select>";
+            $('#beat-filters').append(beat_select);
             $('.chosen-select').chosen();
             $('#submit-query').on('click', function(e){
                 e.preventDefault();
