@@ -85,11 +85,12 @@
                 L.DomUtil.removeClass(container, 'searching');
                 results.innerHTML = '';
                 var locations = resp.results[0].locations;
-                console.log(locations);
                 if (locations.length === 1){
                     var latlng = [locations[0].latLng.lat, locations[0].latLng.lng];
                     map.setView(latlng, 17);
-                    L.marker(latlng).addTo(map);
+                    var mark = L.marker(latlng)
+                    mark.addTo(map);
+                    self._fetch_near(mark); //Add in the $near query
                 } else {
                     for (var i = 0, l = Math.min(locations.length, 5); i < l; i++) {
                         var name = [];
@@ -105,9 +106,12 @@
                                 var lat = result.latLng.lat;
                                 var lng = result.latLng.lng;
                                 map.setView(L.latLng(lat, lng), 16);
-                                L.marker([lat,lng]).addTo(map);
+                                var mark = L.marker([lat,lng]);
+                                mark.addTo(map);
                                 L.DomEvent.stop(e);
                                 self._toggle();
+                                self._fetch_near(mark);
+                                // add in the $near query
                             }, this);
                         }, this))(locations[i]);
                     }
@@ -130,6 +134,29 @@
                 dataType: 'jsonp',
                 success: onload
             });
+        },
+        _fetch_near: function(point){
+            var geo = point.toGeoJSON()['geometry'];
+            var query = {};
+            query['location__near'] = JSON.stringify(geo);
+            query['maxDistance'] = 0;
+            var start = $('.start').val().replace('Start Date: ', '');
+            var end = $('.end').val().replace('End Date: ', '');
+            start = moment(start)
+            end = moment(end)
+            start = start.startOf('day').unix();
+            end = end.endOf('day').unix();
+            query['date__lte'] = end;
+            query['date__gte'] = start;
+            $.when(get_results(query)).then(
+                function(resp){
+                    add_resp_to_map(resp);
+                    window.location.hash = $.param(query);
+                    if (geojson.getLayers().length > 0){
+                        map.fitBounds(geojson.getBounds());
+                    }
+                }
+            )
         }
     });
     $(document).ready(function(){
@@ -231,23 +258,6 @@
             });
         })
         $('#report').on('click', get_report);
-        $('#address-search').on('click',function(e){
-            e.preventDefault();
-            $('#refine').empty()
-            var query = $(this).prev().val() + ' Chicago, IL';
-            var bbox = "42.023134979999995,-87.52366115999999,41.644286009999995,-87.94010087999999";
-            var params = {
-                key: 'Fmjtd|luub2d0rn1,rw=o5-9u2ggw',
-                location: query,
-                boundingBox: bbox
-            }
-            $.ajax({
-                url:'http://open.mapquestapi.com/geocoding/v1/address',
-                data: params,
-                dataType: 'jsonp',
-                success: handle_geocode
-            });
-        });
     });
 
     function parseParams(query){
