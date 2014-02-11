@@ -262,7 +262,6 @@
                 window.location.reload();
             })
         })
-        $('#report').on('click', get_report);
     });
 
     function parseParams(query){
@@ -418,6 +417,12 @@
                 onEachFeature: bind_popup
             })).addTo(map);
         });
+        if ($('#report').length > 0){
+            $('#report').remove();
+        }
+        var report = '<button id="report" class="button radius success">Download Report</button>'
+        $('#form-controls').after(report);
+        $('#report').on('click', get_report);
     }
 
     function bind_popup(feature, layer){
