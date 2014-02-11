@@ -90,7 +90,7 @@
                     map.setView(latlng, 17);
                     var mark = L.marker(latlng)
                     mark.addTo(map);
-                    self._fetch_near(mark); //Add in the $near query
+                    //self._fetch_near(mark); //Add in the $near query
                 } else {
                     for (var i = 0, l = Math.min(locations.length, 5); i < l; i++) {
                         var name = [];
@@ -110,7 +110,7 @@
                                 mark.addTo(map);
                                 L.DomEvent.stop(e);
                                 self._toggle();
-                                self._fetch_near(mark);
+                                //self._fetch_near(mark);
                                 // add in the $near query
                             }, this);
                         }, this))(locations[i]);
@@ -138,8 +138,8 @@
         _fetch_near: function(point){
             var geo = point.toGeoJSON()['geometry'];
             var query = {};
-            query['location__near'] = JSON.stringify(geo);
-            query['maxDistance'] = 0;
+            query['location__nearSphere'] = JSON.stringify(geo);
+            query['maxDistance'] = 500;
             var start = $('.start').val().replace('Start Date: ', '');
             var end = $('.end').val().replace('End Date: ', '');
             start = moment(start)
@@ -256,6 +256,11 @@
                 e.preventDefault();
                 edit_create();
             });
+            $('#reset').on('click', function(e){
+                e.preventDefault();
+                window.location.hash = '';
+                window.location.reload();
+            })
         })
         $('#report').on('click', get_report);
     });
@@ -300,7 +305,7 @@
         var layers = drawnItems.getLayers();
         if (layers.length > 0){
             drawnItems.eachLayer(function(layer){
-                query['location__geoWithin'] = JSON.stringify(layer['geometry']);
+                query['location__geoWithin'] = JSON.stringify(layer.toGeoJSON()['geometry']);
             })
         }
         var start = $('.start').val().replace('Start Date: ', '');
