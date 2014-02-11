@@ -1,35 +1,37 @@
-<h6><%= moment(date.$date).format('dddd MMM D, YYYY') %></h6>
-<h3><%= primary_type %> <br/> <span class="light"><%= typeof description !== 'undefined' ? description : '' %></span></h3>
-<h5><%= block %> <br/> <span class="light">(<%= typeof location_description !== 'undefined' ? location_description : '' %>)</span></h5>
+<p><%= moment(date.$date).format('dddd MMM D, YYYY') %></p>
+<h3><%= primary_type %><br /><span class="light"><%= typeof description !== 'undefined' ? description : '' %></span></h3>
 <p>
-    <strong>Arrest? </strong>
-    <% if(arrest == 'true' || arrest == true){ %> 
-        <i class="foundicon-checkmark"></i>&nbsp;&nbsp;
-    <% } else { %> 
-        <i class="foundicon-remove"></i>&nbsp;&nbsp;
-    <% } %> 
-    <strong>Domestic? </strong>
-    <% if(domestic == 'true' || domestic == true){ %> 
-        <i class="foundicon-checkmark"></i>
-    <% } else { %> 
-        <i class="foundicon-remove"></i>
-    <% } %> 
+<strong><%= block.replace("0X", "00").replace("XX", "00") %></strong> <br />
+<%= typeof location_description !== 'undefined' ? location_description : '' %>
 </p>
+
 <table class="twelve">
     <thead>
         <tr>
-            <th>Beat</th>
-            <th>District</th>
-            <th>Comm Area</th>
             <th>Ward</th>
+            <th>Beat</th>
+            <th>Arrest?</th>
+            <th>Domestic?</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td><%= typeof beat !== 'undefined' ? beat : '' %></td>
-            <td><%= typeof district !== 'undefined' ? district : '' %></td>
-            <td><%= typeof community_area !== 'undefined' ? community_area : ''%></td>
             <td><%= typeof ward !== 'undefined' ? ward : '' %></td>
+            <td><%= typeof beat !== 'undefined' ? beat : '' %></td>
+            <td>
+                <% if(arrest == 'true' || arrest == true){ %> 
+                    Yes
+                <% } else { %> 
+                    No
+                <% } %> 
+            </td>
+            <td>
+                <% if(domestic == 'true' || domestic == true){ %> 
+                    Yes
+                <% } else { %> 
+                    No
+                <% } %> 
+            </td>
         </tr>
     </tbody>
 </table>
