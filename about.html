@@ -31,58 +31,44 @@
             </nav>
         </div>
         <div class="row">
-            <div class="ten columns centered">
-                <h2 class="light">What’s happening around you?</h2>
-                <h4 class="light">
-                    This app provides a unique way of finding out.
-                </h4>
-                <img src="images/custom-shape.png" />
-                <h5>Who is behind this?</h5>
+            <div class="ten columns centered about">
+                <h2 class="light">About</h2>
+                <p><strong>Crime Around Us</strong> is a tool for browsing crimes reported to the <a href='https://portal.chicagopolice.org/portal/page/portal/ClearPath'>City of Chicago Police Department</a> from 2001 to present.</p>
+
+                <p>This site, which is updated daily from the <a href='https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2'>Chicago Data Portal</a>, allows anyone to search for crime in any area of the city by drawing a box or a custom shape on the map like so:</p>
+
+                <p><img src="images/custom_shape_1.png" alt='Custom shape in Chicago'/></p>
+
+                <p>Additionally, you can filter by the <strong>date</strong> the crime was reported, <strong>time of day</strong>, <strong>crime type</strong> and <strong>type of location</strong>. Read our <a href='/help.html'>help page</a> to learn more about using these filters.</p>
+
+                <h3>Who built this?</h3>
                 <p>
-                    This app is mostly made possible by infrastructure made
-                    available by the
-                    <a href="http://www.smartchicagocollaborative.org">
-                        Smart Chicago Collaborative
-                    </a> and a partnership between <a href="http://datamade.us">DataMade</a>
-                    and <a href="http://www.lisc-chicago.org/">LISC Chicago</a>.
+                    This app was originally built by <a href="https://twitter.com/evanzanten">Eric van Zanten</a>,
+                    a web developer in Chicago who works for
+                    <a href="http://datamade.us">DataMade</a> who also <a href="http://crime.static-eric.com">created a visualization that compares daily temperature and crime</a>.
                 </p>
-                <h5>Have an idea? Or a problem? Want to help?</h5>
-                <p>You can submit bug reports, fork this code, or give us ideas
-                    <a href="https://github.com/evz/crimearound.us/issues">
-                        over on github
-                    </a>.
-                </p>
-                <h5>How does this thing work, anyways?</h5>
-                <p>
-                    In a nutshell, the portion of the app that you are
-                    interacting with here and on the map page is being hosted
-                    entirely using Github pages. There is a MongoDB instance that
-                    has all crime reported in Chicago from 2001 until a week ago.
-                    In front of the database is a
-                    <a href="https://github.com/evz/crimeapi">
-                        very simple Flask app
-                    </a>
-                    that gives this site a way to talk to it by responding
-                    with JSONP. Because it uses JSONP, the database can be used by
-                    client-side javascript from anywhere on the web. Or, with a bit
-                    of trickery, from server-side apps as well.
-                    <strong>
-                        Want to use this data?
-                        <a href="https://github.com/evz/crimeapi">
-                            Read the docs&hellip;
-                        </a>
-                    </strong>
-                </p>
-                <h5>Who are you, anyways?</h5>
-                <p>
-                    Oh yeah, that. I’m <strong>Eric van Zanten</strong>,
-                    a web developer in Chicago who currently works for
-                    <a href="http://datamade.us">DataMade</a>. I’m on
-                    <a href="https://twitter.com/evanzanten">Twitter</a>
-                    and I have a <a href="http://www.static-eric.com">blog</a>.
-                    Besides this app, I created a visualization that compares daily temperature
-                    and crime <a href="http://crime.static-eric.com">over here</a>.
-                </p>
+
+                <p>Crime Around Us is currently being developed in partnership with <a href="http://datamade.us">DataMade</a> and <a href="http://www.lisc-chicago.org/">LISC Chicago</a>. The database with all our crime data is <a href='http://www.smartchicagocollaborative.org/projects/hosted-web-space/'>hosted</a> by <a href="http://www.smartchicagocollaborative.org">The Smart Chicago Collaborative</a> and the website is hosted on <a href=''>Github Pages</a>.</p>
+
+                <h3>Code</h3>
+                <p>All of the code for this project is open source. It's comprised of a <a href='https://github.com/evz/crimeapi/'>database of crime data</a> and <a href='https://github.com/datamade/crimearound.us/'>this website</a> for bowsing it.</p>
+
+                <p><strong><a href='https://github.com/evz/crimeapi/'>Crime API</a></strong>
+                - A python app that serves up crime data.</p>
+                <ul>
+                    <li><a href='http://flask.pocoo.org/'>Flask</a> - python web framework</li>
+                    <li><a href='http://www.mongodb.org/'>MongoDB</a> - geospatial document storage database</li>
+                </ul>
+
+                <p><strong><a href='https://github.com/datamade/crimearound.us/'>Crime Around Us</a></strong> - 
+                An HTML and Javascript website</p>
+                <ul>
+                    <li><a href='http://foundation.zurb.com/'>Foundation</a> - responsive HTML and CSS framework</li>
+                    <li><a href='http://leafletjs.com/'>Leaflet</a> - interactive map</li>
+                </ul>
+
+                <h3>Contact us</h3>
+                <p>Found a bug? Have a suggestion? <a href='https://github.com/datamade/crimearound.us/issues/'>Report it on our issue tracker!</a> If you'd rather email us, get in touch at <a href='mailto:info@datamade.us'>info (at) datamade.us</a></p>
             </div>
         </div>
         <script src="foundation/javascripts/foundation.min.js"></script>

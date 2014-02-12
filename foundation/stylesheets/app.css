@@ -1,4 +1,8 @@
 /* Artfully masterminded by ZURB  */
+.about p, .about li {
+    font-size: 14pt;
+}
+
 .top-bar {
     margin-bottom: 0px !important;
 }
@@ -28,7 +32,7 @@
     margin-bottom: 0;
 }
 
-#search ul {
+ul {
     list-style-position: inside !important;
 }
 
