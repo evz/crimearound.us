@@ -229,6 +229,12 @@
                         });
                         $('#crime-location').trigger('chosen:updated');
                     }
+                    if(typeof query['time'] !== 'undefined'){
+                        $.each(query['time'].split(','), function(i, time){
+                            $('#time-of-day').find('[value="' + time + '"]').attr('selected', 'selected');
+                        });
+                        $('#time-of-day').trigger('chosen:updated');
+                    }
                     if (typeof resp.meta.query.beat !== 'undefined'){
                         add_beats(resp.meta.query.beat['$in']);
                     }
@@ -268,7 +274,7 @@
                 window.location.reload();
             });
         })
-        $('.filter').datepicker({
+        $('.date-filter').datepicker({
             dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
             prevText: '',
             nextText: ''
@@ -357,15 +363,14 @@
                 query['beat'] = beats.join(',');
             }
         }
-        var time_checkboxes = $('.filter.time');
-        var on = [];
-        $.each(time_checkboxes, function(i, checkbox){
-            if($(checkbox).is(':checked')){
-                on.push($(checkbox).attr('value'));
+        if($('#time-of-day').val()){
+            var times = [];
+            $.each($('#time-of-day').val(), function(i, time){
+                times.push(time);
+            });
+            if(times.length > 0){
+                query['time'] = times.join(',');
             }
-        });
-        if (on.length > 0){
-            query['time'] = on.join(',');
         }
         if(valid){
             $.when(get_results(query)).then(function(resp){
