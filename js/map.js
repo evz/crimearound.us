@@ -453,7 +453,8 @@
         })
     }
 
-    function get_report(){
+    function get_report(e){
+        e.preventDefault();
         var query = JSON.stringify(meta_data.query);
         if (typeof query !== 'undefined'){
             $.fileDownload(endpoint + '/api/report/?query=' + query, {
