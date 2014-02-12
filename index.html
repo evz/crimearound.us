@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
+        <title>crimearound.us</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -36,11 +36,6 @@
         </script>
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-
-        <!-- Add your site or application content here -->
         <div class="fixed">
             <nav class="top-bar">
                 <ul>
@@ -66,40 +61,66 @@
                         <input id="end" class="filter end" type="text" placeholder="End Date"/>
                     </fieldset>
                     <fieldset>
+                        <legend>Time of day</legend>
+                        <label>
+                            <input class="filter time" type="checkbox" value="0,6" checked="true">
+                            Early Morning (Midnight&ndash;6am)
+                        </label>
+                        <label>
+                            <input class="filter time" type="checkbox" value="6,12" checked="true">
+                            Morning (6am&ndash;Noon)
+                        </label>
+                        <label>
+                            <input class="filter time" type="checkbox" value="12,18" checked="true">
+                            Afternoon (Noon&ndash;6pm)
+                        </label>
+                        <label>
+                            <input class="filter time" type="checkbox" value="18,24" checked="true">
+                            Night (6pm&ndash;Midnight)
+                        </label>
+                    </fieldset>
+                    <fieldset>
                         <legend>Type</legend>
                         <select id="crime-type" data-placeholder="Crime type ..." class="chosen-select" multiple>
                             <option value=""></option>
-                            <option value="THEFT">Theft</option>
-                            <option value="BATTERY">Battery</option>
-                            <option value="CRIMINAL DAMAGE">Criminal Damage</option>
-                            <option value="NARCOTICS">Narcotics</option>
-                            <option value="OTHER OFFENSE">Other Offense</option>
-                            <option value="ASSAULT">Assault</option>
-                            <option value="BURGLARY">Burglary</option>
-                            <option value="MOTOR VEHICLE THEFT">Motor Vehicle Theft</option>
-                            <option value="ROBBERY">Robbery</option>
-                            <option value="DECEPTIVE PRACTICE">Deceptive Practice</option>
-                            <option value="CRIMINAL TRESPASS">Criminal Trespass</option>
-                            <option value="PROSTITUTION">Prostitution</option>
-                            <option value="WEAPONS VIOLATION">Weapons Violation</option>
-                            <option value="PUBLIC PEACE VIOLATION">Public Peace Violation</option>
-                            <option value="OFFENSE INVOLVING CHILDREN,OFFENSES INVOLVING CHILDREN">Offense Involving Children</option>
-                            <option value="SEX OFFENSE">sex offense</option>
-                            <option value="CRIM SEXUAL ASSAULT">Criminal Sexual Assault</option>
-                            <option value="GAMBLING">Gambling</option>
-                            <option value="LIQUOR LAW VIOLATION">Liquor Law Violation</option>
-                            <option value="ARSON">Arson</option>
-                            <option value="HOMICIDE">Homicide</option>
-                            <option value="INTERFERE WITH PUBLIC OFFICER,INTERFERENCE WITH PUBLIC OFFICER">Interference with a public officer</option>
-                            <option value="KIDNAPPING">Kidnapping</option>
-                            <option value="INTIMIDATION">Intimidation</option>
-                            <option value="STALKING">Stalking</option>
-                            <option value="OBSCENITY">Obscenity</option>
-                            <option value="PUBLIC INDECENCY">Public Indecency</option>
-                            <option value="OTHER NARCOTIC VIOLATION">Other Narcotic Violation</option>
-                            <option value="RITUALISM">Ritualism</option>
-                            <option value="NON-CRIMINAL,NON-CRIMINAL (SUBJECT SPECIFIED)">Non-criminal</option>
-                            <option value="OTHER OFFENSE">Other Offense</option>
+                            <optgroup label="Violent">
+                                <option value="ROBBERY">Robbery</option>
+                                <option value="ASSAULT">Assault</option>
+                                <option value="BATTERY">Battery</option>
+                                <option value="HOMICIDE">Homicide</option>
+                                <option value="CRIM SEXUAL ASSAULT">Criminal Sexual Assault</option>
+                            </optgroup>
+                            <optgroup label="Property">
+                                <option value="THEFT">Theft</option>
+                                <option value="MOTOR VEHICLE THEFT">Motor Vehicle Theft</option>
+                                <option value="BURGLARY">Burglary</option>
+                                <option value="ARSON">Arson</option>
+                            </optgroup>
+                            <optgroup label="Quality of Life">
+                                <option value="CRIMINAL DAMAGE">Criminal Damage</option>
+                                <option value="NARCOTICS">Narcotics</option>
+                                <option value="PROSTITUTION">Prostitution</option>
+                            </optgroup>
+                            <optgroup label="Other">
+                                <option value="OTHER OFFENSE">Other Offense</option>
+                                <option value="DECEPTIVE PRACTICE">Deceptive Practice</option>
+                                <option value="CRIMINAL TRESPASS">Criminal Trespass</option>
+                                <option value="WEAPONS VIOLATION">Weapons Violation</option>
+                                <option value="PUBLIC PEACE VIOLATION">Public Peace Violation</option>
+                                <option value="OFFENSE INVOLVING CHILDREN,OFFENSES INVOLVING CHILDREN">Offense Involving Children</option>
+                                <option value="SEX OFFENSE">sex offense</option>
+                                <option value="GAMBLING">Gambling</option>
+                                <option value="LIQUOR LAW VIOLATION">Liquor Law Violation</option>
+                                <option value="INTERFERE WITH PUBLIC OFFICER,INTERFERENCE WITH PUBLIC OFFICER">Interference with a public officer</option>
+                                <option value="KIDNAPPING">Kidnapping</option>
+                                <option value="INTIMIDATION">Intimidation</option>
+                                <option value="STALKING">Stalking</option>
+                                <option value="OBSCENITY">Obscenity</option>
+                                <option value="PUBLIC INDECENCY">Public Indecency</option>
+                                <option value="OTHER NARCOTIC VIOLATION">Other Narcotic Violation</option>
+                                <option value="RITUALISM">Ritualism</option>
+                                <option value="NON-CRIMINAL,NON-CRIMINAL (SUBJECT SPECIFIED)">Non-criminal</option>
+                            </optgroup>
                         </select>
                         <br /><br />
                         <select id="crime-location" data-placeholder="Location type ..." class="chosen-select" multiple>

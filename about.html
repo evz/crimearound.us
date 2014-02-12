@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Share my data</title>
+        <title>crimearound.us | About</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -29,52 +29,71 @@
         </script>
     </head>
     <body>
-        <!--[if lt IE 7]>
-            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-        <![endif]-->
-
-        <!-- Add your site or application content here -->
         <div class="fixed">
             <nav class="top-bar">
                 <ul>
                     <li class="name"><h1><a href="/">crimearound.us</a></h1></li>
                 </ul>
                 <section>
-                    <ul class="left">
-                        <li><a id="report" href="/about.html">What’s going on here?</a></li>
+                    <ul class="right">
+                        <li><a href="/about.html">About</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
         <div class="row">
             <div class="ten columns centered">
-                <h2 class="light">What’s happening around you?</h2> <h4
-                  class="light">This app provides a unique way of finding
-                  out.</h4> <img src="/custom-shape.png" /> <h5>Draw a
-                  map&hellip;</h5> <p>Using the tools on the left side of the
-                map interface, you can draw a custom shape on the map to define
-                the area that you are interested in. When you’re done drawing,
-                the area you drew will immediately be populated by dots
-                representing the various reported crimes that took place
-                between 7 and 14 days ago. To customize the date range or limit
-                the types of crimes returned, you can use the controls across
-                the bottom of the map. Both date fields expect a date formatted
-                like so <strong>YYYY-MM-DD</strong></p> <h5>&hellip;get a
-                  report</h5> <p>Once you’ve honed in on what it is that you
-                want to look at, you can click on “Get a Report” which will
-                generate an Excel Spreadsheet of everything you’re looking at.
-                Have a use for other formats? You can submit an issue <a
-                  href="https://github.com/evz/crimeapi/issues">over here</a>
-                and tell me what you’re after.</p> <h5>More to come?</h5>
-                <p>This app is mostly made possible by infrastructure made
-                available to me by the <a
-                  href="http://www.smartchicagocollaborative.org">Smart Chicago
-                  Collaborative</a>. I hope to be able to continue developing
-                this app as well as whatever else seems to make sense.</p>
-                <h5>Have an idea? Or a problem? Want to help?</h5> <p>You can
-                submit bug reports, fork my code, or give me ideas <a
-                  href="https://github.com/evz/crimearound.us/issues">over on
-                  github</a>.</p> <h5>How does this thing work, anyways?</h5>
+                <h2 class="light">What’s happening around you?</h2>
+                <h4 class="light">
+                    This app provides a unique way of finding out.
+                </h4>
+                <img src="images/custom-shape.png" />
+                <h5>Draw a shape on the map&hellip;</h5>
+                <p>
+                    Using the tools on the left side of the map interface, you
+                    can draw a custom shape on the map to define the area that
+                    you are interested in.
+                </p>
+                <img style="float:right; margin-left: 10px;" src="images/dot-click.png" />
+                <h5>&hellip;optionally limit your query&hellip;</h5>
+                <p>
+                    When you’re done drawing, you can optionally limit the
+                    types of crimes that are returned by using the filters in
+                    the left hand panel. Currently, your query can be limited
+                    by <strong>date range, primary crime type, location
+                    type</strong>, and <strong>police beat</strong>.
+                </p>
+                <h5>&hellip;get a report</h5>
+                <p>
+                    Once you’ve honed in on what it is that you want to look
+                    at, you can click on “Search” to see the results of your query on the map.
+                    Clicking on any of the dots on the map will reveal some details about that particular crime report.
+                    If you’re interested in getting the data you’re looking at in a tabular format, you can use the
+                    <strong>Download Report</strong> button
+                    Excel Spreadsheet of everything you’re looking at.  Have a
+                    use for other formats? You can submit an issue
+                    <a href="https://github.com/evz/crimeapi/issues">
+                        over here
+                    </a>
+                    and tell me what you’re after.
+                </p>
+                <h5>More to come?</h5>
+                <p>
+                    This app is mostly made possible by infrastructure made
+                    available to me by the
+                    <a href="http://www.smartchicagocollaborative.org">
+                        Smart Chicago Collaborative
+                    </a>.
+                    I hope to be able to continue developing this app as well
+                    as whatever else seems to make sense.
+                </p>
+                <h5>Have an idea? Or a problem? Want to help?</h5>
+                <p>You can submit bug reports, fork my code, or give me ideas
+                    <a href="https://github.com/evz/crimearound.us/issues">
+                        over on github
+                    </a>.
+                </p>
+                <h5>How does this thing work, anyways?</h5>
                 <p>In a nutshell, the portion of the app that you are
                 interacting with here and on the map page is being hosted
                 entirely out of an S3 bucket. I’ve got a MongoDB instance that

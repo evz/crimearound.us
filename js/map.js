@@ -266,7 +266,7 @@
                 e.preventDefault();
                 window.location.hash = '';
                 window.location.reload();
-            })
+            });
         })
         $('.filter').datepicker({
             dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
