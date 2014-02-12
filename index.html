@@ -60,8 +60,10 @@
                 <form>
                     <fieldset>
                         <legend>Date</legend>
-                        <input class="filter start" type="text"  placeholder="Start Date"/>
-                        <input class="filter end" type="text" placeholder="End Date"/>
+                        <label for="start">Start Date: </label>
+                        <input id="start" class="filter start" type="text"  placeholder="Start Date"/>
+                        <label for="end">End Date: </label>
+                        <input id="end" class="filter end" type="text" placeholder="End Date"/>
                     </fieldset>
                     <fieldset>
                         <legend>Type</legend>
@@ -169,6 +171,7 @@
             Raven.config('https://0b2a28d91b324689b12ca36f747af10e@app.getsentry.com/8349').install();
         </script>
         <script src="foundation/javascripts/foundation.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
         <script src="foundation/javascripts/app.js"></script>
         <script src="js/chosen.jquery.min.js"></script>
         <script src="js/ejs_production.js"></script>

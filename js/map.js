@@ -1,6 +1,7 @@
 (function(){
     var drawnItems = new L.FeatureGroup();
-    var geojson = new L.FeatureGroup();
+    var crimes = new L.FeatureGroup();
+    var beats = new L.FeatureGroup();
     var map;
     var meta = L.control({position: 'bottomright'});
     var meta_data;
@@ -152,8 +153,8 @@
                 function(resp){
                     add_resp_to_map(resp);
                     window.location.hash = $.param(query);
-                    if (geojson.getLayers().length > 0){
-                        map.fitBounds(geojson.getBounds());
+                    if (crimes.getLayers().length > 0){
+                        map.fitBounds(crimes.getBounds());
                     }
                 }
             )
@@ -208,8 +209,8 @@
                     }
                     var start = query['date__gte'];
                     var end = query['date__lte'];
-                    $('.start').val("Start Date: " + moment(start, 'X').format('YYYY-MM-DD'));
-                    $('.end').val("End Date: " + moment(end, 'X').format('YYYY-MM-DD'));
+                    $('.start').val(moment(start, 'X').format('MM/DD/YYYY'));
+                    $('.end').val(moment(end, 'X').format('MM/DD/YYYY'));
                     if(typeof query['beat'] !== 'undefined'){
                         $.each(query['beat'].split(','), function(i, beat){
                             $('#police-beat').find('[value="' + beat + '"]').attr('selected', 'selected');
@@ -228,18 +229,23 @@
                         });
                         $('#crime-location').trigger('chosen:updated');
                     }
-                    add_resp_to_map(resp);
-                    if (geojson.getLayers().length > 0){
-                        map.fitBounds(geojson.getBounds());
+                    if (typeof resp.meta.query.beat !== 'undefined'){
+                        add_beats(resp.meta.query.beat['$in']);
                     }
+                    add_resp_to_map(resp);
+                    if (crimes.getLayers().length > 0){
+                        map.fitBounds(crimes.getBounds());
+                    }
+                    crimes.bringToFront();
+                    beats.bringToBack();
                 }
             ).fail();
         } else {
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
         map.addControl(new AddressSearch());
-        $('.start').val("Start Date: " + moment().subtract('d', 14).format('YYYY-MM-DD'));
-        $('.end').val("End Date: " + moment().subtract('d', 7).format('YYYY-MM-DD'));
+        $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
+        $('.end').val(moment().subtract('d', 7).format('MM/DD/YYYY'));
         $.getJSON('js/beats.json', function(resp){
             var beat_select = "<select id='police-beat' data-placeholder='Police Beat ...' class='chosen-select' multiple>";
             $.each(resp, function(district, beats){
@@ -262,6 +268,11 @@
                 window.location.reload();
             })
         })
+        $('.filter').datepicker({
+            dayNamesMin: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            prevText: '',
+            nextText: ''
+        });
     });
 
     function parseParams(query){
@@ -282,7 +293,7 @@
 
     function draw_edit(e){
         var layers = e.layers;
-        geojson.clearLayers();
+        crimes.clearLayers();
         layers.eachLayer(function(layer){
             drawnItems.addLayer(layer);
         });
@@ -293,7 +304,7 @@
     }
 
     function draw_delete(e){
-        geojson.clearLayers();
+        crimes.clearLayers();
         drawnItems.clearLayers();
         meta.update();
     }
@@ -358,11 +369,16 @@
         }
         if(valid){
             $.when(get_results(query)).then(function(resp){
+                if (typeof resp.meta.query.beat !== 'undefined'){
+                    add_beats(resp.meta.query.beat['$in']);
+                }
                 add_resp_to_map(resp);
                 window.location.hash = $.param(query);
-                if (geojson.getLayers().length > 0){
-                    map.fitBounds(geojson.getBounds());
+                if (crimes.getLayers().length > 0){
+                    map.fitBounds(crimes.getBounds());
                 }
+                crimes.bringToFront();
+                beats.bringToBack();
             }).fail(function(data){
                 console.log(data);
             })
@@ -372,7 +388,20 @@
         }
     }
 
+    function add_beats(b){
+        beats.clearLayers();
+        $.each(b, function(i, beat){
+            $.getJSON('/data/beats/' + beat + '.geojson', function(geo){
+                beats.addLayer(L.geoJson(geo)).addTo(map);
+            })
+        });
+        beats.bringToBack()
+    }
+
     function add_resp_to_map(resp){
+        if(crimes.getLayers().length > 0){
+            crimes.clearLayers();
+        }
         var marker_opts = {
             radius: 10,
             weight: 2,
@@ -386,21 +415,10 @@
         }
         meta.addTo(map);
         meta.update(meta_data);
-        if(geojson.getLayers().length > 0){
-            geojson.clearLayers();
-        }
-        if (typeof resp.meta.query.beat !== 'undefined'){
-            var beats = []
-            $.each(resp.meta.query.beat['$in'], function(i, beat){
-                $.getJSON('/data/beats/' + beat + '.geojson', function(geo){
-                    geojson.addLayer(L.geoJson(geo)).addTo(map);
-                })
-            })
-        }
         $.each(resp.results, function(i, result){
             var location = result.location;
             location.properties = result;
-            geojson.addLayer(L.geoJson(location, {
+            crimes.addLayer(L.geoJson(location, {
                 pointToLayer: function(feature, latlng){
                     if (feature.properties.type == 'violent'){
                         marker_opts.color = '#7B3294';
