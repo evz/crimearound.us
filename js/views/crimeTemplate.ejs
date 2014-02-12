@@ -1,7 +1,7 @@
 <p><%= moment(date.$date).format('dddd MMM D, YYYY') %></p>
 <h3><%= primary_type %><br /><span class="light"><%= typeof description !== 'undefined' ? description : '' %></span></h3>
 <p>
-<strong><%= block.replace("0X", "00").replace("XX", "00") %></strong> <br />
+<strong><%= block.replace("XX", "00").replace("0X", "00") %></strong> <br />
 <%= typeof location_description !== 'undefined' ? location_description : '' %>
 </p>
 
@@ -20,16 +20,16 @@
             <td><%= typeof beat !== 'undefined' ? beat : '' %></td>
             <td>
                 <% if(arrest == 'true' || arrest == true){ %> 
-                    Yes
+                    <i class="foundicon-checkmark"></i>
                 <% } else { %> 
-                    No
+                    <i class="foundicon-remove"></i>
                 <% } %> 
             </td>
             <td>
                 <% if(domestic == 'true' || domestic == true){ %> 
-                    Yes
+                    <i class="foundicon-checkmark"></i>
                 <% } else { %> 
-                    No
+                    <i class="foundicon-remove"></i>
                 <% } %> 
             </td>
         </tr>
