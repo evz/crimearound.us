@@ -54,30 +54,22 @@
             <div id="filters">
                 <form>
                     <fieldset>
-                        <legend>Date</legend>
-                        <label for="start">Start Date: </label>
-                        <input id="start" class="filter start" type="text"  placeholder="Start Date"/>
-                        <label for="end">End Date: </label>
-                        <input id="end" class="filter end" type="text" placeholder="End Date"/>
-                    </fieldset>
-                    <fieldset>
-                        <legend>Time of day</legend>
-                        <label>
-                            <input class="filter time" type="checkbox" value="0,6" checked="true">
-                            Early Morning (Midnight&ndash;6am)
-                        </label>
-                        <label>
-                            <input class="filter time" type="checkbox" value="6,12" checked="true">
-                            Morning (6am&ndash;Noon)
-                        </label>
-                        <label>
-                            <input class="filter time" type="checkbox" value="12,18" checked="true">
-                            Afternoon (Noon&ndash;6pm)
-                        </label>
-                        <label>
-                            <input class="filter time" type="checkbox" value="18,24" checked="true">
-                            Night (6pm&ndash;Midnight)
-                        </label>
+                        <legend>Date & Time</legend>
+                        <div class="date-wrapper">
+                            <label for="start">Start: </label>
+                            <input id="start" class="date-filter start" type="text" placeholder="Start Date"/>
+                        </div>
+                        <div class="date-wrapper">
+                            <label for="end">End:</label>
+                            <input id="end" class="date-filter end" type="text" placeholder="End Date"/>
+                        </div>
+                        <select id="time-of-day" data-placeholder="Time of day..." class="chosen-select" multiple>
+                            <option value=""></option>
+                            <option class="time" value="0,6">Early Morning (Midnight&ndash;6am)</option>
+                            <option class="time" value="6,12">Morning (6am&ndash;Noon)</option>
+                            <option class="time" value="12,18">Afternoon (Noon&ndash;6pm)</option>
+                            <option class="time" value="18,24">Night (6pm&ndash;Midnight)</option>
+                        </select>
                     </fieldset>
                     <fieldset>
                         <legend>Type</legend>

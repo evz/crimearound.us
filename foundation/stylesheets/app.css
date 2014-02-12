@@ -14,29 +14,18 @@
     z-index: 99;
 }
 
+.date-wrapper {
+    width: 47.5% !important;
+    float: left !important;
+    margin-right: 5px !important;
+}
+
 #mapinfo {
     overflow: scroll;
 }
 
 #filters form {
     margin-bottom: 0;
-}
-
-label {
-    float: left;
-    margin-right: 7px;
-}
-
-.label.violent {
-    background-color: #7B3294;
-}
-
-.label.quality {
-    background-color: #008837;
-}
-
-.label.property {
-    background-color: #ca0020;
 }
 
 #search ul {
