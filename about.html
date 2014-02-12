@@ -60,60 +60,71 @@
                     When you’re done drawing, you can optionally limit the
                     types of crimes that are returned by using the filters in
                     the left hand panel. Currently, your query can be limited
-                    by <strong>date range, primary crime type, location
+                    by <strong>date range, time of day, primary crime type, location
                     type</strong>, and <strong>police beat</strong>.
                 </p>
                 <h5>&hellip;get a report</h5>
                 <p>
                     Once you’ve honed in on what it is that you want to look
-                    at, you can click on “Search” to see the results of your query on the map.
-                    Clicking on any of the dots on the map will reveal some details about that particular crime report.
-                    If you’re interested in getting the data you’re looking at in a tabular format, you can use the
-                    <strong>Download Report</strong> button
-                    Excel Spreadsheet of everything you’re looking at.  Have a
-                    use for other formats? You can submit an issue
+                    at, you can click on “Search” to see the results of your
+                    query on the map.  Clicking on any of the dots on the map
+                    will reveal some details about that particular crime
+                    report.  If you’re interested in getting the data you’re
+                    looking at in a tabular format, you can use the
+                    <strong>Download Report</strong> button Excel Spreadsheet
+                    of everything you’re looking at.  Have a use for other
+                    formats? You can submit an issue
                     <a href="https://github.com/evz/crimeapi/issues">
                         over here
                     </a>
                     and tell me what you’re after.
                 </p>
-                <h5>More to come?</h5>
+                <h5>Who is behind this?</h5>
                 <p>
                     This app is mostly made possible by infrastructure made
-                    available to me by the
+                    available by the
                     <a href="http://www.smartchicagocollaborative.org">
                         Smart Chicago Collaborative
-                    </a>.
-                    I hope to be able to continue developing this app as well
-                    as whatever else seems to make sense.
+                    </a> and a partnership between <a href="http://datamade.us">DataMade</a>
+                    and <a href="http://www.lisc-chicago.org/">LISC Chicago</a>.
                 </p>
                 <h5>Have an idea? Or a problem? Want to help?</h5>
-                <p>You can submit bug reports, fork my code, or give me ideas
+                <p>You can submit bug reports, fork this code, or give us ideas
                     <a href="https://github.com/evz/crimearound.us/issues">
                         over on github
                     </a>.
                 </p>
                 <h5>How does this thing work, anyways?</h5>
-                <p>In a nutshell, the portion of the app that you are
-                interacting with here and on the map page is being hosted
-                entirely out of an S3 bucket. I’ve got a MongoDB instance that
-                has all crime reported in Chicago from 2001 until a week ago.
-                In front of the database is a <a
-                  href="https://github.com/evz/crimeapi">very simple Flask
-                  app</a> that gives this app a way to talk to it by responding
-                with JSONP. Because it uses JSONP, the database can be used by
-                client-side javascript from anywhere on the web. Or, with a bit
-                of trickery, from server-side apps as well. <strong>Want to use
-                  this data? <a href="https://github.com/evz/crimeapi">Read the
-                    docs&hellip;</a></strong></p> <h5>Who are you,
-                  anyways?</h5> <p>Oh yeah, that. I’m <strong>Eric van
-                  Zanten</strong>, a web developer in Chicago who currently
-                works for the <a href="http://datamade.us">DataMade</a>. I’m on
-                <a href="https://twitter.com/evanzanten">Twitter</a> and I have
-                a <a href="http://www.static-eric.com">blog</a>. Besides this
-                app, I created a visualization that compares daily temperature
-                and crime <a href="http://crime.static-eric.com">over
-                  here</a>.</p>
+                <p>
+                    In a nutshell, the portion of the app that you are
+                    interacting with here and on the map page is being hosted
+                    entirely using Github pages. There is a MongoDB instance that
+                    has all crime reported in Chicago from 2001 until a week ago.
+                    In front of the database is a
+                    <a href="https://github.com/evz/crimeapi">
+                        very simple Flask app
+                    </a>
+                    that gives this site a way to talk to it by responding
+                    with JSONP. Because it uses JSONP, the database can be used by
+                    client-side javascript from anywhere on the web. Or, with a bit
+                    of trickery, from server-side apps as well.
+                    <strong>
+                        Want to use this data?
+                        <a href="https://github.com/evz/crimeapi">
+                            Read the docs&hellip;
+                        </a>
+                    </strong>
+                </p>
+                <h5>Who are you, anyways?</h5>
+                <p>
+                    Oh yeah, that. I’m <strong>Eric van Zanten</strong>,
+                    a web developer in Chicago who currently works for
+                    <a href="http://datamade.us">DataMade</a>. I’m on
+                    <a href="https://twitter.com/evanzanten">Twitter</a>
+                    and I have a <a href="http://www.static-eric.com">blog</a>.
+                    Besides this app, I created a visualization that compares daily temperature
+                    and crime <a href="http://crime.static-eric.com">over here</a>.
+                </p>
             </div>
         </div>
         <script src="foundation/javascripts/foundation.min.js"></script>
