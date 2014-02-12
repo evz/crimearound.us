@@ -247,16 +247,7 @@
                 }
             ).fail();
         } else {
-            var violent = 'ASSAULT,BATTERY,HOMICIDE,ROBBERY,CRIM SEXUAL ASSAULT';
-            var query = {'primary_type': violent};
-            $.when(get_results(query)).then(
-                function(resp){
-                    add_resp_to_map(resp);
-                    map.fitBounds(crimes.getBounds());
-                    crimes.bringToFront();
-                    beats.bringToBack();
-                }
-            )
+            map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
         map.addControl(new AddressSearch());
         $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
