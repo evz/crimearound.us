@@ -403,7 +403,7 @@
             crimes.clearLayers();
         }
         var marker_opts = {
-            radius: 10,
+            radius: 8,
             weight: 2,
             opacity: 1,
             fillOpacity: 0.6
