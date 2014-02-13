@@ -24,16 +24,6 @@
             <link rel="stylesheet" href="/css/leaflet.ie.css" />
             <link rel="stylesheet" href="/css/leaflet.draw.ie.css" />
         <![endif]-->
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-          ga('create', 'UA-41010142-1', 'crimearound.us');
-          ga('send', 'pageview');
-
-        </script>
     </head>
     <body>
         <div class="fixed">
@@ -44,23 +34,25 @@
                 <section>
                     <ul class="right">
                         <li><a href="/about.html">About</a></li>
+                        <li><a href="/help.html">Help</a></li>
                     </ul>
                 </section>
             </nav>
         </div>
         <div id="mapinfo" class="three columns full-height">
             <h4 class="light">Search crime in your area</h4>
+            <p>Draw on the map or <a href='/help.html'>use the filters below</a>.</p>
             <hr />
             <div id="filters">
                 <form>
                     <fieldset>
-                        <legend>Date & Time</legend>
+                        <legend>Date &amp; time</legend>
                         <div class="date-wrapper">
-                            <label for="start">Start: </label>
+                            <label for="start">Start</label>
                             <input id="start" class="date-filter start" type="text" placeholder="Start Date"/>
                         </div>
                         <div class="date-wrapper">
-                            <label for="end">End:</label>
+                            <label for="end">End</label>
                             <input id="end" class="date-filter end" type="text" placeholder="End Date"/>
                         </div>
                         <select id="time-of-day" data-placeholder="Time of day..." class="chosen-select" multiple>
@@ -194,5 +186,6 @@
         <script src="js/jquery.spin.js"></script>
         <script src="js/jquery.fileDownload.js"></script>
         <script src="js/map.js?2"></script>
+        <script src="js/analytics_lib.js"></script>
     </body>
 </html>

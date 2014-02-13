@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>crimearound.us | Help</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="foundation/stylesheets/foundation.min.css">
+        <link rel="stylesheet" href="foundation/stylesheets/app.css">
+        <link rel="stylesheet" href="foundation/stylesheets/general_foundicons.css">
+    </head>
+    <body>
+        <div class="fixed">
+            <nav class="top-bar">
+                <ul>
+                    <li class="name"><h1><a href="/">crimearound.us</a></h1></li>
+                </ul>
+                <section>
+                    <ul class="right">
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/help.html">Help</a></li>
+                    </ul>
+                </section>
+            </nav>
+        </div>
+        <div class="row">
+            <div class="ten columns centered about">
+                <h2 class="light">Help</h2>
+                <h3 id='drawing-on-the-map'>Drawing on the map</h3>
+                <p>
+                    Using the tools on the left side of the map, 
+                    you can draw a custom shape on the map to define the area that
+                    you are interested in.
+                </p>
+
+                <div class="row">
+                  <div class="four columns">
+                    <img src='/images/map_drawing_1.png' alt='' />
+                    <br />1. Select the shape or box tool on the left side of the map
+                  </div>
+                  <div class="four columns">
+                    <img src='/images/map_drawing_2.png' alt='' />
+                    <br />2. Click on the points on the map to bound your box
+                  </div>
+                  <div class="four columns">
+                    <img src='/images/map_drawing_3.png' alt='' />
+                    <br />3. When done, click the <strong>search</strong> button and see your results
+                  </div>
+                </div>
+                
+                <hr />
+                <h3 id='filters'>Filters</h3>
+                <p> 
+                    In addition to drawing on the map, you can filter on different crime attributes.
+
+                    <img src='/images/filters.png' alt='Search filters' />
+                </p>
+
+                <h4>Date &amp; time</h4>
+                <p>The date the crime occurred. We have reports going back to Jan 1st, 2001. Be warned, searching over multiple years may take a while to process.</p>
+                
+                <h4>Time of day</h4>
+                <p>We can group crimes by the time of day it happened - Early morning (Midnight&ndash;6am), Morning (6am&ndash;Noon), Afternoon (Noon&ndash;6pm) and Night (6pm&ndash;Midnight).</p>
+
+                <h4>Crime type</h4>
+                <p>Each crime is classified as one of 30 different types, such as <a href='/#date__lte=1391666399&date__gte=1390975200&primary_type=ASSAULT'>Assault</a>, <a href='/#date__lte=1391666399&date__gte=1390975200&primary_type=NARCOTICS'>Narcotics</a>, or <a href='/#date__lte=1391666399&date__gte=1357020000&primary_type=PROSTITUTION'>Prostitution</a>. For more detail, see the <a href='http://gis.chicagopolice.org/clearmap/crime_types.html'>full definition list</a> on the Chicago Police Department ClearPath website.</p>
+
+                <p>Also, for each incident, multiple offenses can be reported, but the data we get only reveals most serious offense.</p>
+
+                <p>We also group crime types in to <strong class='violent'>violent crimes</strong>, <strong class='property'>property crimes</strong> and <strong class='quality-of-life'>quality of life crimes</strong> in the same way that the <a href='http://crime.chicagotribune.com/chicago/faq#community-type-definition'>Chicago Tribune does</a>.</p>
+                <ul>
+                    <li><strong class='violent'>Violent crimes</strong> - assault, battery, homicide, robbery, sexual assault</li>
+                    <li><strong class='property'>Property crimes</strong> - arson, burglary, motor vehicle theft, theft</li>
+                    <li><strong class='quality-of-life'>Quality of life crimes</strong> - criminal damage, narcotics, prostitution</li>
+                </ul>
+
+                <h4>Location type</h4>
+                <p>Crimes can be filtered by location description as well. This includes places like <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=business_liquor'>Liquor stores</a>, <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=cta'>CTA stations</a> and <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=outdoors_public%2Coutdoors_residence'>streets</a>.</p>
+                
+                <h4>Police beat</h4>
+                <p>The Chicago Police Department divides the city in to <a href='https://portal.chicagopolice.org/portal/page/portal/ClearPath/Communities/Districts'>22 districts</a>, which are then divided in to a number of police beats made up of several city blocks. We provide the ability to filter crime by police beat.</p>
+
+                <p><img src='/images/beat_0111.png' alt='Beat 0111' /></p>
+
+                <hr />
+                <h3 id='download-your-search'>Download your search</h3>
+                <p>
+                    If you’re interested in downloading the crime data you’re
+                    searched for, you can use the
+                    <strong class='quality-of-life'>Download report</strong> button to download the data as an Excel spreadsheet.
+                </p>
+            </div>
+        </div>
+        <script src="foundation/javascripts/foundation.min.js"></script>
+        <script src="foundation/javascripts/app.js"></script>
+        <script src="js/analytics_lib.js"></script>
+    </body>
+</html>
