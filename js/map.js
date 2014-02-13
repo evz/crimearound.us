@@ -239,11 +239,11 @@
                         add_beats(resp.meta.query.beat['$in']);
                     }
                     add_resp_to_map(resp);
-                    if (crimes.getLayers().length > 0){
+                    if (beats.getLayers().length > 0){
+                        map.fitBounds(beats.getBounds());
+                    } else if (crimes.getLayers().length > 0){
                         map.fitBounds(crimes.getBounds());
                     }
-                    crimes.bringToFront();
-                    beats.bringToBack();
                 }
             ).fail();
         } else {
@@ -355,12 +355,12 @@
             }
         }
         if ($('#police-beat').val()){
-            var beats = [];
+            var bts = [];
             $.each($('#police-beat').val(), function(i, beat){
-                beats.push(beat);
+                bts.push(beat);
             });
-            if(beats.length > 0){
-                query['beat'] = beats.join(',');
+            if(bts.length > 0){
+                query['beat'] = bts.join(',');
             }
         }
         if($('#time-of-day').val()){
@@ -379,11 +379,11 @@
                 }
                 add_resp_to_map(resp);
                 window.location.hash = $.param(query);
-                if (crimes.getLayers().length > 0){
+                if (beats.getLayers().length > 0){
+                    map.fitBounds(beats.getBounds());
+                } else if (crimes.getLayers().length > 0){
                     map.fitBounds(crimes.getBounds());
                 }
-                crimes.bringToFront();
-                beats.bringToBack();
             }).fail(function(data){
                 console.log(data);
             })
@@ -397,16 +397,24 @@
         beats.clearLayers();
         $.each(b, function(i, beat){
             $.getJSON('/data/beats/' + beat + '.geojson', function(geo){
-                beats.addLayer(L.geoJson(geo)).addTo(map);
+                beats.addLayer(L.geoJson(geo, {
+                    style: function(){
+                        return {
+                            stroke: true,
+                            color: '#f06eaa',
+                            weight: 4,
+                            opacity: 0.9,
+                            fill: false
+                        }
+                    }
+                }))
             })
         });
-        beats.bringToBack()
+        map.addLayer(beats, true);
     }
 
     function add_resp_to_map(resp){
-        if(crimes.getLayers().length > 0){
-            crimes.clearLayers();
-        }
+        crimes.clearLayers();
         var marker_opts = {
             radius: 8,
             weight: 2,
@@ -420,8 +428,10 @@
         }
         meta.addTo(map);
         meta.update(meta_data);
+        var geo = []
         $.each(resp.results, function(i, result){
             var location = result.location;
+            geo.push(location);
             location.properties = result;
             crimes.addLayer(L.geoJson(location, {
                 pointToLayer: function(feature, latlng){
@@ -438,8 +448,9 @@
                     return L.circleMarker(latlng, marker_opts)
                 },
                 onEachFeature: bind_popup
-            })).addTo(map);
+            }));
         });
+        map.addLayer(crimes);
         if ($('#report').length > 0){
             $('#report').remove();
         }
