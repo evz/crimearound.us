@@ -401,7 +401,7 @@
                     style: function(){
                         return {
                             stroke: true,
-                            color: '#f06eaa',
+                            color: '#7B3294',
                             weight: 4,
                             opacity: 0.9,
                             fill: false
