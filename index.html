@@ -28,7 +28,7 @@
     <body>
         <div class="fixed">
             <nav class="top-bar">
-                <ul>
+                <ul id="left-nav">
                     <li class="name"><h1><a href="/">crimearound.us</a></h1></li>
                 </ul>
                 <section>
@@ -138,6 +138,8 @@
                         <li><a href="javascript://" id="submit-query" class="button radius">Search</a></li>
                         <li><a href="javascript://" id="reset" class="button radius alert">Reset</a></li>
                     </ul>
+                    <h5 id="report" class="light" style="display:none;"><i class="foundicon-inbox"></i> <a href="javascript://">Download Report</a></h5>
+                    <h5 id="remember" class="light" style="display:none;"><i class="foundicon-paper-clip"></i> <a href="javascript://">Remember Query</a></h5>
                   </ul>
                 </form>
             </div>
@@ -177,8 +179,9 @@
             Raven.config('https://0b2a28d91b324689b12ca36f747af10e@app.getsentry.com/8349').install();
         </script>
         <script src="foundation/javascripts/foundation.min.js"></script>
-        <script src="js/jquery-ui.min.js"></script>
         <script src="foundation/javascripts/app.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery.cookie.js"></script>
         <script src="js/chosen.jquery.min.js"></script>
         <script src="js/ejs_production.js"></script>
         <script src="js/moment.min.js"></script>

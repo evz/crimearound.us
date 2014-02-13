@@ -279,6 +279,23 @@
             prevText: '',
             nextText: ''
         });
+        if (typeof $.cookie('crimearound_us') === 'undefined'){
+            $.cookie('crimearound_us', [], {
+                json: true,
+                expires: 365
+            });
+        } else {
+            var saves = $.cookie('crimearound_us');
+            saves = $.parseJSON(saves);
+            if (saves.length > 0){
+                var item = '<li class="has-dropdown"><a href="#">Remembered searches</a><ul class="dropdown">';
+                $.each(saves, function(i, save){
+                    item += '<li><a href="javascript://" data-save="save-index_' + i + '">' + save.name + '</a></li>'
+                })
+                item += '</ul></li>';
+                $('#left-nav').append(item);
+            }
+        }
     });
 
     function parseParams(query){
@@ -400,7 +417,7 @@
                 beats.addLayer(L.geoJson(geo)).addTo(map);
             })
         });
-        beats.bringToBack()
+        beats.bringToBack();
     }
 
     function add_resp_to_map(resp){
@@ -440,12 +457,18 @@
                 onEachFeature: bind_popup
             })).addTo(map);
         });
-        if ($('#report').length > 0){
-            $('#report').remove();
-        }
-        var report = '<button id="report" class="button radius success">Download Report</button>'
-        $('#form-controls').after(report);
+        $('#report').show();
         $('#report').on('click', get_report);
+        $('#remember').show();
+        $('#remember').on('click', remember_search)
+    }
+
+    function remember_search(){
+        var hash = window.location.hash.slice(1,window.location.hash.length);
+        var query = parseParams(hash);
+        console.log(query);
+        query['name'] = moment().format('MMM D, YYYY h:ma')
+        $.cookie('crimearound_us', JSON.stringify([query]));
     }
 
     function bind_popup(feature, layer){
