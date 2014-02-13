@@ -33,7 +33,7 @@
         <div class="row">
             <div class="ten columns centered about">
                 <h2 class="light">Help</h2>
-                <h3>Drawing on the map</h3>
+                <h3 id='drawing-on-the-map'>Drawing on the map</h3>
                 <p>
                     Using the tools on the left side of the map, 
                     you can draw a custom shape on the map to define the area that
@@ -47,45 +47,52 @@
                   </div>
                   <div class="four columns">
                     <img src='/images/map_drawing_2.png' alt='' />
-                    <br />2. Click on the points to bound your box
+                    <br />2. Click on the points on the map to bound your box
                   </div>
                   <div class="four columns">
                     <img src='/images/map_drawing_3.png' alt='' />
-                    <br />3. When done, click the search button
+                    <br />3. When done, click the <strong>search</strong> button and see your results
                   </div>
                 </div>
                 
-                <h3>Filters</h3>
+                <h3 id='filters'>Filters</h3>
                 <p> 
-                    When you’re done drawing, you can optionally limit the
-                    types of crimes that are returned by using the filters in
-                    the left hand panel.
+                    In addition to drawing on the map, you can filter on different crime attributes.
+
+                    <img src='/images/filters.png' alt='Search filters' />
                 </p>
 
-                <p>You can filter by:</p>
+                <h4>Date</h4>
+                <p>The date the crime occurred. We have reports going back to Jan 1st, 2001. Be warned, searching over multiple years may take a while to process.</p>
+                
+                <h4>Time of day</h4>
+                <p>We can group crimes by the time of day it happened - Early morning (Midnight&ndash;6am), Morning (6am&ndash;Noon), Afternoon (Noon&ndash;6pm) and Night (6pm&ndash;Midnight).</p>
+
+                <h4>Crime type</h4>
+                <p>Each crime is classified as one of 30 different types, such as <a href='/#date__lte=1391666399&date__gte=1390975200&primary_type=ASSAULT'>Assault</a>, <a href='/#date__lte=1391666399&date__gte=1390975200&primary_type=NARCOTICS'>Narcotics</a>, or <a href='/#date__lte=1391666399&date__gte=1357020000&primary_type=PROSTITUTION'>Prostitution</a>. For more detail, see the <a href='http://gis.chicagopolice.org/clearmap/crime_types.html'>full definition list</a> on the Chicago Police Department ClearPath website.</p>
+
+                <p>Also, for each incident, multiple offenses can be reported, but the data we get only reveals most serious offense.</p>
+
+                <p>We also group crime types in to <strong class='violent'>violent crimes</strong>, <strong class='property'>property crimes</strong> and <strong class='quality-of-life'>quality of life crimes</strong> in the same way that the <a href='http://crime.chicagotribune.com/chicago/faq#community-type-definition'>Chicago Tribune does</a>.</p>
                 <ul>
-                    <li><strong>Date</strong> - </li>
-                    <li><strong>Time of day</strong> - </li>
-                    <li><strong>Crime type</strong> - </li>
-                    <li><strong>Location type</strong> - </li>
-                    <li><strong>Police beat</strong> - </li>
+                    <li><strong class='violent'>Violent crimes</strong> - assault, battery, homicide, robbery, sexual assault</li>
+                    <li><strong class='property'>Property crimes</strong> - arson, burglary, motor vehicle theft, theft</li>
+                    <li><strong class='quality-of-life'>Quality of life crimes</strong> - criminal damage, narcotics, prostitution</li>
                 </ul>
 
-                <h3>Download your search</h3>
+                <h4>Location type</h4>
+                <p>Crimes can be filtered by location description as well. This includes places like <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=business_liquor'>Liquor stores</a>, <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=cta'>CTA stations</a> and <a href='/#date__lte=1391666399&date__gte=1390975200&location_description=outdoors_public%2Coutdoors_residence'>streets</a>.</p>
+                
+                <h4>Police beat</h4>
+                <p>The Chicago Police Department divides the city in to <a href='https://portal.chicagopolice.org/portal/page/portal/ClearPath/Communities/Districts'>22 districts</a>, which are then divided in to a number of police beats made up of several city blocks. We provide the ability to filter crime by police beat.</p>
+
+                <p><img src='/images/beat_0111.png' alt='Beat 0111' /></p>
+
+                <h3 id='download-your-search'>Download your search</h3>
                 <p>
-                    Once you’ve honed in on what it is that you want to look
-                    at, you can click on “Search” to see the results of your
-                    query on the map.  Clicking on any of the dots on the map
-                    will reveal some details about that particular crime
-                    report.  If you’re interested in getting the data you’re
-                    looking at in a tabular format, you can use the
-                    <strong>Download Report</strong> button Excel Spreadsheet
-                    of everything you’re looking at.  Have a use for other
-                    formats? You can submit an issue
-                    <a href="https://github.com/evz/crimeapi/issues">
-                        over here
-                    </a>
-                    and tell me what you’re after.
+                    If you’re interested in downloading the crime data you’re
+                    searched for, you can use the
+                    <strong class='quality-of-life'>Download report</strong> button to download the data in Excel Spreadsheet format.
                 </p>
             </div>
         </div>
