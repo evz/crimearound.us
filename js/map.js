@@ -188,62 +188,7 @@
             $('#map').spin('large');
             $.when(get_results(query)).then(
                 function(resp){
-                    $('#map').spin(false);
-                    var location = resp['meta']['query']['location'];
-                    if (typeof location !== 'undefined'){
-                        var shape_opts = {
-                            stroke: true,
-                            color: '#f06eaa',
-                            weight: 4,
-                            opacity: 0.5,
-                            fill: true,
-                            fillOpacity: 0.2,
-                            clickable: true
-                        }
-                        var geo = L.geoJson(location['$geoWithin']['$geometry'],{
-                            style: function(feature){
-                                return shape_opts;
-                            }
-                        });
-                        drawnItems.addLayer(geo);
-                    }
-                    var start = query['date__gte'];
-                    var end = query['date__lte'];
-                    $('.start').val(moment(start, 'X').format('MM/DD/YYYY'));
-                    $('.end').val(moment(end, 'X').format('MM/DD/YYYY'));
-                    if(typeof query['beat'] !== 'undefined'){
-                        $.each(query['beat'].split(','), function(i, beat){
-                            $('#police-beat').find('[value="' + beat + '"]').attr('selected', 'selected');
-                        });
-                        $('#police-beat').trigger('chosen:updated');
-                    }
-                    if(typeof query['primary_type'] !== 'undefined'){
-                        $.each(query['primary_type'].split(','), function(i, pt){
-                            $('#crime-type').find('[value="' + pt + '"]').attr('selected', 'selected');
-                        });
-                        $('#crime-type').trigger('chosen:updated');
-                    }
-                    if(typeof query['location_description'] !== 'undefined'){
-                        $.each(query['location_description'].split(','), function(i, loc){
-                            $('#crime-location').find('[value="' + loc + '"]').attr('selected', 'selected');
-                        });
-                        $('#crime-location').trigger('chosen:updated');
-                    }
-                    if(typeof query['time'] !== 'undefined'){
-                        $.each(query['time'].split(','), function(i, time){
-                            $('#time-of-day').find('[value="' + time + '"]').attr('selected', 'selected');
-                        });
-                        $('#time-of-day').trigger('chosen:updated');
-                    }
-                    if (typeof resp.meta.query.beat !== 'undefined'){
-                        add_beats(resp.meta.query.beat['$in']);
-                    }
-                    add_resp_to_map(resp);
-                    if (beats.getLayers().length > 0){
-                        map.fitBounds(beats.getBounds());
-                    } else if (crimes.getLayers().length > 0){
-                        map.fitBounds(crimes.getBounds());
-                    }
+                    reload_state(query, resp);
                 }
             ).fail();
         } else {
@@ -280,7 +225,7 @@
             nextText: ''
         });
         if (typeof $.cookie('crimearound_us') === 'undefined'){
-            $.cookie('crimearound_us', [], {
+            $.cookie('crimearound_us', JSON.stringify([]), {
                 json: true,
                 expires: 365
             });
@@ -290,10 +235,11 @@
             if (saves.length > 0){
                 var item = '<li class="has-dropdown"><a href="#">Remembered searches</a><ul class="dropdown">';
                 $.each(saves, function(i, save){
-                    item += '<li><a href="javascript://" data-save="save-index_' + i + '">' + save.name + '</a></li>'
+                    item += '<li class="saved-search"><a href="javascript://">' + save.name + '</a></li>'
                 })
                 item += '</ul></li>';
-                $('#left-nav').append(item);
+                $('#right-nav').prepend(item);
+                $('.saved-search').on('click', load_remembered_search);
             }
         }
     });
@@ -467,18 +413,120 @@
                 onEachFeature: bind_popup
             }));
         });
+        map.addLayer(crimes);
         $('#report').show();
         $('#report').on('click', get_report);
         $('#remember').show();
         $('#remember').on('click', remember_search)
     }
 
+    function reload_state(query, resp){
+        $('#map').spin(false);
+        var location = resp['meta']['query']['location'];
+        if (typeof location !== 'undefined'){
+            var shape_opts = {
+                stroke: true,
+                color: '#f06eaa',
+                weight: 4,
+                opacity: 0.5,
+                fill: true,
+                fillOpacity: 0.2,
+                clickable: true
+            }
+            var geo = L.geoJson(location['$geoWithin']['$geometry'],{
+                style: function(feature){
+                    return shape_opts;
+                }
+            });
+            drawnItems.addLayer(geo);
+        }
+        var start = query['date__gte'];
+        var end = query['date__lte'];
+        $('.start').val(moment(start, 'X').format('MM/DD/YYYY'));
+        $('.end').val(moment(end, 'X').format('MM/DD/YYYY'));
+        if(typeof query['beat'] !== 'undefined'){
+            $.each(query['beat'].split(','), function(i, beat){
+                $('#police-beat').find('[value="' + beat + '"]').attr('selected', 'selected');
+            });
+            $('#police-beat').trigger('chosen:updated');
+        }
+        if(typeof query['primary_type'] !== 'undefined'){
+            $.each(query['primary_type'].split(','), function(i, pt){
+                $('#crime-type').find('[value="' + pt + '"]').attr('selected', 'selected');
+            });
+            $('#crime-type').trigger('chosen:updated');
+        }
+        if(typeof query['location_description'] !== 'undefined'){
+            $.each(query['location_description'].split(','), function(i, loc){
+                $('#crime-location').find('[value="' + loc + '"]').attr('selected', 'selected');
+            });
+            $('#crime-location').trigger('chosen:updated');
+        }
+        if(typeof query['time'] !== 'undefined'){
+            $.each(query['time'].split(','), function(i, time){
+                $('#time-of-day').find('[value="' + time + '"]').attr('selected', 'selected');
+            });
+            $('#time-of-day').trigger('chosen:updated');
+        }
+        if (typeof resp.meta.query.beat !== 'undefined'){
+            add_beats(resp.meta.query.beat['$in']);
+        }
+        add_resp_to_map(resp);
+        if (beats.getLayers().length > 0){
+            map.fitBounds(beats.getBounds());
+        } else if (crimes.getLayers().length > 0){
+            map.fitBounds(crimes.getBounds());
+        }
+    }
+
     function remember_search(){
         var hash = window.location.hash.slice(1,window.location.hash.length);
         var query = parseParams(hash);
-        console.log(query);
-        query['name'] = moment().format('MMM D, YYYY h:ma')
-        $.cookie('crimearound_us', JSON.stringify([query]));
+        query['name'] = moment().format('MMM D, YYYY h:mm:ssa')
+        var cookie_val = $.parseJSON($.cookie('crimearound_us'));
+        cookie_val.push(query);
+        $.cookie('crimearound_us', JSON.stringify(cookie_val));
+        if($('#remember').find('i.foundicon-checkmark').length > 0){
+            $('#remember i.foundicon-checkmark').hide(500);
+            $('#remember i.foundicon-checkmark').remove();
+        }
+        $('#remember').append('<i class="foundicon-checkmark" style="display:none; color:#008837;"> </i>');
+        $('#remember i.foundicon-checkmark').show(500);
+        var item = '';
+        if($('#right-nav').find('ul.dropdown').length > 0){
+            item += '<li class="saved-search"><a href="javascript://">' + query['name'] + '</a></li>';
+            $('#right-nav').find('ul.dropdown').append(item);
+        } else {
+            item += '<li class="has-dropdown"><a href="#">Remembered searches</a><ul class="dropdown">';
+            item += '<li class="saved-search"><a href="javascript://">' + query['name'] + '</a></li>'
+            item += '</ul></li>';
+            $('#right-nav').prepend(item);
+        }
+        if(typeof $('.saved-search').data('events') === 'undefined'){
+            $('.saved-search').on('click', load_remembered_search);
+        }
+    }
+
+    function load_remembered_search(e){
+        $('#map').spin('large');
+        var name = $(e.target).text();
+        console.log($(e.target));
+        var cookie_val = $.parseJSON($.cookie('crimearound_us'));
+        var query = null;
+        $.each(cookie_val, function(i, val){
+            console.log('valname: ' + val.name);
+            console.log('Name: ' + name);
+            if(val.name == name){
+                console.log(val);
+                query = val;
+            }
+        });
+        delete query['name'];
+        $.when(get_results(query)).then(
+            function(resp){
+                reload_state(query, resp);
+            }
+        ).fail();
     }
 
     function bind_popup(feature, layer){
