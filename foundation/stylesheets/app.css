@@ -1,4 +1,10 @@
-/* Artfully masterminded by ZURB  */
+.saved-search, .delete-search {
+    display: inline !important;
+}
+.saved-searches li {
+    border-bottom: 1px solid #333;
+    padding-top: 5px;
+}
 .about p, .about li {
     font-size: 14pt;
 }
