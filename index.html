@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="foundation/stylesheets/general_foundicons.css">
         <link rel="stylesheet" href="css/chosen.min.css">
         <link rel="stylesheet" href="foundation/stylesheets/app.css">
+        <link rel="stylesheet" href="foundation/stylesheets/print.css" media="print" />
         <!--[if lte IE 8]>
             <link rel="stylesheet" href="/css/leaflet.ie.css" />
             <link rel="stylesheet" href="/css/leaflet.draw.ie.css" />
@@ -138,11 +139,19 @@
                         <li><a href="javascript://" id="submit-query" class="button radius">Search</a></li>
                         <li><a href="javascript://" id="reset" class="button radius alert">Reset</a></li>
                     </ul>
-                    <h5 id="report" class="light" style="display:none;"><i class="foundicon-inbox"></i> <a href="javascript://">Download Report</a></h5>
-                    <h5 id="remember" class="light" style="display:none;">
-                        <i class="foundicon-paper-clip"></i>
-                        <a href="javascript://">Remember Search</a>
-                    </h5>
+                    <p>
+                        <span id="remember" class="light" style="display:none;">
+                            <a href="javascript://">Remember search</a>
+                        </span>
+                        <span id="report" class="light" style="display:none;">
+                            |
+                            <a href="javascript://">Download</a>
+                        </span>
+                        <span id="print" class="light" style="display:none;">
+                            |
+                            <a href="javascript://">Print</a>
+                        </span>
+                    </p>
                   </ul>
                 </form>
             </div>

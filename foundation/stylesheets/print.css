@@ -1,0 +1,5 @@
+/* Hide unnecessary elements
+======================================================================*/
+.top-bar, #mapinfo, .leaflet-control { display: none; }
+body { padding-top: 0px;}
+#map { width: 100%; }

@@ -426,6 +426,13 @@
                 $('#remember').on('click', remember_search);
             }
         })
+
+        $('#print').show();
+        $('#print').each(function(r){
+            if(typeof $._data(this, 'events') === 'undefined'){
+                $('#print').on('click', function(){window.print();} );
+            }
+        })
         window.location.hash = $.param(query);
     }
 
