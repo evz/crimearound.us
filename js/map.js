@@ -194,7 +194,9 @@
         } else {
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
-        map.addControl(new AddressSearch());
+
+
+        map.addControl(new AddressSearch().setPosition('topright'));
         $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
         $('.end').val(moment().subtract('d', 7).format('MM/DD/YYYY'));
         $.getJSON('js/beats.json', function(resp){
