@@ -177,6 +177,7 @@
                 marker: false
             }
         });
+        drawControl.setPosition('topright')
         map.addControl(drawControl);
         map.on('draw:created', draw_create);
         map.on('draw:edited', draw_edit);
