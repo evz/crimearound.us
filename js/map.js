@@ -199,9 +199,21 @@
         map.addControl(new AddressSearch().setPosition('topright'));
         $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
         $('.end').val(moment().subtract('d', 7).format('MM/DD/YYYY'));
-        $.getJSON('js/beats.json', function(resp){
+        $.getJSON('js/beats.json?2', function(resp){
             var beat_select = "<select id='police-beat' data-placeholder='Police Beat ...' class='chosen-select' multiple>";
-            $.each(resp, function(district, beats){
+            var keys = [];
+            for (k in resp){
+                if (resp.hasOwnProperty(k)){
+                    keys.push(k)
+                }
+            }
+            keys.sort();
+            sorted_resp = {};
+            for (i = 0; i < keys.length; i++){
+                var k = keys[i];
+                sorted_resp[k] = resp[k];
+            }
+            $.each(sorted_resp, function(district, beats){
                 beat_select += "<optgroup label='" + district + "'>";
                 $.each(beats, function(i, beat){
                     beat_select += "<option value='" + beat + "'>" + beat + "</option>";
