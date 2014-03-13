@@ -48,5 +48,10 @@ jQuery(function () {
     if (href.match(/^mailto:/i)) {
       _trackClickEventWithGA("Emails", "Click", href);
     }
+
+    //for tracking #hash values
+    $(window).hashchange( function(){
+     _gaq.push(['_trackPageview',location.pathname + location.search  + location.hash]);
+    });
   });
 });
