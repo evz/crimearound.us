@@ -168,3 +168,9 @@ ul.chosen-choices li input {
 .violent { color: #7B3294; }
 .property { color: #ca0020; }
 .quality-of-life { color: #008837;}
+
+.leaflet-control-mapbox-geocoder .leaflet-control-mapbox-geocoder-wrap,
+.leaflet-control-mapbox-geocoder-results {
+    right: 26px;
+    left: inherit;
+}
