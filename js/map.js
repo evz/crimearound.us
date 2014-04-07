@@ -164,7 +164,7 @@
         window.onresize = function(event){
             resize_junk();
         }
-        map = L.mapbox.map('map', 'ericvanzanten.map-7b7muw9h', {attributionControl: false})
+        map = L.mapbox.map('map', 'datamade.hnmob3j3', {attributionControl: false})
             .fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         map.addLayer(drawnItems);
         var drawControl = new L.Control.Draw({
