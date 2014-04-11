@@ -56,13 +56,21 @@
                             <label for="end">End</label>
                             <input id="end" class="date-filter end" type="text" placeholder="End Date"/>
                         </div>
-                        <select id="time-of-day" data-placeholder="Time of day..." class="chosen-select" multiple>
+                        <div class="date-wrapper">
+                            <label for="time-of-day-start">Time of day start</label>
+                            <input id="time-of-day-start" class="time-filter" type="text" placeholder="0:00"/>
+                        </div>
+                        <div class="date-wrapper">
+                            <label for="time-of-day-end">Time of day end</label>
+                            <input id="time-of-day-end" class="time-filter" type="text" placeholder="23:00"/>
+                        </div>
+                        <!-- <select id="time-of-day" data-placeholder="Time of day..." class="chosen-select" multiple>
                             <option value=""></option>
                             <option class="time" value="0,6">Early morning (Midnight&ndash;6am)</option>
                             <option class="time" value="6,12">Morning (6am&ndash;Noon)</option>
                             <option class="time" value="12,18">Afternoon (Noon&ndash;6pm)</option>
                             <option class="time" value="18,24">Night (6pm&ndash;Midnight)</option>
-                        </select>
+                        </select> -->
                     </fieldset>
                     <fieldset>
                         <legend>Crime</legend>
@@ -193,6 +201,7 @@
         <script src="foundation/javascripts/foundation.min.js"></script>
         <script src="foundation/javascripts/app.js"></script>
         <script src="js/jquery-ui.min.js"></script>
+        <script src="js/jquery-ui-timepicker-addon.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/chosen.jquery.min.js"></script>
         <script src="js/ejs_production.js"></script>

@@ -18,7 +18,7 @@
             meta.removeFrom(map);
         }
     }
-    //var endpoint = 'http://localhost:7777';
+    //var endpoint = 'http://33.33.33.66:7777';
     var endpoint = 'http://crime-weather.smartchicagoapps.org';
     var AddressSearch = L.Control.extend({
         options: {
@@ -238,6 +238,7 @@
             prevText: '',
             nextText: ''
         });
+        $('.time-filter').timepicker({showMinute: false});
         if (typeof $.cookie('crimearound_us') === 'undefined'){
             $.cookie('crimearound_us', JSON.stringify([]), {
                 json: true,
@@ -315,6 +316,31 @@
         }
         query['date__lte'] = end;
         query['date__gte'] = start;
+        var time_start = $('#time-of-day-start').val();
+        var time_end = $('#time-of-day-end').val();
+        //var valid = false;
+        if (time_start || time_end){
+            var times = [];
+            var s = time_start.split(":")[0]
+            var e = time_end.split(":")[0]
+            if (!s){
+                s = 0
+            }
+            if (!e){
+                e = 24
+            }
+            s = parseInt(s);
+            e = parseInt(e);
+            if (s > e){
+                e = s;
+            }
+            times.push(s);
+            times.push(e);
+            console.log(s, e)
+            query['time'] = times.join(',');
+        }
+        //query['date__lte'] = end;
+        //query['date__gte'] = start;
         if($('#crime-type').val()){
             var types = []
             $.each($('#crime-type').val(), function(i, type){
@@ -342,15 +368,15 @@
                 query['beat'] = bts.join(',');
             }
         }
-        if($('#time-of-day').val()){
-            var times = [];
-            $.each($('#time-of-day').val(), function(i, time){
-                times.push(time);
-            });
-            if(times.length > 0){
-                query['time'] = times.join(',');
-            }
-        }
+      //if($('#time-of-day').val()){
+      //    var times = [];
+      //    $.each($('#time-of-day').val(), function(i, time){
+      //        times.push(time);
+      //    });
+      //    if(times.length > 0){
+      //        query['time'] = times.join(',');
+      //    }
+      //}
         if(valid){
             $.when(get_results(query)).then(function(resp){
                 if (typeof resp.meta.query.beat !== 'undefined'){
