@@ -327,7 +327,7 @@
                 s = 0
             }
             if (!e){
-                e = 24
+                e = 23
             }
             s = parseInt(s);
             e = parseInt(e);
@@ -337,6 +337,9 @@
                 times.push(e);
                 query['time'] = times.join(',');
             }
+        } else {
+            query['time'] = '0,23';
+            time_valid = true;
         }
         //query['date__lte'] = end;
         //query['date__gte'] = start;
@@ -367,15 +370,6 @@
                 query['beat'] = bts.join(',');
             }
         }
-      //if($('#time-of-day').val()){
-      //    var times = [];
-      //    $.each($('#time-of-day').val(), function(i, time){
-      //        times.push(time);
-      //    });
-      //    if(times.length > 0){
-      //        query['time'] = times.join(',');
-      //    }
-      //}
         if(date_valid && time_valid){
             $.when(get_results(query)).then(function(resp){
                 if (typeof resp.meta.query.beat !== 'undefined'){
@@ -622,12 +616,7 @@
         e.preventDefault();
         var query = JSON.stringify(meta_data.query);
         if (typeof query !== 'undefined'){
-            $.fileDownload(endpoint + '/api/report/?query=' + query, {
-                successCallback: function(url){
-                },
-                errorCallback: function(html, url){
-                }
-            })
+            window.location = endpoint + '/api/report/?query=' + query;
         } else {
             $('#report-modal').reveal()
         }
@@ -641,11 +630,7 @@
             query['dimensions'] = [map.getSize().x, map.getSize().y];
             query['zoom'] = map.getZoom();
             query = JSON.stringify(query);
-            $.fileDownload(endpoint + '/api/print/?query=' + query, {
-                successCallback: function(url){
-                    console.log(url);
-                }
-            });
+            window.location = endpoint + '/api/print/?query=' + query;
         } else {
             $('#report-modal').reveal()
         }
@@ -661,7 +646,5 @@
 
     function resize_junk(){
         $('.full-height').height(window.innerHeight - 45);
-        //var offset = $('#overlay-top').height() + $('#crime-title').height() + 75;
-        //$('.hide-overflow').height(window.innerHeight - offset);
     }
 })()
