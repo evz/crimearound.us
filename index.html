@@ -64,13 +64,6 @@
                             <label for="time-of-day-end">Time of day end</label>
                             <input id="time-of-day-end" class="time-filter" type="text" placeholder="23:00"/>
                         </div>
-                        <!-- <select id="time-of-day" data-placeholder="Time of day..." class="chosen-select" multiple>
-                            <option value=""></option>
-                            <option class="time" value="0,6">Early morning (Midnight&ndash;6am)</option>
-                            <option class="time" value="6,12">Morning (6am&ndash;Noon)</option>
-                            <option class="time" value="12,18">Afternoon (Noon&ndash;6pm)</option>
-                            <option class="time" value="18,24">Night (6pm&ndash;Midnight)</option>
-                        </select> -->
                     </fieldset>
                     <fieldset>
                         <legend>Crime</legend>
@@ -177,14 +170,20 @@
             <p class="lead">You need to give me something to work with</p>
             <p>Before I can generate a report, I need you to specify what you want me to report
             on by drawing a shape on the map.</p>
-            <a class="close-reveal-modal">&#215;</a>
+            <a href="javascript://" class="close-reveal-modal">&#215;</a>
         </div>
         <div id="date-error" class="reveal-modal small">
             <h2 class="light">Oops, slight problem</h2>
             <p class="lead">At least one of your dates isn’t formatted correctly.
             The date fields down at the bottom of the map expect dates formatted like this:
             <strong>YYYY-MM-DD</strong></p>
-            <a class="close-reveal-modal">&#215;</a>
+            <a href="javascript://" class="close-reveal-modal">&#215;</a>
+        </div>
+        <div id="time-error" class="reveal-modal small">
+            <h2 class="light">Oops, slight problem</h2>
+            <p class="lead">It looks like the time of day range that you specified has a start time
+            that occurs after the end time. Please correct this and try again.</p>
+            <a href="javascript://" class="close-reveal-modal">&#215;</a>
         </div>
         <div id="shape-error" class="reveal-modal small">
             <h2 class="light">Oops, slight problem</h2>
@@ -192,7 +191,7 @@
                 Before we can run your query, you’ll need to make sure to draw
                 a shape on the map using the tools on the left-hand side.
             </p>
-            <a class="close-reveal-modal">&#215;</a>
+            <a href="javascript://" class="close-reveal-modal">&#215;</a>
         </div>
         <script src="//d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js"></script>
         <script>

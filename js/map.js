@@ -18,8 +18,8 @@
             meta.removeFrom(map);
         }
     }
-    //var endpoint = 'http://33.33.33.66:7777';
-    var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    var endpoint = 'http://33.33.33.66:7777';
+    //var endpoint = 'http://crime-weather.smartchicagoapps.org';
     var AddressSearch = L.Control.extend({
         options: {
             position: 'topleft',
@@ -308,17 +308,17 @@
         var end = $('.end').val().replace('End Date: ', '');
         start = moment(start)
         end = moment(end)
-        var valid = false;
+        var date_valid = false;
         if (start.isValid() && end.isValid()){
             start = start.startOf('day').unix();
             end = end.endOf('day').unix();
-            valid = true;
+            date_valid = true;
         }
         query['date__lte'] = end;
         query['date__gte'] = start;
         var time_start = $('#time-of-day-start').val();
         var time_end = $('#time-of-day-end').val();
-        //var valid = false;
+        var time_valid = false;
         if (time_start || time_end){
             var times = [];
             var s = time_start.split(":")[0]
@@ -331,13 +331,12 @@
             }
             s = parseInt(s);
             e = parseInt(e);
-            if (s > e){
-                e = s;
+            if (s < e){
+                time_valid = true
+                times.push(s);
+                times.push(e);
+                query['time'] = times.join(',');
             }
-            times.push(s);
-            times.push(e);
-            console.log(s, e)
-            query['time'] = times.join(',');
         }
         //query['date__lte'] = end;
         //query['date__gte'] = start;
@@ -377,7 +376,7 @@
       //        query['time'] = times.join(',');
       //    }
       //}
-        if(valid){
+        if(date_valid && time_valid){
             $.when(get_results(query)).then(function(resp){
                 if (typeof resp.meta.query.beat !== 'undefined'){
                     add_beats(resp.meta.query.beat['$in']);
@@ -393,7 +392,12 @@
             })
         } else {
             $('#map').spin(false);
-            $('#date-error').reveal();
+            if(!date_valid){
+                $('#date-error').reveal();
+            }
+            if(!time_valid){
+                $('#time-error').reveal();
+            }
         }
     }
 
@@ -471,7 +475,7 @@
         $('#print').show();
         $('#print').each(function(r){
             if(typeof $._data(this, 'events') === 'undefined'){
-                $('#print').on('click', function(){window.print();} );
+                $('#print').on('click', print);
             }
         })
         window.location.hash = $.param(query);
@@ -624,6 +628,24 @@
                 errorCallback: function(html, url){
                 }
             })
+        } else {
+            $('#report-modal').reveal()
+        }
+    }
+
+    function print(e){
+        e.preventDefault();
+        if (typeof meta_data.query !== 'undefined'){
+            var query = {'query': meta_data.query}
+            query['center'] = [map.getCenter().lng, map.getCenter().lat];
+            query['dimensions'] = [map.getSize().x, map.getSize().y];
+            query['zoom'] = map.getZoom();
+            query = JSON.stringify(query);
+            $.fileDownload(endpoint + '/api/print/?query=' + query, {
+                successCallback: function(url){
+                    console.log(url);
+                }
+            });
         } else {
             $('#report-modal').reveal()
         }

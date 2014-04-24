@@ -1,15 +1,31 @@
-﻿/*
-* jQuery File Download Plugin v1.4.0
+/*
+* jQuery File Download Plugin v1.4.2 
 *
 * http://www.johnculviner.com
 *
-* Copyright (c) 2012 - John Culviner
+* Copyright (c) 2013 - John Culviner
 *
 * Licensed under the MIT license:
 *   http://www.opensource.org/licenses/mit-license.php
+*
+* !!!!NOTE!!!!
+* You must also write a cookie in conjunction with using this plugin as mentioned in the orignal post:
+* http://johnculviner.com/jquery-file-download-plugin-for-ajax-like-feature-rich-file-downloads/
+* !!!!NOTE!!!!
 */
 
 (function($, window){
+	// i'll just put them here to get evaluated on script load
+	var htmlSpecialCharsRegEx = /[<>&\r\n"']/gm;
+	var htmlSpecialCharsPlaceHolders = {
+				'<': 'lt;',
+				'>': 'gt;',
+				'&': 'amp;',
+				'\r': "#13;",
+				'\n': "#10;",
+				'"': 'quot;',
+				"'": 'apos;' /*single quotes just to be safe*/
+	};
 
 $.extend({
     //
@@ -336,16 +352,27 @@ $.extend({
                         if ($form && $form.length) {
                             var $contents = $(formDoc.body).contents().first();
 
-                            if ($contents.length && $contents[0] === $form[0]) {
-                                isFailure = false;
-                            }
+                            try {
+                                if ($contents.length && $contents[0] === $form[0]) {
+                                    isFailure = false;
+                                }
+                            } catch (e) {
+                                if (e && e.number == -2146828218) {
+                                    // IE 8-10 throw a permission denied after the form reloads on the "$contents[0] === $form[0]" comparison
+                                    isFailure = true;
+                                } else {
+                                    throw e;
+                                }
+                            } 
                         }
 
                         if (isFailure) {
-                            internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl);
-
-                            cleanUp(true);
-
+                            // IE 8-10 don't always have the full content available right away, they need a litle bit to finish
+                            setTimeout(function () {
+                                internalCallbacks.onFail(formDoc.body.innerHTML, fileUrl);
+                                cleanUp(true);
+                            }, 100);
+                            
                             return;
                         }
                     }
@@ -386,27 +413,24 @@ $.extend({
                     }
 
                     if (isIos) {
-                        downloadWindow.focus(); //ios safari bug doesn't allow a window to be closed unless it is focused
-                        if (isFailure) {
-                            downloadWindow.close();
+                        if (downloadWindow.focus) {
+                            downloadWindow.focus(); //ios safari bug doesn't allow a window to be closed unless it is focused
+                            if (isFailure) {
+                                downloadWindow.close();
+                            }
                         }
                     }
                 }
+                
+                //iframe cleanup appears to randomly cause the download to fail
+                //not doing it seems better than failure...
+                //if ($iframe) {
+                //    $iframe.remove();
+                //}
 
             }, 0);
         }
 
-
-        var htmlSpecialCharsRegEx = /[<>&\r\n"']/gm;
-        var htmlSpecialCharsPlaceHolders = {
-        			'<': 'lt;',
-        			'>': 'gt;',
-        			'&': 'amp;',
-        			'\r': "#13;",
-        			'\n': "#10;",
-        			'"': 'quot;',
-        			"'": 'apos;' /*single quotes just to be safe*/
-        };
 
         function htmlSpecialCharsEntityEncode(str) {
             return str.replace(htmlSpecialCharsRegEx, function(match) {
