@@ -18,8 +18,8 @@
             meta.removeFrom(map);
         }
     }
-    var endpoint = 'http://33.33.33.66:7777';
-    //var endpoint = 'http://crime-weather.smartchicagoapps.org';
+    //var endpoint = 'http://33.33.33.66:7777';
+    var endpoint = 'http://crime-weather.smartchicagoapps.org';
     var AddressSearch = L.Control.extend({
         options: {
             position: 'topleft',
@@ -238,7 +238,23 @@
             prevText: '',
             nextText: ''
         });
-        $('.time-filter').timepicker({showMinute: false});
+        $('#time-slider').slider({
+            orientation: "horizontal",
+            range: true,
+            min: 0,
+            max: 23,
+            values: [0,23],
+            slide: function(event, ui){
+                var s = ui.values[0]
+                var e = ui.values[1]
+                var start = convertTime(s);
+                var end = convertTime(e);
+                $('#time-start').html(start);
+                $('#time-end').html(end);
+                $('#time-start').data('value', s);
+                $('#time-end').data('value', e);
+            }
+        });
         if (typeof $.cookie('crimearound_us') === 'undefined'){
             $.cookie('crimearound_us', JSON.stringify([]), {
                 json: true,
@@ -260,6 +276,12 @@
             }
         }
     });
+
+    function convertTime(time){
+        var meridian = time < 12 ? 'am' : 'pm';
+        var hour = time % 12 || 12;
+        return hour + meridian;
+    }
 
     function parseParams(query){
         var re = /([^&=]+)=?([^&]*)/g;
@@ -316,33 +338,10 @@
         }
         query['date__lte'] = end;
         query['date__gte'] = start;
-        var time_start = $('#time-of-day-start').val();
-        var time_end = $('#time-of-day-end').val();
-        var time_valid = false;
-        if (time_start || time_end){
-            var times = [];
-            var s = time_start.split(":")[0]
-            var e = time_end.split(":")[0]
-            if (!s){
-                s = 0
-            }
-            if (!e){
-                e = 23
-            }
-            s = parseInt(s);
-            e = parseInt(e);
-            if (s < e){
-                time_valid = true
-                times.push(s);
-                times.push(e);
-                query['time'] = times.join(',');
-            }
-        } else {
-            query['time'] = '0,23';
-            time_valid = true;
-        }
-        //query['date__lte'] = end;
-        //query['date__gte'] = start;
+        var time_start = $('#time-start').data('value');
+        var time_end = $('#time-end').data('value');
+        var times = [time_start, time_end];
+        query['time'] = times.join(',');
         if($('#crime-type').val()){
             var types = []
             $.each($('#crime-type').val(), function(i, type){
@@ -370,7 +369,7 @@
                 query['beat'] = bts.join(',');
             }
         }
-        if(date_valid && time_valid){
+        if(date_valid){
             $.when(get_results(query)).then(function(resp){
                 if (typeof resp.meta.query.beat !== 'undefined'){
                     add_beats(resp.meta.query.beat['$in']);
@@ -386,12 +385,7 @@
             })
         } else {
             $('#map').spin(false);
-            if(!date_valid){
-                $('#date-error').reveal();
-            }
-            if(!time_valid){
-                $('#time-error').reveal();
-            }
+            $('#date-error').reveal();
         }
     }
 
@@ -518,10 +512,17 @@
             $('#crime-location').trigger('chosen:updated');
         }
         if(typeof query['time'] !== 'undefined'){
-            $.each(query['time'].split(','), function(i, time){
-                $('#time-of-day').find('[value="' + time + '"]').attr('selected', 'selected');
-            });
-            $('#time-of-day').trigger('chosen:updated');
+            var times = query['time'].split(',');
+            var s = times[0];
+            var e = times[1];
+            var start = convertTime(s);
+            var end = convertTime(e);
+            $('#time-start').html(start);
+            $('#time-end').html(end);
+            $('#time-start').data('value', s);
+            $('#time-end').data('value', e);
+            $('#time-slider').slider('values', 0, s);
+            $('#time-slider').slider('values', 1, e);
         }
         if (typeof resp.meta.query.beat !== 'undefined'){
             add_beats(resp.meta.query.beat['$in']);

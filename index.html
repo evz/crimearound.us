@@ -49,21 +49,22 @@
                     <fieldset>
                         <legend>Date &amp; time</legend>
                         <div class="date-wrapper">
-                            <label for="start">Start</label>
+                            <label for="start">Start Date</label>
                             <input id="start" class="date-filter start" type="text" placeholder="Start Date"/>
                         </div>
                         <div class="date-wrapper">
-                            <label for="end">End</label>
+                            <label for="end">End Date</label>
                             <input id="end" class="date-filter end" type="text" placeholder="End Date"/>
                         </div>
-                        <div class="date-wrapper">
-                            <label for="time-of-day-start">Time of day start</label>
-                            <input id="time-of-day-start" class="time-filter" type="text" placeholder="0:00"/>
-                        </div>
-                        <div class="date-wrapper">
-                            <label for="time-of-day-end">Time of day end</label>
-                            <input id="time-of-day-end" class="time-filter" type="text" placeholder="23:00"/>
-                        </div>
+                        <p>
+                        Hour of day:
+                        <span>
+                            <span id="time-start" data-value="0">12am</span>
+                            —
+                            <span id="time-end" data-value="23">11pm</span>
+                        </span>
+                        <div id="time-slider"></div>
+                        </p>
                     </fieldset>
                     <fieldset>
                         <legend>Crime</legend>
@@ -200,7 +201,6 @@
         <script src="foundation/javascripts/foundation.min.js"></script>
         <script src="foundation/javascripts/app.js"></script>
         <script src="js/jquery-ui.min.js"></script>
-        <script src="js/jquery-ui-timepicker-addon.js"></script>
         <script src="js/jquery.cookie.js"></script>
         <script src="js/chosen.jquery.min.js"></script>
         <script src="js/ejs_production.js"></script>
