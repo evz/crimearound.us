@@ -3,7 +3,6 @@
     var crimes = new L.FeatureGroup();
     var beats = new L.FeatureGroup();
     var map;
-    var oms;
     var meta = L.control({position: 'bottomright'});
     var meta_data;
     meta.onAdd = function(map){
@@ -195,9 +194,6 @@
         } else {
             map.fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         }
-
-        oms = new OverlappingMarkerSpiderfier(map);
-        oms.addListener('click', bind_popup)
 
         map.addControl(new AddressSearch().setPosition('topright'));
         $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
@@ -444,11 +440,12 @@
                         marker_opts.color = '#008837';
                         marker_opts.fillColor = '#008837';
                     }
-                    var mark = L.circleMarker(latlng, marker_opts);
-                    oms.addMarker(mark);
+                    var jitter = 0.0001;
+                    var ll = [latlng.lat + (Math.random() * jitter), latlng.lng - (Math.random() * jitter)]
+                    var mark = L.circleMarker(ll, marker_opts);
                     return mark;
-                }//,
-                //onEachFeature: bind_popup
+                },
+                onEachFeature: bind_popup
             }));
         });
         map.addLayer(crimes);
@@ -608,19 +605,14 @@
         ).fail();
     }
 
-    function bind_popup(marker){
-        var feature = marker.feature.geometry
+    function bind_popup(feature, layer){
         var crime_template = new EJS({url: 'js/views/crimeTemplate.ejs'});
         var props = feature.properties;
         var pop_content = crime_template.render(props);
-        var popup = new L.Popup({closeButton: true, minWidth: 320});
-        popup.setContent(pop_content);
-        popup.setLatLng(marker.getLatLng());
-        map.openPopup(popup)
-        //layer.bindPopup(pop_content, {
-        //    closeButton: true,
-        //    minWidth: 320
-        //})
+        layer.bindPopup(pop_content, {
+            closeButton: true,
+            minWidth: 320
+        })
     }
 
     function get_report(e){
