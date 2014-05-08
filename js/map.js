@@ -447,20 +447,18 @@
             }));
         });
         map.addLayer(crimes);
-        $('#report').show();
+
+        $('#search-options').show();
         $('#report').each(function(r){
             if(typeof $._data(this, 'events') === 'undefined'){
                 $('#report').on('click', get_report);
             }
         })
-        $('#remember').show();
         $('#remember').each(function(r){
             if(typeof $._data(this, 'events') === 'undefined'){
                 $('#remember').on('click', remember_search);
             }
         })
-
-        $('#print').show();
         $('#print').each(function(r){
             if(typeof $._data(this, 'events') === 'undefined'){
                 $('#print').on('click', print);
