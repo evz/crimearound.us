@@ -197,7 +197,11 @@
         }
 
         oms = new OverlappingMarkerSpiderfier(map);
-        oms.addListener('click', bind_popup)
+        oms.addListener('click', bind_popup);
+        oms.addListener('unspiderfy', function(markers){
+            console.log(markers);
+        });
+        oms.unspiderfy()
 
         map.addControl(new AddressSearch().setPosition('topright'));
         $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
