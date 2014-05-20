@@ -18,7 +18,7 @@
             meta.removeFrom(map);
         }
     }
-    var endpoint = 'http://33.33.33.66:7777';
+    var endpoint = 'http://api.crimearound.us';
     //var endpoint = 'http://crime-weather.smartchicagoapps.org';
     //var endpoint = 'http://127.0.0.1:5000';
     var AddressSearch = L.Control.extend({
@@ -350,8 +350,8 @@
         query['obs_date__ge'] = start;
         var time_start = $('#time-start').data('value');
         var time_end = $('#time-end').data('value');
-        query['date1__time_of_day_ge'] = time_start;
-        query['date1__time_of_day_le'] = time_end;
+        query['orig_date__time_of_day_ge'] = time_start;
+        query['orig_date__time_of_day_le'] = time_end;
         if($('#crime-type').val()){
             var types = []
             $.each($('#crime-type').val(), function(i, type){
@@ -367,13 +367,13 @@
                 bts.push(beat);
             });
             if(bts.length > 0){
-                query['beat'] = bts.join(',');
+                query['beat__in'] = bts.join(',');
             }
         }
         if(date_valid){
             $.when(get_results(query)).then(function(resp){
-                if (typeof query.beat !== 'undefined'){
-                    add_beats(query.beat.split(','));
+                if (typeof query.beat__in !== 'undefined'){
+                    add_beats(query.beat__in.split(','));
                 }
                 add_resp_to_map(query, resp);
                 if (beats.getLayers().length > 0){
@@ -419,22 +419,17 @@
             fillOpacity: 0.6
         };
         $('#map').spin(false);
-      //meta_data = resp.meta;
-      //if($('.meta.leaflet-control').length){
-      //    meta.removeFrom(map);
-      //}
-      //meta.addTo(map);
-      //meta.update(meta_data);
+        meta_data = resp.meta;
+        if($('.meta.leaflet-control').length){
+            meta.removeFrom(map);
+        }
+        meta.addTo(map);
+        meta.update(meta_data);
         var geo = []
-        $.each(resp.objects, function(i, result){
+        $.each(resp.results, function(i, result){
             if (result.latitude && result.longitude){
-                var location = {
-                    type: 'Point',
-                    coordinates: [result.longitude, result.latitude]
-                }
-                geo.push(location);
-                location.properties = result;
-                crimes.addLayer(L.geoJson(location, {
+                result.location.properties = result;
+                crimes.addLayer(L.geoJson(result.location, {
                     pointToLayer: function(feature, latlng){
                         var crime_type = feature.properties.crime_type
                         console.log(crime_type);
@@ -447,8 +442,13 @@
                         } else if (crime_type == 'quality'){
                             marker_opts.color = '#008837';
                             marker_opts.fillColor = '#008837';
+                        } else {
+                            marker_opts.color = '#000';
+                            marker_opts.fillColor = '#000';
                         }
-                        return L.circleMarker(latlng, marker_opts)
+                        var jitter = 0.0001;
+                        var ll = [latlng.lat + (Math.random() * jitter), latlng.lng - (Math.random() * jitter)]
+                        return L.circleMarker(ll, marker_opts)
                     },
                     onEachFeature: bind_popup
                 }));
