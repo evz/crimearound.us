@@ -13,6 +13,7 @@
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <script src="http://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.js"></script>
         <script src='http://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.js'></script>
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v1.6.1/mapbox.css" />
         <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-draw/v0.2.2/leaflet.draw.css" />
 
@@ -34,8 +35,8 @@
                 </ul>
                 <section>
                     <ul class="right" id="right-nav">
-                        <li><a href="/about.html">About</a></li>
-                        <li><a href="/help.html">Help</a></li>
+                        <li><a href="/about.html"><i class="fa fa-info-circle"></i> About</a></li>
+                        <li><a href="/help.html"><i class="fa fa-question-circle"></i> Help</a></li>
                     </ul>
                 </section>
             </nav>
@@ -47,7 +48,7 @@
             <div id="filters">
                 <form>
                     <fieldset>
-                        <legend>Date &amp; time</legend>
+                        <legend><i class="fa fa-calendar-o"></i> Date &amp; time</legend>
                         <div class="date-wrapper">
                             <label for="start">Start Date</label>
                             <input id="start" class="date-filter start" type="text" placeholder="Start Date"/>
@@ -142,20 +143,20 @@
                         <li><a href="javascript://" id="reset" class="button radius alert">Reset</a></li>
                     </ul>
                     <p>
-                        <div id='search-options' style="display:none;">
-                            <span id="remember" class="light">
-                                <a href="javascript://">Remember search</a>
-                            </span>
-                            <br /><br />
-                            Download: 
-                            <span id="report" class="light">
-                                <a href="javascript://">Spreadsheet</a>
-                            </span>
-                            <span id="print" class="light">
-                                |
-                                <a href="javascript://">PDF Map</a>
-                            </span>
-                        </div>
+                        <span id="remember" class="light" style="display:none;">
+                            <i class="fa fa-save"></i>
+                            <a href="javascript://">Remember search</a>
+                        </span>
+                        <span id="report" class="light" style="display:none;">
+                            |
+                            <i class="fa fa-download"></i>
+                            <a href="javascript://">Download</a>
+                        </span>
+                        <span id="print" class="light" style="display:none;">
+                            |
+                            <i class="fa fa-print"></i>
+                            <a href="javascript://">Print</a>
+                        </span>
                     </p>
                   </ul>
                 </form>
