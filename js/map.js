@@ -5,6 +5,13 @@
     var map;
     var meta = L.control({position: 'bottomright'});
     var meta_data;
+
+    var colors = [
+       '#e41a1c',
+       '#377eb8',
+       '#4daf4a',
+       '#984ea3'
+    ];
     meta.onAdd = function(map){
         this._div = L.DomUtil.create('div', 'meta');
         return this._div;
@@ -165,7 +172,7 @@
         window.onresize = function(event){
             resize_junk();
         }
-        map = L.mapbox.map('map', 'datamade.hnmob3j3', {attributionControl: false})
+        map = L.mapbox.map('map', 'datamade.hn83a654', {attributionControl: false})
             .fitBounds([[41.644286009999995, -87.94010087999999], [42.023134979999995, -87.52366115999999]]);
         map.addLayer(drawnItems);
         var drawControl = new L.Control.Draw({
@@ -198,7 +205,7 @@
 
 
         map.addControl(new AddressSearch().setPosition('topright'));
-        $('.start').val(moment().subtract('d', 14).format('MM/DD/YYYY'));
+        $('.start').val(moment().subtract('d', 8).format('MM/DD/YYYY'));
         $('.end').val(moment().subtract('d', 7).format('MM/DD/YYYY'));
         $.getJSON('js/beats.json?2', function(resp){
             var beat_select = "<select id='police-beat' data-placeholder='Police Beat ...' class='chosen-select' multiple>";
@@ -433,17 +440,17 @@
                     pointToLayer: function(feature, latlng){
                         var crime_type = feature.properties.crime_type
                         if (crime_type == 'violent'){
-                            marker_opts.color = '#984ea3';
-                            marker_opts.fillColor = '#984ea3';
+                            marker_opts.color = colors[3];
+                            marker_opts.fillColor = colors[3];
                         } else if (crime_type == 'property'){
-                            marker_opts.color = '#e41a1c';
-                            marker_opts.fillColor = '#e41a1c';
+                            marker_opts.color = colors[0];
+                            marker_opts.fillColor = colors[0];
                         } else if (crime_type == 'quality'){
-                            marker_opts.color = '#4daf4a';
-                            marker_opts.fillColor = '#4daf4a';
+                            marker_opts.color = colors[2];
+                            marker_opts.fillColor = colors[2];
                         } else {
-                            marker_opts.color = '#ffff33';
-                            marker_opts.fillColor = '#ffff33';
+                            marker_opts.color = colors[1];
+                            marker_opts.fillColor = colors[1];
                         }
                         var jitter = 0.0001;
                         var ll = [latlng.lat + (Math.random() * jitter), latlng.lng - (Math.random() * jitter)]

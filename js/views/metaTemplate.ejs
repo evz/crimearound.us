@@ -1,12 +1,15 @@
 <div class="twelve columns">
-    <h1 class="light violent"><%= typeof violent !== 'undefined' ? violent : 0 %></h1>
-    <h5 class="light">Violent crimes</h5>
+  <h3 class='light'>Crime reports</h3>
 </div>
 <div class="twelve columns">
-    <h1 class="light property"><%= typeof property !== 'undefined' ? property : 0 %></h1>
-    <h5 class="light">Property crimes</h5>
+    <h5 class='light'><strong class="violent"><%= typeof violent !== 'undefined' ? violent : 0 %></strong> Violent</h5>
 </div>
 <div class="twelve columns">
-    <h1 class="light quality-of-life"><%= typeof quality !== 'undefined' ? quality : 0 %></h1>
-    <h5 class="light">Quality of life crimes</h5>
+    <h5 class='light'><strong class="property"><%= typeof property !== 'undefined' ? property : 0 %></strong> Property</h5>
+</div>
+<div class="twelve columns">
+    <h5 class='light'><strong class="quality-of-life"><%= typeof quality !== 'undefined' ? quality : 0 %></strong> Quality of life</h5>
+</div>
+<div class="twelve columns">
+    <h5 class='light'><strong class='other'><%= typeof other !== 'undefined' ? other : 0 %></strong> Other</h5>
 </div>

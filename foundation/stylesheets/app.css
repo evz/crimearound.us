@@ -1,6 +1,7 @@
 .violent { color: #984ea3; }
 .property { color: #e41a1c; }
 .quality-of-life { color: #4daf4a;}
+.other { color: #377eb8;}
 
 .saved-search, .delete-search {
     display: inline !important;
@@ -47,7 +48,7 @@ ul {
 }
 
 .meta.leaflet-control {
-    width: 25%;
+    width: 35%;
     background-color: #fff;
     padding: 10px 0px;
 }
