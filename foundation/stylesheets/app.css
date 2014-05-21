@@ -1,3 +1,7 @@
+.violent { color: #984ea3; }
+.property { color: #e41a1c; }
+.quality-of-life { color: #4daf4a;}
+
 .saved-search, .delete-search {
     display: inline !important;
 }
@@ -286,10 +290,6 @@ ul.chosen-choices li input {
   background: #ffffff url("images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
   color: #eb8f00;
 }
-
-.violent { color: #7B3294; }
-.property { color: #ca0020; }
-.quality-of-life { color: #008837;}
 
 .leaflet-control-mapbox-geocoder .leaflet-control-mapbox-geocoder-wrap,
 .leaflet-control-mapbox-geocoder-results {
