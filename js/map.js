@@ -324,7 +324,7 @@
         var layers = drawnItems.getLayers();
         if (layers.length > 0){
             drawnItems.eachLayer(function(layer){
-                query['location_geom__within'] = JSON.stringify(layer.toGeoJSON()['geometry']);
+                query['location_geom__within'] = JSON.stringify(layer.toGeoJSON());
             })
         }
         if ($('#crime-location').val()){
@@ -432,19 +432,18 @@
                 crimes.addLayer(L.geoJson(result.location, {
                     pointToLayer: function(feature, latlng){
                         var crime_type = feature.properties.crime_type
-                        console.log(crime_type);
                         if (crime_type == 'violent'){
-                            marker_opts.color = '#7B3294';
-                            marker_opts.fillColor = '#7B3294';
+                            marker_opts.color = '#984ea3';
+                            marker_opts.fillColor = '#984ea3';
                         } else if (crime_type == 'property'){
-                            marker_opts.color = '#ca0020';
-                            marker_opts.fillColor = '#ca0020';
+                            marker_opts.color = '#e41a1c';
+                            marker_opts.fillColor = '#e41a1c';
                         } else if (crime_type == 'quality'){
-                            marker_opts.color = '#008837';
-                            marker_opts.fillColor = '#008837';
+                            marker_opts.color = '#4daf4a';
+                            marker_opts.fillColor = '#4daf4a';
                         } else {
-                            marker_opts.color = '#000';
-                            marker_opts.fillColor = '#000';
+                            marker_opts.color = '#ffff33';
+                            marker_opts.fillColor = '#ffff33';
                         }
                         var jitter = 0.0001;
                         var ll = [latlng.lat + (Math.random() * jitter), latlng.lng - (Math.random() * jitter)]
@@ -455,31 +454,31 @@
             }
         });
         map.addLayer(crimes);
-      //$('#report').show();
-      //$('#report').each(function(r){
-      //    if(typeof $._data(this, 'events') === 'undefined'){
-      //        $('#report').on('click', get_report);
-      //    }
-      //})
-      //$('#remember').show();
-      //$('#remember').each(function(r){
-      //    if(typeof $._data(this, 'events') === 'undefined'){
-      //        $('#remember').on('click', remember_search);
-      //    }
-      //})
+        $('#report').show();
+        $('#report').each(function(r){
+            if(typeof $._data(this, 'events') === 'undefined'){
+                $('#report').on('click', get_report);
+            }
+        })
+        $('#remember').show();
+        $('#remember').each(function(r){
+            if(typeof $._data(this, 'events') === 'undefined'){
+                $('#remember').on('click', remember_search);
+            }
+        })
 
-      //$('#print').show();
-      //$('#print').each(function(r){
-      //    if(typeof $._data(this, 'events') === 'undefined'){
-      //        $('#print').on('click', print);
-      //    }
-      //})
-      //window.location.hash = $.param(query);
+        $('#print').show();
+        $('#print').each(function(r){
+            if(typeof $._data(this, 'events') === 'undefined'){
+                $('#print').on('click', print);
+            }
+        })
+        window.location.hash = $.param(query);
     }
 
     function reload_state(query, resp){
         $('#map').spin(false);
-        var location = resp['meta']['query']['location'];
+        var location = resp['meta']['query']['location__within'];
         if (typeof location !== 'undefined'){
             var shape_opts = {
                 stroke: true,
@@ -490,7 +489,7 @@
                 fillOpacity: 0.2,
                 clickable: true
             }
-            var geo = L.geoJson(location['$geoWithin']['$geometry'],{
+            var geo = L.geoJson(location,{
                 style: function(feature){
                     return shape_opts;
                 }
@@ -499,10 +498,10 @@
         }
         var start = query['obs_date__ge'];
         var end = query['obs_date__le'];
-        $('.start').val(moment(start, 'X').format('MM/DD/YYYY'));
-        $('.end').val(moment(end, 'X').format('MM/DD/YYYY'));
-        if(typeof query['beat'] !== 'undefined'){
-            $.each(query['beat'].split(','), function(i, beat){
+        $('.start').val(moment(start).format('MM/DD/YYYY'));
+        $('.end').val(moment(end).format('MM/DD/YYYY'));
+        if(typeof query['beat__in'] !== 'undefined'){
+            $.each(query['beat__in'].split(','), function(i, beat){
                 $('#police-beat').find('[value="' + beat + '"]').attr('selected', 'selected');
             });
             $('#police-beat').trigger('chosen:updated');
@@ -519,10 +518,9 @@
             });
             $('#crime-location').trigger('chosen:updated');
         }
-        if(typeof query['time'] !== 'undefined'){
-            var times = query['time'].split(',');
-            var s = times[0];
-            var e = times[1];
+        if(typeof query['orig_date__time_of_day_le'] !== 'undefined'){
+            var s = query['orig_date__time_of_day_ge'];
+            var e = query['orig_date__time_of_day_le'];
             var start = convertTime(s);
             var end = convertTime(e);
             $('#time-start').html(start);
@@ -532,8 +530,8 @@
             $('#time-slider').slider('values', 0, s);
             $('#time-slider').slider('values', 1, e);
         }
-        if (typeof resp.meta.query.beat !== 'undefined'){
-            add_beats(resp.meta.query.beat['$in']);
+        if (typeof query['beat__in'] !== 'undefined'){
+            add_beats(query['beat__in'].split(','));
         }
         add_resp_to_map(query, resp);
         if (beats.getLayers().length > 0){
