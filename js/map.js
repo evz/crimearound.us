@@ -205,7 +205,7 @@
 
 
         map.addControl(new AddressSearch().setPosition('topright'));
-        $('.start').val(moment().subtract('d', 8).format('MM/DD/YYYY'));
+        $('.start').val(moment().subtract('d', 9).format('MM/DD/YYYY'));
         $('.end').val(moment().subtract('d', 8).format('MM/DD/YYYY'));
         $.getJSON('js/beats.json?2', function(resp){
             var beat_select = "<select id='police-beat' data-placeholder='Police Beat ...' class='chosen-select' multiple>";
