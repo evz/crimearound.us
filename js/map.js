@@ -365,7 +365,7 @@
                 types.push(type);
             });
             if(types.length > 0){
-                query['primary_type'] = types.join(',');
+                query['primary_type__in'] = types.join(',');
             }
         }
         if ($('#police-beat').val()){
@@ -513,8 +513,8 @@
             });
             $('#police-beat').trigger('chosen:updated');
         }
-        if(typeof query['primary_type'] !== 'undefined'){
-            $.each(query['primary_type'].split(','), function(i, pt){
+        if(typeof query['primary_type__in'] !== 'undefined'){
+            $.each(query['primary_type__in'].split(','), function(i, pt){
                 $('#crime-type').find('[value="' + pt + '"]').attr('selected', 'selected');
             });
             $('#crime-type').trigger('chosen:updated');
