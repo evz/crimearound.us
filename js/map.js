@@ -520,7 +520,7 @@
             $('#crime-type').trigger('chosen:updated');
         }
         if(typeof query['location_description__in'] !== 'undefined'){
-            $.each(query['location_description'].split(','), function(i, loc){
+            $.each(query['location_description__in'].split(','), function(i, loc){
                 $('#crime-location').find('[value="' + loc + '"]').attr('selected', 'selected');
             });
             $('#crime-location').trigger('chosen:updated');
