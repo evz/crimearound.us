@@ -340,7 +340,7 @@
                 locations.push(location);
             });
             if(locations.length > 0){
-                query['location_description__in'] = locations.join(',');
+                query['locations'] = locations.join(',');
             }
         }
         var start = $('.start').val().replace('Start Date: ', '');
@@ -519,8 +519,8 @@
             });
             $('#crime-type').trigger('chosen:updated');
         }
-        if(typeof query['location_description__in'] !== 'undefined'){
-            $.each(query['location_description__in'].split(','), function(i, loc){
+        if(typeof query['locations'] !== 'undefined'){
+            $.each(query['locations'].split(','), function(i, loc){
                 $('#crime-location').find('[value="' + loc + '"]').attr('selected', 'selected');
             });
             $('#crime-location').trigger('chosen:updated');
