@@ -24,7 +24,7 @@ def make_shapes(content, get_jobs=False):
                 dbf.write(f.read(name))
     shape_reader = shapefile.Reader(shp=shp, dbf=dbf, shx=shx)
     records = shape_reader.shapeRecords()
-    fields = [f[0] for f in shape_reader.fields[1:5]]
+    fields = [f[0] for f in shape_reader.fields]
     record_groups = grouper(records, 1000)
     geo = {'type': 'FeatureCollection', 'features': []}
     for records in record_groups:
@@ -40,8 +40,6 @@ def make_shapes(content, get_jobs=False):
                     'id': i,
                     'properties': properties
                 }
-                if get_jobs:
-                    dump = add_jobs(tract_fips, dump)
                 i += 1
                 geo['features'].append(dump)
     return geo
